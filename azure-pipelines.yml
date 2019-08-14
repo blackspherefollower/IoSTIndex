@@ -21,6 +21,17 @@ steps:
 
 
 - script: |
-    wget -O devices.csv  https://docs.google.com/spreadsheets/d/e/2PACX-1vSHftWLAXfiRVv09H6JzVeXE8kov71YfrYi-v7gwHtwjdRC95D0nEKmmPtKFCbMgvI3FTFWFNrk3J5g/pub?output=csv
+    wget -O devices.csv $CSVURL
     git diff devices.csv
+    git config --local user.name "Azure Pipelines"
+    git config --local user.email "azuredevops@microsoft.com"
+    git add devices.csv
+    git commit -m "Updating devices.csv"
   displayName: 'Check for modifications'
+
+- task: InstallSSHKey@0
+  inputs:
+    knownHostsEntry: 
+    sshPublicKey: $DEPLOY
+    #sshPassphrase: # Optional
+    sshKeySecureFile: deploy_key
