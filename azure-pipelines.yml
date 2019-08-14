@@ -31,7 +31,7 @@ steps:
 
 - task: InstallSSHKey@0
   inputs:
-    knownHostsEntry: $KNOWN_HOST
-    sshPublicKey: $DEPLOY
+    knownHostsEntry: '$(KNOWN_HOST)'
+    sshPublicKey: '$(DEPLOY)'
     #sshPassphrase: # Optional
     sshKeySecureFile: deploy_key
