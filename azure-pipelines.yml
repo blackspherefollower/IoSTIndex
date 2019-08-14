@@ -35,3 +35,8 @@ steps:
     sshPublicKey: '$(DEPLOY)'
     #sshPassphrase: # Optional
     sshKeySecureFile: deploy_key
+    
+- script: |
+    git remote set-url --push origin git@github.com:blackspherefollower/IoSTIndex
+    git push origin HEAD:master
+  displayName: 'Publish to GitHub'
