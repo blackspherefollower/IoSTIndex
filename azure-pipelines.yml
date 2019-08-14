@@ -21,6 +21,6 @@ steps:
 
 
 - script: |
-    wget -O devices.csv https://docs.google.com/spreadsheets/d/e/2PACX-1vSHftWLAXfiRVv09H6JzVeXE8kov71YfrYi-v7gwHtwjdRC95D0nEKmmPtKFCbMgvI3FTFWFNrk3J5g/pubhtml 
+    wget -O devices.csv  https://docs.google.com/spreadsheets/d/e/2PACX-1vSHftWLAXfiRVv09H6JzVeXE8kov71YfrYi-v7gwHtwjdRC95D0nEKmmPtKFCbMgvI3FTFWFNrk3J5g/pub?output=csv
     git diff devices.csv
   displayName: 'Check for modifications'
