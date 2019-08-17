@@ -12,14 +12,14 @@ pool:
 
 steps:
 - script: |
-    wget -O devices.csv $CSVURL
-    if [ -z "$(git diff devices.csv)" ]; then
+    wget -O src/data/devices.csv $CSVURL
+    if [ -z "$(git diff src/data/devices.csv)" ]; then
       echo '##vso[task.setvariable variable=dev-diff]skip'
       exit 0
     fi
     git config --local user.name "Azure Pipelines"
     git config --local user.email "azuredevops@microsoft.com"
-    git add devices.csv
+    git add src/data/devices.csv
     git commit -m "Updating devices.csv"
   displayName: 'Check for modifications'
 
