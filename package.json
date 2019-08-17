@@ -13,10 +13,23 @@
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
   },
   "dependencies": {
+    "apollo-boost": "^0.4.4",
+    "awesome-debounce-promise": "^2.1.0",
+    "bootstrap": "^4.3.1",
     "gatsby": "^2.13.67",
+    "gatsby-source-filesystem": "^2.1.9",
+    "gatsby-source-graphql": "^2.1.5",
     "gatsby-transformer-csv": "^2.1.2",
+    "open-iconic": "^1.1.1",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react-apollo": "^3.0.1",
+    "react-async-hook": "^3.4.0",
+    "react-bootstrap": "^1.0.0-beta.11",
+    "react-bootstrap-table-next": "^3.1.8",
+    "react-bootstrap-table2-filter": "^1.1.11",
+    "react-bootstrap-table2-toolkit": "^2.0.1",
+    "react-dom": "^16.9.0",
+    "use-constant": "^1.0.0"
   },
   "devDependencies": {
     "prettier": "^1.18.2"
