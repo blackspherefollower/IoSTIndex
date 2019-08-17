@@ -1,0 +1,30 @@
+{
+  "name": "IoSTIndex",
+  "private": true,
+  "description": "A list of all known computer controllable devices",
+  "version": "0.0.1",
+  "license": "BSDv3",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
+    "start": "npm run develop",
+    "serve": "gatsby serve",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
+  },
+  "dependencies": {
+    "gatsby": "^2.13.67",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blackspherefollower/IoSTIndex"
+  },
+  "bugs": {
+    "url": "https://github.com/blackspherefollower/IoSTIndex/issues"
+  }
+}
