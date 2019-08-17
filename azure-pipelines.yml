@@ -12,15 +12,16 @@ pool:
 
 steps:
 - script: |
-    wget -O src/data/devices.csv $CSVURL
-    if [ -z "$(git diff src/data/devices.csv)" ]; then
+    wget -O src/data/devices.csv $CSVURL-DEVICES
+    wget -O src/data/bpsupport.csv $CSVURL-BPSUPPORT
+    if [ -z "$(git diff src/data)" ]; then
       echo '##vso[task.setvariable variable=dev-diff]skip'
       exit 0
     fi
     git config --local user.name "Azure Pipelines"
     git config --local user.email "azuredevops@microsoft.com"
-    git add src/data/devices.csv
-    git commit -m "Updating devices.csv"
+    git add src/data
+    git commit -m "Updating datasets"
   displayName: 'Check for modifications'
 
 - task: InstallSSHKey@0
