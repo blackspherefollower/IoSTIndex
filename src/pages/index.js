@@ -5,7 +5,7 @@ import { graphql } from "gatsby"
 import React from "react"
 import { Navbar } from 'react-bootstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
-import filterFactory, { textFilter, selectFilter, Comparator } from 'react-bootstrap-table2-filter';
+import filterFactory, { textFilter, multiSelectFilter, Comparator } from 'react-bootstrap-table2-filter';
 
 
 function urlFormatter(cell, row, rowIndex, formatExtraData) {
@@ -17,11 +17,23 @@ function urlFormatter(cell, row, rowIndex, formatExtraData) {
     </>
   );
 }
+
 const availabilityOptions = {
   'Available': 'Available',
+  'DIY': 'DIY',
   'Discontinued': 'Discontinued',
   'Unreleased': 'Unreleased',
-  "Existence unknown": "Existence unknown",
+  'Existence unknown': 'Existence unknown',
+};
+
+const connectionOptions = {
+  'BT': 'Bluetooth (Any)',
+  'BT2 (Serial)': 'Bluetooth (Serial)',
+  'BT2 (Audio)': 'Bluetooth (Audio)',
+  'BT2 (HID)': 'Bluetooth (HID)',
+  'BT4': 'Bluetooth LE',
+  'USB': 'USB',
+  'Serial': 'Serial',
 };
 
 const columns = [
@@ -42,10 +54,23 @@ const columns = [
   }, {
     dataField: 'node.Availability',
     text: 'Availability',
-    filter: selectFilter({
+    filter: multiSelectFilter({
       options: availabilityOptions,
       comparator: Comparator.LIKE,
+      defaultValue: ['Available', 'DIY'],
     }),
+    sort: true,
+  }, {
+    dataField: 'node.Connection',
+    text: 'Connectivity',
+    filter: multiSelectFilter({
+      options: connectionOptions,
+      comparator: Comparator.LIKE,
+    }),
+    sort: true,
+  }, {
+    dataField: 'node.Type',
+    text: 'Form Factor',
     sort: true,
   }, {
     dataField: 'node.Detail',
@@ -101,7 +126,6 @@ class IndexComponent extends React.Component {
         <Navbar bg="light" expand="lg">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <input name="product" onChange={e => this.setInputText(e.target.value)}/>
           </Navbar.Collapse>
         </Navbar>
         <BootstrapTable
@@ -132,6 +156,8 @@ export const IndexQuery = graphql`
           Device
           Detail
           Availability
+          Connection
+          Type
         }
       }
     }
