@@ -1,14 +1,8 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-
-
+# Auto import pipeline from Google Sheets
 
 schedules:
 - cron: "0 * * * *"
-  displayName: Daily midnight build
+  displayName: Hourly import attempt
   branches:
     include:
     - master
@@ -17,14 +11,12 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-
-
-
 - script: |
     wget -O devices.csv $CSVURL
     git diff devices.csv
     git config --local user.name "Azure Pipelines"
     git config --local user.email "azuredevops@microsoft.com"
+    git log
     git add devices.csv
     git commit -m "Updating devices.csv"
   displayName: 'Check for modifications'
