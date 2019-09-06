@@ -13,7 +13,6 @@ pool:
 steps:
 - script: |
     wget -O src/data/devices.csv $DEVICESURL
-    wget -O src/data/bpsupport.csv $BPSUPPORTURL
     if [ -z "$(git diff src/data)" ]; then
       echo '##vso[task.setvariable variable=dev-diff]skip'
       exit 0

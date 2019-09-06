@@ -114,65 +114,16 @@ class IndexComponent extends React.Component {
   constructor(props) {
     super(props)
     const devices = this.props.data.allDevicesCsv.edges
-    const bpSupp = this.props.data.allBpsupportCsv.edges
 
-    function cmpDev(left, right) {
-      const b = left.node.Brand.localeCompare(right.node.Brand, `en`, {
-        sensitivity: `base`,
-      })
-      if (b !== 0) return b
-
-      return left.node.Device.localeCompare(right.node.Device, `en`, {
-        sensitivity: `base`,
-      })
-    }
-
-    function copyBpSupp(dev, bp) {
-      dev.node.Buttplug_C_ = bp ? bp.node.Buttplug_C_ : ``
-      dev.node.Buttplug_JS = bp ? bp.node.Buttplug_JS : ``
-      dev.node.BpNotes = bp ? bp.node.Notes : ``
-      dev.node.Win7 = bp ? bp.node.Win7 : ``
-      dev.node.Win8 = bp ? bp.node.Win8 : ``
-      dev.node.Win10_14939 = bp ? bp.node.Win10_14939 : ``
-      dev.node.Win10_15063 = bp ? bp.node.Win10_15063 : ``
-      dev.node.macOS = bp ? bp.node.macOS : ``
-      dev.node.Linux = bp ? bp.node.Linux : ``
-      dev.node.ChromeOS = bp ? bp.node.ChromeOS : ``
-      dev.node.iOS = bp ? bp.node.iOS : ``
-      dev.node.Android = bp ? bp.node.Android : ``
+    devices.map((dev, i) => {
+      dev.id = i
 
       const cs = dev.node.Buttplug_C_.length > 0 && dev.node.Buttplug_C_ !== `0`
       const js = dev.node.Buttplug_JS.length > 0 && dev.node.Buttplug_JS !== `0`
       dev.node.ButtplugSupport = 0
       if (cs) dev.node.ButtplugSupport |= 1
       if (js) dev.node.ButtplugSupport |= 2
-    }
-
-    let l = 0
-    let r = 0
-    while (l >= 0 || r >= 0) {
-      const c =
-        devices[l] && bpSupp[r]
-          ? cmpDev(devices[l], bpSupp[r])
-          : devices[l]
-          ? -1
-          : 1
-      if (c === 0) {
-        // Join
-        copyBpSupp(devices[l], bpSupp[r])
-        l++
-        r++
-      } else if (c < 0) {
-        // Skip left
-        copyBpSupp(devices[l])
-        l++
-      } else if (c > 0) {
-        // Skip right
-        r++
-      }
-      if (!devices[l]) l = -1
-      if (!bpSupp[r]) r = -1
-    }
+    })
 
     this.state = { devices }
   }
@@ -208,8 +159,6 @@ class IndexComponent extends React.Component {
   setInputText(text) {}
 
   render() {
-    const data = this.state.devices
-    data.map((row, i) => (row.id = i))
     return (
       <div>
         <Navbar bg="dark" variant="dark" expand="lg">
@@ -254,7 +203,6 @@ export const IndexQuery = graphql`
     allDevicesCsv(sort: { fields: [Brand, Device] }) {
       edges {
         node {
-          id
           Brand
           Device
           Detail
@@ -262,18 +210,9 @@ export const IndexQuery = graphql`
           Connection
           Type
           Notes
-        }
-      }
-    }
-    allBpsupportCsv(sort: { fields: [Brand, Device] }) {
-      edges {
-        node {
-          id
-          Brand
-          Device
           Buttplug_C_
           Buttplug_JS
-          Notes
+          Buttplug_Support_Notes
           Win10_14939
           Win10_15063
           Win7
