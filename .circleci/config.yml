@@ -6,6 +6,7 @@ jobs:
         - image: circleci/node:lts
     steps:
       - checkout # check out the code in the project directory
+      - run: echo "hello world" # run the `echo` command
       - run: wget -O src/data/devices.csv ${DEVICESURL}
       - run: git config --local user.name "CircleCI"
       - run: git config --local user.email "circleci@circleci.com"
