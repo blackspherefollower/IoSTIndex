@@ -83,17 +83,6 @@ const columns = [
     dataField: `ButtplugSupport`,
     text: `Buttplug.io Support`,
     sort: true,
-    filter: multiSelectFilter({
-      options: buttplugOptions,
-      onFilter: (filterVal, data) => {
-        if (filterVal) {
-          let match = 0
-          filterVal.forEach(f => (match |= f))
-          return data.filter(row => row.ButtplugSupport & match)
-        }
-        return data
-      },
-    }),
     formatter: (cellContent, row) => (
       <div>
         {(row.ButtplugSupport & 1 && <span> C#</span>) || ``}
@@ -136,11 +125,16 @@ class FieldFilter extends React.Component {
     })
   }
 
+  doBpFilter = (data, filter) =>
+    (data[filter.field] & filter.bpSupport) === filter.bpSupport
+
   handleBpChange = (event, mode) => {
     this.props.onChange(this.props.ident, {
       field: this.props.filter.field,
-      bpSupport: event.target.value,
-      filterData: this.doTextFilter,
+      bpSupport:
+        (this.props.filter.bpSupport &= ~mode) |
+        (event.target.checked ? mode : 0),
+      filterData: this.doBpFilter,
     })
   }
 
