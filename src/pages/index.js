@@ -238,7 +238,7 @@ class IndexComponent extends React.Component {
 
       devices.push(dev)
     })
-console.log(devices)
+
     this.state = { devices, data: devices, filters: [] }
   }
 
