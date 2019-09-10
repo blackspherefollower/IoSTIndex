@@ -11,7 +11,6 @@ import filterFactory, {
 import { Link } from "gatsby-plugin-modal-routing"
 import NavLink from "react-bootstrap/NavLink"
 import axios from "axios"
-import Dropdown from "react-bootstrap/Dropdown"
 import NavDropdown from "react-bootstrap/NavDropdown"
 import Table from "react-bootstrap/Table"
 import Row from "react-bootstrap/Row"
@@ -143,6 +142,54 @@ class FieldFilter extends React.Component {
     })
   }
 
+  doFeatureFilter = (data, filter) => {
+    for (let i of filter.features.Inputs) {
+      console.log(i, filter, data)
+      if (
+        data.Features.Inputs[i] === undefined ||
+        data.Features.Inputs[i] === null ||
+        data.Features.Inputs[i] === 0 ||
+        data.Features.Inputs[i] === `0` ||
+        data.Features.Inputs[i].length === 0
+      ) {
+        return false
+      }
+    }
+    for (let i of filter.features.Outputs) {
+      console.log(i)
+      if (
+        data.Features.Outputs[i] === undefined ||
+        data.Features.Outputs[i] === null ||
+        data.Features.Outputs[i] === 0 ||
+        data.Features.Outputs[i] === `0` ||
+        data.Features.Outputs[i].length === 0
+      ) {
+        return false
+      }
+    }
+    return true
+  }
+
+  handleFeatureChange = (event, type, feature) => {
+    let features = { Inputs: [], Outputs: [] }
+    if (this.props.filter.features !== undefined) {
+      features.Inputs = [...this.props.filter.features.Inputs]
+      features.Outputs = [...this.props.filter.features.Outputs]
+    }
+    let pos = features[type].indexOf(feature)
+    if (pos === -1) {
+      features[type].push(feature)
+    } else {
+      features[type].splice(pos, 1)
+    }
+
+    this.props.onChange(this.props.ident, {
+      field: this.props.filter.field,
+      features: features,
+      filterData: this.doFeatureFilter,
+    })
+  }
+
   render() {
     return (
       <Navbar>
@@ -219,7 +266,22 @@ class FieldFilter extends React.Component {
             <NavDropdown title="Outputs" id="nav-out-dropdown">
               {this.props.filterData.Features !== undefined &&
                 this.props.filterData.Features.Outputs.map((feat, i) => (
-                  <NavDropdown.Item key={i}>{feat}</NavDropdown.Item>
+                  <NavDropdown.Item
+                    key={i}
+                    onClick={e => this.handleFeatureChange(e, `Outputs`, feat)}
+                  >
+                    {this.props.filter.features !== undefined &&
+                      this.props.filter.features.Outputs.find(
+                        x => x == feat
+                      ) !== undefined && (
+                        <span
+                          className="oi oi-check"
+                          title="icon check"
+                          aria-hidden="true"
+                        />
+                      )}
+                    {feat}
+                  </NavDropdown.Item>
                 ))}
             </NavDropdown>
           )}
@@ -227,7 +289,21 @@ class FieldFilter extends React.Component {
             <NavDropdown title="Inputs" id="nav-in-dropdown">
               {this.props.filterData.Features !== undefined &&
                 this.props.filterData.Features.Inputs.map((feat, i) => (
-                  <NavDropdown.Item key={i}>{feat}</NavDropdown.Item>
+                  <NavDropdown.Item
+                    key={i}
+                    onClick={e => this.handleFeatureChange(e, `Inputs`, feat)}
+                  >
+                    {this.props.filter.features !== undefined &&
+                      this.props.filter.features.Inputs.find(x => x == feat) !==
+                        undefined && (
+                        <span
+                          className="oi oi-check"
+                          title="icon check"
+                          aria-hidden="true"
+                        />
+                      )}
+                    {feat}
+                  </NavDropdown.Item>
                 ))}
             </NavDropdown>
           )}
@@ -365,6 +441,7 @@ class IndexComponent extends React.Component {
       if (f.hasOwnProperty(`filterData`)) {
         data = data.filter(d => {
           const res = f.filterData(d, f)
+          console.log(res, f, d)
           return res
         })
       }

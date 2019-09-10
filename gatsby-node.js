@@ -142,7 +142,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       `Linear_Actuators`,
       `Estim`,
       `Camera`,
-      `Vibrator`,
+      `Vibrators`,
     ]
 
     dev.Features = {
