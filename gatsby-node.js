@@ -60,6 +60,23 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             Linux
             ChromeOS
             Android
+            Thermometers
+            Suction
+            Speaker
+            Rotators
+            Pressure
+            Position
+            Outputs
+            Grips_Expanders
+            Heaters
+            Inputs
+            Lights
+            Linear_Actuators
+            Estim
+            Camera
+            Buttons
+            Accelerometers
+            Vibrators
           }
         }
       }
@@ -99,9 +116,49 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       `ChromeOS`,
       `Android`,
     ]
+
     dev.Buttplug = {}
     bpProps.forEach(prop => {
       dev.Buttplug[prop] = dev[prop]
+      delete dev[prop]
+    })
+
+    const inputFeatures = [
+      `Thermometers`,
+      `Pressure`,
+      `Position`,
+      `Camera`,
+      `Buttons`,
+      `Accelerometers`,
+    ]
+
+    const outputFeatures = [
+      `Suction`,
+      `Speaker`,
+      `Rotators`,
+      `Grips_Expanders`,
+      `Heaters`,
+      `Lights`,
+      `Linear_Actuators`,
+      `Estim`,
+      `Camera`,
+      `Vibrator`,
+    ]
+
+    dev.Features = {
+      Inputs: {},
+      Outputs: {},
+      InputsSummary: dev.Inputs,
+      OutputsSummary: dev.Outputs,
+    }
+    delete dev.Inputs
+    delete dev.Outputs
+    inputFeatures.forEach(prop => {
+      dev.Features.Inputs[prop] = dev[prop]
+      delete dev[prop]
+    })
+    outputFeatures.forEach(prop => {
+      dev.Features.Outputs[prop] = dev[prop]
       delete dev[prop]
     })
 
@@ -144,6 +201,4 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       err
     )
   })
-
-  console.log("End of postbuild")
 }

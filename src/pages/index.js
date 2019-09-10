@@ -11,6 +11,12 @@ import filterFactory, {
 import { Link } from "gatsby-plugin-modal-routing"
 import NavLink from "react-bootstrap/NavLink"
 import axios from "axios"
+import Dropdown from "react-bootstrap/Dropdown"
+import NavDropdown from "react-bootstrap/NavDropdown"
+import Table from "react-bootstrap/Table"
+import Row from "react-bootstrap/Row"
+import Container from "react-bootstrap/Container"
+import Col from "react-bootstrap/Col"
 
 function urlFormatter(cell) {
   return <>{cell.length > 0 && <a href={cell}>{cell}</a>}</>
@@ -209,6 +215,22 @@ class FieldFilter extends React.Component {
               />
             </Navbar.Text>
           )}
+          {this.props.filter.field === `Features` && (
+            <NavDropdown title="Outputs" id="nav-out-dropdown">
+              {this.props.filterData.Features !== undefined &&
+                this.props.filterData.Features.Outputs.map((feat, i) => (
+                  <NavDropdown.Item key={i}>{feat}</NavDropdown.Item>
+                ))}
+            </NavDropdown>
+          )}
+          {this.props.filter.field === `Features` && (
+            <NavDropdown title="Inputs" id="nav-in-dropdown">
+              {this.props.filterData.Features !== undefined &&
+                this.props.filterData.Features.Inputs.map((feat, i) => (
+                  <NavDropdown.Item key={i}>{feat}</NavDropdown.Item>
+                ))}
+            </NavDropdown>
+          )}
           <NavLink onClick={() => this.props.onRemove(this.props.ident)}>
             <span className="oi oi-circle-x" title="Close" aria-hidden="true" />
           </NavLink>
@@ -221,20 +243,70 @@ class FieldFilter extends React.Component {
 class IndexComponent extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { devices: [], data: [], filters: [] }
+    this.state = { devices: [], data: [], filters: [], filterData: {} }
     this.handleFilterRemove = this.handleFilterRemove.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
   }
 
   componentDidMount() {
     axios.get(`/devices.json`).then(res => {
-      this.setState({ devices: res.data, data: res.data })
+      let filterData = { Features: { Inputs: [], Outputs: [] } }
+      if (res.data.length > 0) {
+        filterData.Features.Inputs = Object.getOwnPropertyNames(
+          res.data[0].Features.Inputs
+        )
+        filterData.Features.Outputs = Object.getOwnPropertyNames(
+          res.data[0].Features.Outputs
+        )
+      }
+      this.setState({ devices: res.data, data: res.data, filterData })
     })
   }
 
   expandRow = {
-    renderer: () => (
-      <div style={{ width: `100%`, height: `20px` }}>Content</div>
+    renderer: row => (
+      <div style={{ width: `100%` }}>
+        <Container>
+          <Row>
+            <Col>
+              <h1>
+                {row.Brand} - {row.Device}
+              </h1>
+              <span>{row.Notes}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Table>
+                <thead>
+                  <td>Input</td>
+                  <td>Count</td>
+                </thead>
+                {Object.keys(row.Features.Inputs).map((feat, i) => (
+                  <tr key={i}>
+                    <td>{feat}</td>
+                    <td>{row.Features.Inputs[feat]}</td>
+                  </tr>
+                ))}
+              </Table>
+            </Col>
+            <Col>
+              <Table>
+                <thead>
+                  <td>Output</td>
+                  <td>Count</td>
+                </thead>
+                {Object.keys(row.Features.Outputs).map((feat, i) => (
+                  <tr key={i}>
+                    <td>{feat}</td>
+                    <td>{row.Features.Outputs[feat]}</td>
+                  </tr>
+                ))}
+              </Table>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     ),
     showExpandColumn: true,
     expandByColumnOnly: true,
@@ -316,6 +388,7 @@ class IndexComponent extends React.Component {
           ident={i}
           onChange={this.handleFilterChange}
           onRemove={this.handleFilterRemove}
+          filterData={this.state.filterData}
         />
       )
     )
