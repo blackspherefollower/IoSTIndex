@@ -1,7 +1,6 @@
 import "bootstrap/dist/css/bootstrap.css"
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css"
 import "open-iconic/font/css/open-iconic-bootstrap.css"
-import { graphql } from "gatsby"
 import React from "react"
 import { Navbar, Form } from "react-bootstrap"
 import BootstrapTable from "react-bootstrap-table-next"
@@ -11,6 +10,7 @@ import filterFactory, {
 } from "react-bootstrap-table2-filter"
 import { Link } from "gatsby-plugin-modal-routing"
 import NavLink from "react-bootstrap/NavLink"
+import axios from "axios"
 
 function urlFormatter(cell) {
   return <>{cell.length > 0 && <a href={cell}>{cell}</a>}</>
@@ -32,11 +32,6 @@ const connectionOptions = {
   BT4: `Bluetooth LE`,
   USB: `USB`,
   Serial: `Serial`,
-}
-
-const buttplugOptions = {
-  1: `C#`,
-  2: `JS`,
 }
 
 const columns = [
@@ -109,8 +104,12 @@ const SelectOption = props => {
 }
 
 class FieldFilter extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+
   handleFieldChange = event => {
-    console.log(event)
     this.props.onChange(this.props.ident, { field: event.target.value })
   }
 
@@ -222,24 +221,15 @@ class FieldFilter extends React.Component {
 class IndexComponent extends React.Component {
   constructor(props) {
     super(props)
-    const devices0 = this.props.data.allDevicesCsv.edges
-    const devices = []
-
+    this.state = { devices: [], data: [], filters: [] }
     this.handleFilterRemove = this.handleFilterRemove.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
-    devices0.forEach((dev, i) => {
-      dev = dev.node
-      dev.id = i
-      const cs = dev.Buttplug_C_.length > 0 && dev.Buttplug_C_ !== `0`
-      const js = dev.Buttplug_JS.length > 0 && dev.Buttplug_JS !== `0`
-      dev.ButtplugSupport = 0
-      if (cs) dev.ButtplugSupport |= 1
-      if (js) dev.ButtplugSupport |= 2
+  }
 
-      devices.push(dev)
+  componentDidMount() {
+    axios.get(`/devices.json`).then(res => {
+      this.setState({ devices: res.data, data: res.data })
     })
-
-    this.state = { devices, data: devices, filters: [] }
   }
 
   expandRow = {
@@ -287,7 +277,6 @@ class IndexComponent extends React.Component {
   }
 
   handleFilterRemove(ident) {
-    console.log(`remove`, ident)
     const filters = this.state.filters
     filters.splice(ident, 1)
     this.setState({ filters })
@@ -373,33 +362,3 @@ class IndexComponent extends React.Component {
 }
 
 export default IndexComponent
-
-export const IndexQuery = graphql`
-  query {
-    allDevicesCsv(sort: { fields: [Brand, Device] }) {
-      edges {
-        node {
-          Brand
-          Device
-          Detail
-          Availability
-          Connection
-          Type
-          Notes
-          Buttplug_C_
-          Buttplug_JS
-          Buttplug_Support_Notes
-          Win10_14939
-          Win10_15063
-          Win7
-          Win8
-          iOS
-          macOS
-          Linux
-          ChromeOS
-          Android
-        }
-      }
-    }
-  }
-`
