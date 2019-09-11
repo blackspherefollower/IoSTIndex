@@ -77,6 +77,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             Buttons
             Accelerometers
             Vibrators
+            Oscillators
           }
         }
       }
@@ -131,19 +132,22 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       `Buttons`,
       `Accelerometers`,
     ]
+    inputFeatures.sort()
 
     const outputFeatures = [
-      `Suction`,
-      `Speaker`,
-      `Rotators`,
+      `Camera`,
+      `Estim`,
       `Grips_Expanders`,
       `Heaters`,
       `Lights`,
       `Linear_Actuators`,
-      `Estim`,
-      `Camera`,
+      `Speaker`,
+      `Suction`,
+      `Rotators`,
+      `Oscillators`,
       `Vibrators`,
     ]
+    outputFeatures.sort()
 
     dev.Features = {
       Inputs: {},
