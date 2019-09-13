@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css"
 import "open-iconic/font/css/open-iconic-bootstrap.css"
 import React from "react"
-import { Navbar, Form } from "react-bootstrap"
+import { Navbar, Col, Container, Row, Table } from "react-bootstrap"
 import BootstrapTable from "react-bootstrap-table-next"
 import filterFactory, {
   multiSelectFilter,
@@ -11,11 +11,9 @@ import filterFactory, {
 import { Link } from "gatsby-plugin-modal-routing"
 import NavLink from "react-bootstrap/NavLink"
 import axios from "axios"
-import NavDropdown from "react-bootstrap/NavDropdown"
-import Table from "react-bootstrap/Table"
-import Row from "react-bootstrap/Row"
-import Container from "react-bootstrap/Container"
-import Col from "react-bootstrap/Col"
+import DeviceFilter from "../components/DeviceFilter"
+
+import { initializeReactUrlState } from "react-url-state"
 
 function urlFormatter(cell) {
   return <>{cell.length > 0 && <a href={cell}>{cell}</a>}</>
@@ -80,13 +78,13 @@ const columns = [
     sort: true,
   },
   {
-    dataField: `ButtplugSupport`,
+    dataField: `Buttplug.ButtplugSupport`,
     text: `Buttplug.io Support`,
     sort: true,
     formatter: (cellContent, row) => (
       <div>
-        {(row.ButtplugSupport & 1 && <span> C#</span>) || ``}
-        {(row.ButtplugSupport & 2 && <span> JS</span>) || ``}
+        {(row.Buttplug.ButtplugSupport & 1 && <span> C#</span>) || ``}
+        {(row.Buttplug.ButtplugSupport & 2 && <span> JS</span>) || ``}
       </div>
     ),
   },
@@ -97,223 +95,37 @@ const columns = [
   },
 ]
 
-const SelectOption = props => {
-  if (props.value === props.selected) {
-    return (
-      <option value={props.value} selected>
-        {props.text}
-      </option>
-    )
-  }
-  return <option value={props.value}>{props.text}</option>
-}
-
-class FieldFilter extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-
-  handleFieldChange = event => {
-    this.props.onChange(this.props.ident, { field: event.target.value })
-  }
-
-  doTextFilter = (data, filter) =>
-    data[filter.field].match(new RegExp(filter.search, `i`)) !== null
-
-  handleSearchChange = event => {
-    this.props.onChange(this.props.ident, {
-      field: this.props.filter.field,
-      search: event.target.value,
-      filterData: this.doTextFilter,
-    })
-  }
-
-  doBpFilter = (data, filter) =>
-    (data[filter.field] & filter.bpSupport) === filter.bpSupport
-
-  handleBpChange = (event, mode) => {
-    this.props.onChange(this.props.ident, {
-      field: this.props.filter.field,
-      bpSupport:
-        (this.props.filter.bpSupport &= ~mode) |
-        (event.target.checked ? mode : 0),
-      filterData: this.doBpFilter,
-    })
-  }
-
-  doFeatureFilter = (data, filter) => {
-    for (let i of filter.features.Inputs) {
-      console.log(i, filter, data)
-      if (
-        data.Features.Inputs[i] === undefined ||
-        data.Features.Inputs[i] === null ||
-        data.Features.Inputs[i] === 0 ||
-        data.Features.Inputs[i] === `0` ||
-        data.Features.Inputs[i].length === 0
-      ) {
-        return false
+const reactUrlStateOptions = {
+  fromIdResolvers: async (param, value, oldState) => {
+    let newState = { ...oldState }
+    let found = param.match(/filter(\d+)([A-Za-z].+)/)
+    if (found !== null) {
+      let fId = parseInt(found[1], 10)
+      if (newState.filters === undefined) {
+        newState.filters = new Array(fId + 1)
+      } else {
+        while (newState.filters.length < fId + 1) {
+          newState.filters.push({})
+        }
       }
+      newState.filters[fId] = { field: found[2], urlData: value }
     }
-    for (let i of filter.features.Outputs) {
-      console.log(i)
-      if (
-        data.Features.Outputs[i] === undefined ||
-        data.Features.Outputs[i] === null ||
-        data.Features.Outputs[i] === 0 ||
-        data.Features.Outputs[i] === `0` ||
-        data.Features.Outputs[i].length === 0
-      ) {
-        return false
-      }
+    return newState
+  },
+  toIdMappers: (param, state) => {
+    if (param === `filters`) {
+      return state.filters
+        .map((f, i) => {
+          if (typeof f.toUrl === `function`) {
+            return `filter${i}${f.field}=${f.toUrl()}`
+          }
+          return undefined
+        })
+        .filter(p => p !== undefined && p !== null)
+        .join(`&`)
     }
-    return true
-  }
-
-  handleFeatureChange = (event, type, feature) => {
-    let features = { Inputs: [], Outputs: [] }
-    if (this.props.filter.features !== undefined) {
-      features.Inputs = [...this.props.filter.features.Inputs]
-      features.Outputs = [...this.props.filter.features.Outputs]
-    }
-    let pos = features[type].indexOf(feature)
-    if (pos === -1) {
-      features[type].push(feature)
-    } else {
-      features[type].splice(pos, 1)
-    }
-
-    this.props.onChange(this.props.ident, {
-      field: this.props.filter.field,
-      features: features,
-      filterData: this.doFeatureFilter,
-    })
-  }
-
-  render() {
-    return (
-      <Navbar>
-        <Navbar.Collapse>
-          <Navbar.Text>
-            <Form.Control as="select" onChange={e => this.handleFieldChange(e)}>
-              <SelectOption
-                value={`none`}
-                selected={this.props.filter.field}
-                text={`Choose a field:`}
-              />
-              <SelectOption
-                value={`Brand`}
-                selected={this.props.filter.field}
-                text={`Brand`}
-              />
-              <SelectOption
-                value={`Device`}
-                selected={this.props.filter.field}
-                text={`Device Name`}
-              />
-              <SelectOption
-                value={`Availability`}
-                selected={this.props.filter.field}
-                text={`Availability`}
-              />
-              <SelectOption
-                value={`Connection`}
-                selected={this.props.filter.field}
-                text={`Connectivity`}
-              />
-              <SelectOption
-                value={`Type`}
-                selected={this.props.filter.field}
-                text={`Form Factor`}
-              />
-              <SelectOption
-                value={`ButtplugSupport`}
-                selected={this.props.filter.field}
-                text={`Buttplug Support`}
-              />
-              <SelectOption
-                value={`Features`}
-                selected={this.props.filter.field}
-                text={`Features`}
-              />
-            </Form.Control>
-          </Navbar.Text>
-          {(this.props.filter.field === `Brand` ||
-            this.props.filter.field === `Device`) && (
-            <Navbar.Text>
-              <Form.Control
-                as="input"
-                value={this.props.filter.search ? this.props.filter.search : ``}
-                onChange={e => this.handleSearchChange(e)}
-              />
-            </Navbar.Text>
-          )}
-          {this.props.filter.field === `ButtplugSupport` && (
-            <Navbar.Text>
-              <Form.Check
-                inline
-                label="C#"
-                onChange={e => this.handleBpChange(e, 1)}
-              />
-              <Form.Check
-                inline
-                label="JS"
-                onChange={e => this.handleBpChange(e, 2)}
-              />
-            </Navbar.Text>
-          )}
-          {this.props.filter.field === `Features` && (
-            <NavDropdown title="Outputs" id="nav-out-dropdown">
-              {this.props.filterData.Features !== undefined &&
-                this.props.filterData.Features.Outputs.map((feat, i) => (
-                  <NavDropdown.Item
-                    key={i}
-                    onClick={e => this.handleFeatureChange(e, `Outputs`, feat)}
-                  >
-                    {this.props.filter.features !== undefined &&
-                      this.props.filter.features.Outputs.find(
-                        x => x == feat
-                      ) !== undefined && (
-                        <span
-                          className="oi oi-check"
-                          title="icon check"
-                          aria-hidden="true"
-                        />
-                      )}
-                    {feat}
-                  </NavDropdown.Item>
-                ))}
-            </NavDropdown>
-          )}
-          {this.props.filter.field === `Features` && (
-            <NavDropdown title="Inputs" id="nav-in-dropdown">
-              {this.props.filterData.Features !== undefined &&
-                this.props.filterData.Features.Inputs.map((feat, i) => (
-                  <NavDropdown.Item
-                    key={i}
-                    onClick={e => this.handleFeatureChange(e, `Inputs`, feat)}
-                  >
-                    {this.props.filter.features !== undefined &&
-                      this.props.filter.features.Inputs.find(x => x == feat) !==
-                        undefined && (
-                        <span
-                          className="oi oi-check"
-                          title="icon check"
-                          aria-hidden="true"
-                        />
-                      )}
-                    {feat}
-                  </NavDropdown.Item>
-                ))}
-            </NavDropdown>
-          )}
-          <NavLink onClick={() => this.props.onRemove(this.props.ident)}>
-            <span className="oi oi-circle-x" title="Close" aria-hidden="true" />
-          </NavLink>
-        </Navbar.Collapse>
-      </Navbar>
-    )
-  }
+  },
+  pathname: `/`,
 }
 
 class IndexComponent extends React.Component {
@@ -335,8 +147,15 @@ class IndexComponent extends React.Component {
           res.data[0].Features.Outputs
         )
       }
-      this.setState({ devices: res.data, data: res.data, filterData })
+      this.setState({
+        devices: res.data,
+        data: res.data,
+        filterData,
+      })
+      this.handleFilterChange()
     })
+
+    this.reactUrlState = initializeReactUrlState(this)(reactUrlStateOptions)
   }
 
   expandRow = {
@@ -439,14 +258,10 @@ class IndexComponent extends React.Component {
     let data = this.state.devices
     filters.forEach(f => {
       if (f.hasOwnProperty(`filterData`)) {
-        data = data.filter(d => {
-          const res = f.filterData(d, f)
-          console.log(res, f, d)
-          return res
-        })
+        data = data.filter(d => f.filterData(d, f))
       }
     })
-    this.setState({ data, filters })
+    this.reactUrlState.setUrlState({ data, filters })
   }
 
   addFilter = () => {
@@ -459,7 +274,7 @@ class IndexComponent extends React.Component {
     const filterNavs = []
     this.state.filters.forEach((f, i) =>
       filterNavs.push(
-        <FieldFilter
+        <DeviceFilter
           filter={f}
           key={i}
           ident={i}

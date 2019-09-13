@@ -36,6 +36,7 @@
     "react-bootstrap-table2-filter": "^1.2.0",
     "react-bootstrap-table2-toolkit": "^2.1.0",
     "react-dom": "^16.9.0",
+    "react-url-state": "blackspherefollower/react-url-state",
     "use-constant": "^1.0.0"
   },
   "devDependencies": {
