@@ -78,6 +78,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             Accelerometers
             Vibrators
             Oscillators
+            Pump
           }
         }
       }
@@ -146,6 +147,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       `Rotators`,
       `Oscillators`,
       `Vibrators`,
+      `Pump`,
     ]
     outputFeatures.sort()
 

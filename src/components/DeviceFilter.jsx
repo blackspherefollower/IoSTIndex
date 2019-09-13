@@ -123,7 +123,7 @@ class DeviceFilter extends React.Component {
               <option value={`Connection`}>Connectivity</option>
               <option value={`Type`}>Form Factor</option>
               <option value={`ButtplugSupport`}>Buttplug Support</option>
-              <option value={`Features`}>`Features</option>
+              <option value={`Features`}>Features</option>
             </Form.Control>
           </Navbar.Text>
           {(this.props.filter.field === `Brand` ||
