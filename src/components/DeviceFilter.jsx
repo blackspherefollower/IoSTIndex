@@ -9,6 +9,7 @@ class DeviceFilter extends React.Component {
   }
 
   componentDidMount() {
+    let features = { Inputs: [], Outputs: [] }
     if (this.props.filter.urlData !== undefined) {
       switch (this.props.filter.field) {
         case `Brand`:
@@ -25,6 +26,23 @@ class DeviceFilter extends React.Component {
               parseInt(this.props.filter.urlData, 10)
             )
           }
+          break
+
+        case `Features`:
+          if (this.props.filter.features !== undefined) {
+            features.Inputs = [...this.props.filter.features.Inputs]
+            features.Outputs = [...this.props.filter.features.Outputs]
+          }
+          decodeURI(this.props.filter.urlData)
+            .split(`,`)
+            .forEach(f => {
+              let match = f.match(new RegExp(`(Inputs|Outputs)(.*)`))
+              console.log(match, this.props)
+              if (match !== null) {
+                features[match[1]].push([match[2]])
+              }
+            })
+          this.handleFeatureChange(null, `preset`, features)
           break
       }
     }
@@ -92,17 +110,27 @@ class DeviceFilter extends React.Component {
       features.Inputs = [...this.props.filter.features.Inputs]
       features.Outputs = [...this.props.filter.features.Outputs]
     }
-    let pos = features[type].indexOf(feature)
-    if (pos === -1) {
-      features[type].push(feature)
+    if (type === `preset`) {
+      features = feature
     } else {
-      features[type].splice(pos, 1)
+      let pos = features[type].indexOf(feature)
+      if (pos === -1) {
+        features[type].push(feature)
+      } else {
+        features[type].splice(pos, 1)
+      }
     }
 
     this.props.onChange(this.props.ident, {
       field: this.props.filter.field,
       features: features,
       filterData: this.doFeatureFilter,
+      toUrl: () => {
+        let data = []
+        data.push(features.Inputs.map(i => `Inputs${i}`))
+        data.push(features.Outputs.map(o => `Outputs${o}`))
+        return encodeURI(data.flat().join(`,`))
+      },
     })
   }
 

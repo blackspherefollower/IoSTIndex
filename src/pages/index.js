@@ -124,6 +124,7 @@ const reactUrlStateOptions = {
         .filter(p => p !== undefined && p !== null)
         .join(`&`)
     }
+    return undefined
   },
   pathname: `/`,
 }
