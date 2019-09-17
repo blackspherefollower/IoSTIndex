@@ -10,6 +10,7 @@ class DeviceFilter extends React.Component {
 
   componentDidMount() {
     let features = { Inputs: [], Outputs: [] }
+    let tmp = []
     if (this.props.filter.urlData !== undefined) {
       switch (this.props.filter.field) {
         case `Brand`:
@@ -43,6 +44,14 @@ class DeviceFilter extends React.Component {
               }
             })
           this.handleFeatureChange(null, `preset`, features)
+          break
+
+        case `Type`:
+          if (this.props.filter.Type !== undefined) {
+            tmp = [...this.props.filter.Type]
+          }
+          tmp = tmp.concat(decodeURI(this.props.filter.urlData).split(`,`))
+          this.handleTypeChange(null, tmp)
           break
       }
     }
@@ -134,6 +143,38 @@ class DeviceFilter extends React.Component {
     })
   }
 
+  doTypeFilter = (data, filter) => {
+    if (filter[filter.field].length === 0) {
+      return true
+    }
+    return filter[filter.field].includes(data[filter.field])
+  }
+
+  handleTypeChange = (event, type) => {
+    let types = []
+    if (this.props.filter.Type !== undefined) {
+      types = [...this.props.filter.Type]
+    }
+    console.log(type, Array.isArray(type))
+    if (Array.isArray(type)) {
+      types = types.concat(type)
+    } else {
+      let pos = types.indexOf(type)
+      if (pos === -1) {
+        types.push(type)
+      } else {
+        types.splice(pos, 1)
+      }
+    }
+
+    this.props.onChange(this.props.ident, {
+      field: this.props.filter.field,
+      Type: types,
+      filterData: this.doTypeFilter,
+      toUrl: () => encodeURI(types.join(`,`)),
+    })
+  }
+
   render() {
     return (
       <Navbar>
@@ -189,9 +230,7 @@ class DeviceFilter extends React.Component {
                     onClick={e => this.handleFeatureChange(e, `Outputs`, feat)}
                   >
                     {this.props.filter.features !== undefined &&
-                      this.props.filter.features.Outputs.find(
-                        x => x == feat
-                      ) !== undefined && (
+                      this.props.filter.features.Outputs.includes(feat) && (
                         <span
                           className="oi oi-check"
                           title="icon check"
@@ -212,8 +251,7 @@ class DeviceFilter extends React.Component {
                     onClick={e => this.handleFeatureChange(e, `Inputs`, feat)}
                   >
                     {this.props.filter.features !== undefined &&
-                      this.props.filter.features.Inputs.find(x => x == feat) !==
-                        undefined && (
+                      this.props.filter.features.Inputs.includes(feat) && (
                         <span
                           className="oi oi-check"
                           title="icon check"
@@ -221,6 +259,27 @@ class DeviceFilter extends React.Component {
                         />
                       )}
                     {feat}
+                  </NavDropdown.Item>
+                ))}
+            </NavDropdown>
+          )}
+          {this.props.filter.field === `Type` && (
+            <NavDropdown title="FormFactors" id="nav-out-dropdown">
+              {this.props.filterData.Type !== undefined &&
+                this.props.filterData.Type.map((type, i) => (
+                  <NavDropdown.Item
+                    key={i}
+                    onClick={e => this.handleTypeChange(e, type)}
+                  >
+                    {this.props.filter.Type !== undefined &&
+                      this.props.filter.Type.includes(type) && (
+                        <span
+                          className="oi oi-check"
+                          title="icon check"
+                          aria-hidden="true"
+                        />
+                      )}
+                    {type}
                   </NavDropdown.Item>
                 ))}
             </NavDropdown>

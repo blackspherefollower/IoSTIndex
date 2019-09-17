@@ -14,6 +14,7 @@ import axios from "axios"
 import DeviceFilter from "../components/DeviceFilter"
 
 import { initializeReactUrlState } from "react-url-state"
+import { forEach } from "react-bootstrap/utils/ElementChildren"
 
 function urlFormatter(cell) {
   return <>{cell.length > 0 && <a href={cell}>{cell}</a>}</>
@@ -148,6 +149,20 @@ class IndexComponent extends React.Component {
           res.data[0].Features.Outputs
         )
       }
+      let fields = [`Availability`, `Connection`, `Type`]
+      res.data.forEach(d => {
+        fields.forEach(f => {
+          if (filterData[f] === undefined) {
+            filterData[f] = []
+          }
+          if (!filterData[f].includes(d[f])) {
+            filterData[f].push(d[f])
+          }
+        })
+      })
+      fields.forEach(f => {
+        filterData[f].sort()
+      })
       this.setState({
         devices: res.data,
         data: res.data,
