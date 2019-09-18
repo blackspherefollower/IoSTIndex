@@ -14,18 +14,9 @@ import axios from "axios"
 import DeviceFilter from "../components/DeviceFilter"
 
 import { initializeReactUrlState } from "react-url-state"
-import { forEach } from "react-bootstrap/utils/ElementChildren"
 
 function urlFormatter(cell) {
   return <>{cell.length > 0 && <a href={cell}>{cell}</a>}</>
-}
-
-const availabilityOptions = {
-  Available: `Available`,
-  DIY: `DIY`,
-  Discontinued: `Discontinued`,
-  Unreleased: `Unreleased`,
-  "Existence unknown": `Existence unknown`,
 }
 
 const connectionOptions = {
@@ -57,11 +48,6 @@ const columns = [
   {
     dataField: `Availability`,
     text: `Availability`,
-    filter: multiSelectFilter({
-      options: availabilityOptions,
-      comparator: Comparator.LIKE,
-      defaultValue: [`Available`, `DIY`],
-    }),
     sort: true,
   },
   {
@@ -171,7 +157,16 @@ class IndexComponent extends React.Component {
       this.handleFilterChange()
     })
 
-    this.reactUrlState = initializeReactUrlState(this)(reactUrlStateOptions)
+    this.reactUrlState = initializeReactUrlState(this)(
+      reactUrlStateOptions,
+      () => {
+        if (this.state.filters.length === 0) {
+          this.setState({
+            filters: [{ field: `Availability`, urlData: `Available,DIY` }],
+          })
+        }
+      }
+    )
   }
 
   expandRow = {

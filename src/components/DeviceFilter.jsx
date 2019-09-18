@@ -38,7 +38,6 @@ class DeviceFilter extends React.Component {
             .split(`,`)
             .forEach(f => {
               let match = f.match(new RegExp(`(Inputs|Outputs)(.*)`))
-              console.log(match, this.props)
               if (match !== null) {
                 features[match[1]].push([match[2]])
               }
@@ -52,6 +51,14 @@ class DeviceFilter extends React.Component {
           }
           tmp = tmp.concat(decodeURI(this.props.filter.urlData).split(`,`))
           this.handleTypeChange(null, tmp)
+          break
+
+        case `Availability`:
+          if (this.props.filter.Availability !== undefined) {
+            tmp = [...this.props.filter.Availability]
+          }
+          tmp = tmp.concat(decodeURI(this.props.filter.urlData).split(`,`))
+          this.handleAvailabilityChange(null, tmp)
           break
       }
     }
@@ -143,7 +150,7 @@ class DeviceFilter extends React.Component {
     })
   }
 
-  doTypeFilter = (data, filter) => {
+  doSelectFilter = (data, filter) => {
     if (filter[filter.field].length === 0) {
       return true
     }
@@ -155,7 +162,6 @@ class DeviceFilter extends React.Component {
     if (this.props.filter.Type !== undefined) {
       types = [...this.props.filter.Type]
     }
-    console.log(type, Array.isArray(type))
     if (Array.isArray(type)) {
       types = types.concat(type)
     } else {
@@ -170,8 +176,32 @@ class DeviceFilter extends React.Component {
     this.props.onChange(this.props.ident, {
       field: this.props.filter.field,
       Type: types,
-      filterData: this.doTypeFilter,
+      filterData: this.doSelectFilter,
       toUrl: () => encodeURI(types.join(`,`)),
+    })
+  }
+
+  handleAvailabilityChange = (event, availability) => {
+    let data = []
+    if (this.props.filter.Availability !== undefined) {
+      data = [...this.props.filter.Availability]
+    }
+    if (Array.isArray(availability)) {
+      data = data.concat(availability)
+    } else {
+      let pos = data.indexOf(availability)
+      if (pos === -1) {
+        data.push(availability)
+      } else {
+        data.splice(pos, 1)
+      }
+    }
+
+    this.props.onChange(this.props.ident, {
+      field: this.props.filter.field,
+      Availability: data,
+      filterData: this.doSelectFilter,
+      toUrl: () => encodeURI(data.join(`,`)),
     })
   }
 
@@ -264,7 +294,7 @@ class DeviceFilter extends React.Component {
             </NavDropdown>
           )}
           {this.props.filter.field === `Type` && (
-            <NavDropdown title="FormFactors" id="nav-out-dropdown">
+            <NavDropdown title="Form Factors" id="nav-out-dropdown">
               {this.props.filterData.Type !== undefined &&
                 this.props.filterData.Type.map((type, i) => (
                   <NavDropdown.Item
@@ -280,6 +310,27 @@ class DeviceFilter extends React.Component {
                         />
                       )}
                     {type}
+                  </NavDropdown.Item>
+                ))}
+            </NavDropdown>
+          )}
+          {this.props.filter.field === `Availability` && (
+            <NavDropdown title="Options" id="nav-out-dropdown">
+              {this.props.filterData.Availability !== undefined &&
+                this.props.filterData.Availability.map((a, i) => (
+                  <NavDropdown.Item
+                    key={i}
+                    onClick={e => this.handleAvailabilityChange(e, a)}
+                  >
+                    {this.props.filter.Availability !== undefined &&
+                      this.props.filter.Availability.includes(a) && (
+                        <span
+                          className="oi oi-check"
+                          title="icon check"
+                          aria-hidden="true"
+                        />
+                      )}
+                    {a}
                   </NavDropdown.Item>
                 ))}
             </NavDropdown>
