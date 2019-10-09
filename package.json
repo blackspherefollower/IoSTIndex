@@ -23,7 +23,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "gatsby": "^2.15.32",
     "gatsby-plugin-modal-routing": "^1.0.2",
-    "gatsby-source-filesystem": "^2.1.30",
+    "gatsby-source-filesystem": "^2.1.31",
     "gatsby-source-graphql": "^2.1.18",
     "gatsby-transformer-csv": "^2.1.11",
     "gatsby-transformer-remark": "^2.6.27",
