@@ -26,7 +26,7 @@
     "gatsby-source-filesystem": "^2.1.31",
     "gatsby-source-graphql": "^2.1.18",
     "gatsby-transformer-csv": "^2.1.12",
-    "gatsby-transformer-remark": "^2.6.28",
+    "gatsby-transformer-remark": "^2.6.29",
     "open-iconic": "^1.1.1",
     "react": "^16.10.2",
     "react-apollo": "^3.1.2",
