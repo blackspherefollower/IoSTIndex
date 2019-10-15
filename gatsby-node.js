@@ -91,6 +91,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     return
   }
 
+  let imgPromises = []
   const devices = []
   result2.data.allDevicesCsv.edges.forEach((dev, i) => {
     dev = dev.node
@@ -169,6 +170,69 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     })
 
     devices.push(dev)
+  })
+
+  for (let dev of devices) {
+    let brand = dev.Brand.replace(/[/|]/, `_`)
+    let device = dev.Device.replace(/[/|]/, `_`)
+    if (!fs.existsSync(`src/data/devices/${brand}`)) {
+      fs.mkdirSync(`src/data/devices/${brand}`)
+    }
+    if (!fs.existsSync(`src/data/devices/${brand}/${device}`)) {
+      fs.mkdirSync(`src/data/devices/${brand}/${device}`)
+    }
+
+    let images = await graphql(`
+    query {
+      allFile(filter: {relativeDirectory: {eq: "devices/${brand}/${device}"}, extension: {in: ["jpg","jpeg","png","gif"]}}) {
+        edges {
+          node {
+            relativePath
+          }
+        }
+      }
+    }`)
+    dev.images = images.data.allFile.edges.map(e => e.node.relativePath)
+    if (dev.images == null) {
+      dev.images = []
+    }
+
+    if (dev.images.length === 0) {
+      return
+    }
+
+    // I wish I had a better way to do this... Publish to public
+
+    if (!fs.existsSync(`public/devices`)) {
+      fs.mkdirSync(`public/devices`)
+    }
+    if (!fs.existsSync(`public/devices/${brand}`)) {
+      fs.mkdirSync(`public/devices/${brand}`)
+    }
+    if (!fs.existsSync(`public/devices/${brand}/${device}`)) {
+      fs.mkdirSync(`public/devices/${brand}/${device}`)
+    }
+    dev.images.forEach(img =>
+      fs.copyFileSync(`src/data/${img}`, `public/${img}`, err => {
+        if (err) {
+          console.error(err)
+        }
+      })
+    )
+  }
+
+  devices.sort((a, b) => {
+    let res = a.Brand.localeCompare(b.Brand, `en`, {
+      sensitivity: `base`,
+      caseFirst: false,
+    })
+    if (res === 0) {
+      res = a.Device.localeCompare(b.Device, `en`, {
+        sensitivity: `base`,
+        caseFirst: false,
+      })
+    }
+    return res
   })
 
   const rawJson = JSON.stringify(devices)

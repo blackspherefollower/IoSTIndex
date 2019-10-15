@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css"
 import "open-iconic/font/css/open-iconic-bootstrap.css"
 import React from "react"
-import { Navbar, Col, Container, Row, Table } from "react-bootstrap"
+import { Navbar, Col, Container, Row, Table, Image } from "react-bootstrap"
 import BootstrapTable from "react-bootstrap-table-next"
 import filterFactory, {
   multiSelectFilter,
@@ -182,6 +182,13 @@ class IndexComponent extends React.Component {
             </Col>
           </Row>
           <Row>
+            {row.images.map((img, i) => (
+              <Col key={i}>
+                <Image src={img} rounded />
+              </Col>
+            ))}
+          </Row>
+          <Row>
             <Col>
               <Table>
                 <thead>
@@ -243,11 +250,17 @@ class IndexComponent extends React.Component {
     let result
     if (sortOrder === `asc`) {
       result = this.state.devices.sort((a, b) =>
-        a[sortField].localeCompare(b[sortField], `en`, { sensitivity: `base` })
+        a[sortField].localeCompare(b[sortField], `en`, {
+          sensitivity: `base`,
+          caseFirst: false,
+        })
       )
     } else {
       result = this.state.devices.sort((a, b) =>
-        b[sortField].localeCompare(a[sortField], `en`, { sensitivity: `base` })
+        b[sortField].localeCompare(a[sortField], `en`, {
+          sensitivity: `base`,
+          caseFirst: false,
+        })
       )
     }
     this.setState({ devices: result })
