@@ -1,8 +1,11 @@
+/* @jsx glam */
+// eslint-disable-next-line no-unused-vars
+import glam from "glam"
 import "bootstrap/dist/css/bootstrap.css"
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css"
 import "open-iconic/font/css/open-iconic-bootstrap.css"
-import React from "react"
-import { Navbar, Col, Container, Row, Table, Image } from "react-bootstrap"
+import React, { Fragment } from "react"
+import { Navbar, Col, Container, Row, Table } from "react-bootstrap"
 import BootstrapTable from "react-bootstrap-table-next"
 import filterFactory, {
   multiSelectFilter,
@@ -10,6 +13,7 @@ import filterFactory, {
 } from "react-bootstrap-table2-filter"
 import { Link } from "gatsby-plugin-modal-routing"
 import NavLink from "react-bootstrap/NavLink"
+import Carousel, { Modal, ModalGateway } from "react-images"
 import axios from "axios"
 import DeviceFilter from "../components/DeviceFilter"
 
@@ -84,10 +88,10 @@ const columns = [
 
 const reactUrlStateOptions = {
   fromIdResolvers: async (param, value, oldState) => {
-    let newState = { ...oldState }
-    let found = param.match(/filter(\d+)([A-Za-z].+)/)
+    const newState = { ...oldState }
+    const found = param.match(/filter(\d+)([A-Za-z].+)/)
     if (found !== null) {
-      let fId = parseInt(found[1], 10)
+      const fId = parseInt(found[1], 10)
       if (newState.filters === undefined) {
         newState.filters = new Array(fId + 1)
       } else {
@@ -116,17 +120,127 @@ const reactUrlStateOptions = {
   pathname: `/`,
 }
 
+export class DetailBox extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { currentModal: null }
+  }
+
+  toggleModal(index = null) {
+    this.setState({ currentModal: index })
+  }
+
+  render() {
+    return (
+      <Fragment>
+        <Container>
+          <Row>
+            <Col>
+              <h1>
+                {this.props.device.Brand} - {this.props.device.Device}
+              </h1>
+              <span>{this.props.device.Notes}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Gallery>
+              {this.props.device.images.map((img, i) => (
+                <Image onClick={() => this.toggleModal(i)} key={i}>
+                  <img
+                    src={img}
+                    css={{
+                      cursor: `pointer`,
+                      position: `absolute`,
+                      maxWidth: `100%`,
+                    }}
+                  />
+                </Image>
+              ))}
+            </Gallery>
+            {Number.isInteger(this.state.currentModal) && (
+              <ModalGateway>
+                <Modal
+                  allowFullscreen={false}
+                  closeOnBackdropClick={false}
+                  onClose={() => this.toggleModal()}
+                >
+                  <Carousel
+                    currentIndex={this.state.currentModal}
+                    frameProps={{ autoSize: `height` }}
+                    views={this.props.device.images.map(img => {
+                      return { src: img }
+                    })}
+                  />
+                </Modal>
+              </ModalGateway>
+            )}
+          </Row>
+          <Row>
+            <Col>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Input</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(this.props.device.Features.Inputs).map(
+                    (feat, i) => (
+                      <tr key={i}>
+                        <td>{feat}</td>
+                        <td>{this.props.device.Features.Inputs[feat]}</td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </Table>
+            </Col>
+            <Col>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Output</th>
+                    <th>Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(this.props.device.Features.Outputs).map(
+                    (feat, i) => (
+                      <tr key={i}>
+                        <td>{feat}</td>
+                        <td>{this.props.device.Features.Outputs[feat]}</td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+        </Container>
+      </Fragment>
+    )
+  }
+}
+
 class IndexComponent extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { devices: [], data: [], filters: [], filterData: {} }
+    this.state = {
+      devices: [],
+      data: [],
+      filters: [],
+      filterData: {},
+    }
     this.handleFilterRemove = this.handleFilterRemove.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
+    this.handleTableChange = this.handleTableChange.bind(this)
+    this.addFilter = this.addFilter.bind(this)
   }
 
   componentDidMount() {
     axios.get(`/devices.json`).then(res => {
-      let filterData = { Features: { Inputs: [], Outputs: [] } }
+      const filterData = { Features: { Inputs: [], Outputs: [] } }
       if (res.data.length > 0) {
         filterData.Features.Inputs = Object.getOwnPropertyNames(
           res.data[0].Features.Inputs
@@ -135,7 +249,7 @@ class IndexComponent extends React.Component {
           res.data[0].Features.Outputs
         )
       }
-      let fields = [`Availability`, `Connection`, `Type`]
+      const fields = [`Availability`, `Connection`, `Type`]
       res.data.forEach(d => {
         fields.forEach(f => {
           if (filterData[f] === undefined) {
@@ -170,57 +284,7 @@ class IndexComponent extends React.Component {
   }
 
   expandRow = {
-    renderer: row => (
-      <div style={{ width: `100%` }}>
-        <Container>
-          <Row>
-            <Col>
-              <h1>
-                {row.Brand} - {row.Device}
-              </h1>
-              <span>{row.Notes}</span>
-            </Col>
-          </Row>
-          <Row>
-            {row.images.map((img, i) => (
-              <Col key={i}>
-                <Image src={img} rounded />
-              </Col>
-            ))}
-          </Row>
-          <Row>
-            <Col>
-              <Table>
-                <thead>
-                  <td>Input</td>
-                  <td>Count</td>
-                </thead>
-                {Object.keys(row.Features.Inputs).map((feat, i) => (
-                  <tr key={i}>
-                    <td>{feat}</td>
-                    <td>{row.Features.Inputs[feat]}</td>
-                  </tr>
-                ))}
-              </Table>
-            </Col>
-            <Col>
-              <Table>
-                <thead>
-                  <td>Output</td>
-                  <td>Count</td>
-                </thead>
-                {Object.keys(row.Features.Outputs).map((feat, i) => (
-                  <tr key={i}>
-                    <td>{feat}</td>
-                    <td>{row.Features.Outputs[feat]}</td>
-                  </tr>
-                ))}
-              </Table>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    ),
+    renderer: row => <DetailBox device={row} />,
     showExpandColumn: true,
     expandByColumnOnly: true,
     expandHeaderColumnRenderer: ({ isAnyExpands }) => {
@@ -245,7 +309,7 @@ class IndexComponent extends React.Component {
     },
   }
 
-  handleTableChange = (type, { sortField, sortOrder }) => {
+  handleTableChange(type, { sortField, sortOrder }) {
     if (!sortOrder || !sortOrder) return
     let result
     if (sortOrder === `asc`) {
@@ -281,15 +345,15 @@ class IndexComponent extends React.Component {
     }
     let data = this.state.devices
     filters.forEach(f => {
-      if (f.hasOwnProperty(`filterData`)) {
+      if (f.filterData !== undefined) {
         data = data.filter(d => f.filterData(d, f))
       }
     })
     this.reactUrlState.setUrlState({ data, filters })
   }
 
-  addFilter = () => {
-    let filters = this.state.filters
+  addFilter() {
+    const filters = this.state.filters
     filters.push({})
     this.setState({ filters })
   }
@@ -351,3 +415,37 @@ class IndexComponent extends React.Component {
 }
 
 export default IndexComponent
+
+const gutter = 2
+
+const Gallery = props => (
+  <div
+    css={{
+      overflow: `hidden`,
+      marginLeft: -gutter,
+      marginRight: -gutter,
+      flex: `auto`,
+    }}
+    {...props}
+  />
+)
+
+const Image = props => (
+  <div
+    css={{
+      backgroundColor: `#eee`,
+      boxSizing: `border-box`,
+      display: `inline-block`,
+      margin: gutter,
+      overflow: `hidden`,
+      paddingBottom: `15%`,
+      position: `relative`,
+      width: `calc(25% - ${gutter * 2}px)`,
+
+      ":hover": {
+        opacity: 0.9,
+      },
+    }}
+    {...props}
+  />
+)
