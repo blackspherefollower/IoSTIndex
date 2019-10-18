@@ -183,7 +183,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
 
     let images = await graphql(`
     query {
-      allFile(filter: {relativeDirectory: {eq: "devices/${brand}/${device}"}, extension: {in: ["jpg","jpeg","png","gif","jiff"]}}) {
+      allFile(filter: {relativeDirectory: {eq: "devices/${brand}/${device}"}, extension: {in: ["jpg","jpeg","png","gif","jfif"]}}) {
         edges {
           node {
             relativePath
