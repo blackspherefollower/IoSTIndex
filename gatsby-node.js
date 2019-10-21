@@ -172,8 +172,8 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   })
 
   for (let dev of devices) {
-    let brand = dev.Brand.replace(/[/|]/, `_`)
-    let device = dev.Device.replace(/[/|]/, `_`)
+    let brand = dev.Brand.replace(/[/|:]/, `_`)
+    let device = dev.Device.replace(/[/|:]/, `_`)
     if (!fs.existsSync(`src/data/devices/${brand}`)) {
       fs.mkdirSync(`src/data/devices/${brand}`)
     }
