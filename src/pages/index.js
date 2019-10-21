@@ -19,10 +19,6 @@ import DeviceFilter from "../components/DeviceFilter"
 
 import { initializeReactUrlState } from "react-url-state"
 
-function urlFormatter(cell) {
-  return <>{cell.length > 0 && <a href={cell}>{cell}</a>}</>
-}
-
 const connectionOptions = {
   BT: `Bluetooth (Any)`,
   "BT2 (Serial)": `Bluetooth (Serial)`,
@@ -38,6 +34,20 @@ const columns = [
     dataField: `id`,
     text: `ID`,
     hidden: true,
+  },
+  {
+    dataField: `images`,
+    text: `Image`,
+    formatter: (cellContent, row) => (
+      <div>
+        {row.images && row.images.length > 0 && (
+          <img
+            src={row.images[0]}
+            css={{ "object-fit": `cover`, width: `50px`, height: `50px` }}
+          />
+        )}
+      </div>
+    ),
   },
   {
     dataField: `Brand`,
@@ -82,7 +92,11 @@ const columns = [
   {
     dataField: `Detail`,
     text: `Url`,
-    formatter: urlFormatter,
+    formatter: (cellContent, row) => (
+      <div>
+        {cellContent.length > 0 && <a href={cellContent}>{cellContent}</a>}
+      </div>
+    ),
   },
 ]
 
