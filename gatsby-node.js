@@ -171,9 +171,9 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     devices.push(dev)
   })
 
-  for (let dev of devices) {
-    let brand = dev.Brand.replace(/[/|:]/, `_`)
-    let device = dev.Device.replace(/[/|:]/, `_`)
+  for (const dev of devices) {
+    const brand = dev.Brand.replace(/[/|:]/, `_`)
+    const device = dev.Device.replace(/[/|:]/, `_`)
     if (!fs.existsSync(`src/data/devices/${brand}`)) {
       fs.mkdirSync(`src/data/devices/${brand}`)
     }
@@ -181,7 +181,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       fs.mkdirSync(`src/data/devices/${brand}/${device}`)
     }
 
-    let images = await graphql(`
+    const images = await graphql(`
     query {
       allFile(filter: {relativeDirectory: {eq: "devices/${brand}/${device}"}, extension: {in: ["jpg","jpeg","png","gif","jfif"]}}) {
         edges {

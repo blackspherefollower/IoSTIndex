@@ -67,10 +67,6 @@ const columns = [
   {
     dataField: `Connection`,
     text: `Connectivity`,
-    filter: multiSelectFilter({
-      options: connectionOptions,
-      comparator: Comparator.LIKE,
-    }),
     sort: true,
   },
   {
@@ -263,7 +259,7 @@ class IndexComponent extends React.Component {
           res.data[0].Features.Outputs
         )
       }
-      const fields = [`Availability`, `Connection`, `Type`]
+      const fields = [`Availability`, `Type`]
       res.data.forEach(d => {
         fields.forEach(f => {
           if (filterData[f] === undefined) {

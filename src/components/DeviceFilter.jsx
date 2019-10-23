@@ -6,10 +6,18 @@ class DeviceFilter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
+
+    this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this)
+    this.handleBpChange = this.handleBpChange.bind(this)
+    this.handleFeatureChange = this.handleFeatureChange.bind(this)
+    this.handleFieldChange = this.handleFieldChange.bind(this)
+    this.handleSearchChange = this.handleSearchChange.bind(this)
+    this.handleTypeChange = this.handleTypeChange.bind(this)
+    this.handleConnectionChange = this.handleConnectionChange.bind(this)
   }
 
   componentDidMount() {
-    let features = { Inputs: [], Outputs: [] }
+    const features = { Inputs: [], Outputs: [] }
     let tmp = []
     if (this.props.filter.urlData !== undefined) {
       switch (this.props.filter.field) {
@@ -37,7 +45,7 @@ class DeviceFilter extends React.Component {
           decodeURI(this.props.filter.urlData)
             .split(`,`)
             .forEach(f => {
-              let match = f.match(new RegExp(`(Inputs|Outputs)(.*)`))
+              const match = f.match(new RegExp(`(Inputs|Outputs)(.*)`))
               if (match !== null) {
                 features[match[1]].push([match[2]])
               }
@@ -60,18 +68,26 @@ class DeviceFilter extends React.Component {
           tmp = tmp.concat(decodeURI(this.props.filter.urlData).split(`,`))
           this.handleAvailabilityChange(null, tmp)
           break
+
+        case `Connection`:
+          if (this.props.filter.Connection !== undefined) {
+            tmp = [...this.props.filter.Connection]
+          }
+          tmp = tmp.concat(decodeURI(this.props.filter.urlData).split(`,`))
+          this.handleConnectionChange(null, tmp)
+          break
       }
     }
   }
 
-  handleFieldChange = event => {
+  handleFieldChange(event) {
     this.props.onChange(this.props.ident, { field: event.target.value })
   }
 
   doTextFilter = (data, filter) =>
     data[filter.field].match(new RegExp(filter.search, `i`)) !== null
 
-  handleSearchChange = event => {
+  handleSearchChange(event) {
     this.props.onChange(this.props.ident, {
       field: this.props.filter.field,
       search: event.target.value,
@@ -83,7 +99,7 @@ class DeviceFilter extends React.Component {
   doBpFilter = (data, filter) =>
     (data.Buttplug.ButtplugSupport & filter.bpSupport) !== 0
 
-  handleBpChange = (event, mode) => {
+  handleBpChange(event, mode) {
     this.props.onChange(this.props.ident, {
       field: this.props.filter.field,
       bpSupport:
@@ -95,7 +111,7 @@ class DeviceFilter extends React.Component {
   }
 
   doFeatureFilter = (data, filter) => {
-    for (let i of filter.features.Inputs) {
+    for (const i of filter.features.Inputs) {
       if (
         data.Features.Inputs[i] === undefined ||
         data.Features.Inputs[i] === null ||
@@ -106,7 +122,7 @@ class DeviceFilter extends React.Component {
         return false
       }
     }
-    for (let i of filter.features.Outputs) {
+    for (const i of filter.features.Outputs) {
       if (
         data.Features.Outputs[i] === undefined ||
         data.Features.Outputs[i] === null ||
@@ -120,7 +136,7 @@ class DeviceFilter extends React.Component {
     return true
   }
 
-  handleFeatureChange = (event, type, feature) => {
+  handleFeatureChange(event, type, feature) {
     let features = { Inputs: [], Outputs: [] }
     if (this.props.filter.features !== undefined) {
       features.Inputs = [...this.props.filter.features.Inputs]
@@ -129,7 +145,7 @@ class DeviceFilter extends React.Component {
     if (type === `preset`) {
       features = feature
     } else {
-      let pos = features[type].indexOf(feature)
+      const pos = features[type].indexOf(feature)
       if (pos === -1) {
         features[type].push(feature)
       } else {
@@ -142,7 +158,7 @@ class DeviceFilter extends React.Component {
       features: features,
       filterData: this.doFeatureFilter,
       toUrl: () => {
-        let data = []
+        const data = []
         data.push(features.Inputs.map(i => `Inputs${i}`))
         data.push(features.Outputs.map(o => `Outputs${o}`))
         return encodeURI(data.flat().join(`,`))
@@ -157,7 +173,7 @@ class DeviceFilter extends React.Component {
     return filter[filter.field].includes(data[filter.field])
   }
 
-  handleTypeChange = (event, type) => {
+  handleTypeChange(event, type) {
     let types = []
     if (this.props.filter.Type !== undefined) {
       types = [...this.props.filter.Type]
@@ -165,7 +181,7 @@ class DeviceFilter extends React.Component {
     if (Array.isArray(type)) {
       types = types.concat(type)
     } else {
-      let pos = types.indexOf(type)
+      const pos = types.indexOf(type)
       if (pos === -1) {
         types.push(type)
       } else {
@@ -181,7 +197,7 @@ class DeviceFilter extends React.Component {
     })
   }
 
-  handleAvailabilityChange = (event, availability) => {
+  handleAvailabilityChange(event, availability) {
     let data = []
     if (this.props.filter.Availability !== undefined) {
       data = [...this.props.filter.Availability]
@@ -189,7 +205,7 @@ class DeviceFilter extends React.Component {
     if (Array.isArray(availability)) {
       data = data.concat(availability)
     } else {
-      let pos = data.indexOf(availability)
+      const pos = data.indexOf(availability)
       if (pos === -1) {
         data.push(availability)
       } else {
@@ -201,6 +217,63 @@ class DeviceFilter extends React.Component {
       field: this.props.filter.field,
       Availability: data,
       filterData: this.doSelectFilter,
+      toUrl: () => encodeURI(data.join(`,`)),
+    })
+  }
+
+  doConnectFilter = (data, filter) => {
+    if (filter[filter.field].length === 0) {
+      return true
+    }
+    if (
+      filter[filter.field].includes(`Bluetooth 2`) &&
+      data[filter.field].includes(`BT2`)
+    ) {
+      return true
+    }
+    if (
+      filter[filter.field].includes(`Bluetooth 4 LE`) &&
+      data[filter.field].includes(`BT4LE`)
+    ) {
+      return true
+    }
+    if (
+      filter[filter.field].includes(`USB`) &&
+      data[filter.field].includes(`USB`)
+    ) {
+      return true
+    }
+    if (filter[filter.field].includes(`Other`)) {
+      const bits = data[filter.field].split(`,`)
+      return (
+        bits.filter(
+          v => !v.includes(`USB`) && !v.includes(`BT2`) && !v.includes(`BT4LE`)
+        ).length > 0
+      )
+    }
+    return false
+  }
+
+  handleConnectionChange(event, connection) {
+    let data = []
+    if (this.props.filter.Connection !== undefined) {
+      data = [...this.props.filter.Connection]
+    }
+    if (Array.isArray(connection)) {
+      data = data.concat(connection)
+    } else {
+      const pos = data.indexOf(connection)
+      if (pos === -1) {
+        data.push(connection)
+      } else {
+        data.splice(pos, 1)
+      }
+    }
+
+    this.props.onChange(this.props.ident, {
+      field: this.props.filter.field,
+      Connection: data,
+      filterData: this.doConnectFilter,
       toUrl: () => encodeURI(data.join(`,`)),
     })
   }
@@ -333,6 +406,26 @@ class DeviceFilter extends React.Component {
                     {a}
                   </NavDropdown.Item>
                 ))}
+            </NavDropdown>
+          )}
+          {this.props.filter.field === `Connection` && (
+            <NavDropdown title="Options" id="nav-out-dropdown">
+              {[`Bluetooth 2`, `Bluetooth 4 LE`, `USB`, `Other`].map((a, i) => (
+                <NavDropdown.Item
+                  key={i}
+                  onClick={e => this.handleConnectionChange(e, a)}
+                >
+                  {this.props.filter.Connection !== undefined &&
+                    this.props.filter.Connection.includes(a) && (
+                      <span
+                        className="oi oi-check"
+                        title="icon check"
+                        aria-hidden="true"
+                      />
+                    )}
+                  {a}
+                </NavDropdown.Item>
+              ))}
             </NavDropdown>
           )}
           <NavLink onClick={() => this.props.onRemove(this.props.ident)}>
