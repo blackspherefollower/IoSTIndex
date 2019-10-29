@@ -1,11 +1,20 @@
 const path = require(`path`)
 const fs = require(`fs`)
 
+function encode(string) {
+  return encodeURIComponent(string)
+    .replace(/%20/g, ` `)
+    .replace(/%2F/g, `_`)
+}
+
 exports.createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions
 
   const modalMarkdownTemplate = path.resolve(
     `src/templates/modalMarkdownTemplate.js`
+  )
+  const deviceDetailTemplate = path.resolve(
+    `src/templates/deviceDetailTemplate.js`
   )
 
   const result = await graphql(`
@@ -172,8 +181,8 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   })
 
   for (const dev of devices) {
-    const brand = dev.Brand.replace(/[/|:]/, `_`)
-    const device = dev.Device.replace(/[/|:]/, `_`)
+    const brand = encode(dev.Brand)
+    const device = encode(dev.Device)
     if (!fs.existsSync(`src/data/devices/${brand}`)) {
       fs.mkdirSync(`src/data/devices/${brand}`)
     }
@@ -191,7 +200,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
         }
       }
     }`)
-    dev.images = images.data.allFile.edges.map(e => e.node.relativePath)
+    dev.images = images.data.allFile.edges.map(e => `/` + e.node.relativePath)
     if (dev.images == null) {
       dev.images = []
     }
@@ -270,4 +279,13 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       err
     )
   })
+
+  // Per-device detail pages
+  for (const dev of devices) {
+    createPage({
+      path: `/devices/` + encode(dev.Brand) + `/` + encode(dev.Device),
+      component: deviceDetailTemplate,
+      context: { device: dev }, // additional data can be passed via context
+    })
+  }
 }
