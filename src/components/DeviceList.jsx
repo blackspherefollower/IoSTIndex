@@ -109,7 +109,7 @@ function EnhancedTableHead() {
 
 const useStyles = makeStyles(theme => {
   return {
-    root: {
+    devList: {
       width: `100%`,
       marginTop: theme.spacing(3),
     },
@@ -143,7 +143,7 @@ export default function DeviceList(props) {
   const data = props.data
 
   return (
-    <div className={classes.root}>
+    <div className={classes.devList}>
       <div className={classes.tableWrapper}>
         <Table className={classes.table} aria-label="device table">
           <EnhancedTableHead />
