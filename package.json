@@ -24,7 +24,7 @@
     "gatsby": "^2.17.4",
     "gatsby-plugin-modal-routing": "^1.0.2",
     "gatsby-source-filesystem": "^2.1.33",
-    "gatsby-source-graphql": "^2.1.20",
+    "gatsby-source-graphql": "^2.1.21",
     "gatsby-transformer-csv": "^2.1.14",
     "gatsby-transformer-remark": "^2.6.30",
     "glam": "^5.0.1",
