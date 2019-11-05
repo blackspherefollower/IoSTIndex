@@ -1,14 +1,12 @@
-import "bootstrap/dist/css/bootstrap.css"
-import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css"
-import "open-iconic/font/css/open-iconic-bootstrap.css"
 import React from "react"
-import { Navbar } from "react-bootstrap"
-import NavLink from "react-bootstrap/NavLink"
 import axios from "axios"
 import DeviceFilter from "../components/DeviceFilter"
 import DeviceList from "../components/DeviceList"
-
 import { initializeReactUrlState } from "react-url-state"
+import * as localforage from "localforage"
+import * as moment from "moment"
+import Fab from "@material-ui/core/Fab"
+import FilterListIcon from "@material-ui/icons/FilterList"
 
 const reactUrlStateOptions = {
   fromIdResolvers: async (param, value, oldState) => {
@@ -60,37 +58,67 @@ class IndexComponent extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`/devices.json`).then(res => {
-      const filterData = { Features: { Inputs: [], Outputs: [] } }
-      if (res.data.length > 0) {
-        filterData.Features.Inputs = Object.getOwnPropertyNames(
-          res.data[0].Features.Inputs
-        )
-        filterData.Features.Outputs = Object.getOwnPropertyNames(
-          res.data[0].Features.Outputs
-        )
-      }
-      const fields = [`Availability`, `Type`]
-      res.data.forEach(d => {
-        fields.forEach(f => {
-          if (filterData[f] === undefined) {
-            filterData[f] = []
-          }
-          if (!filterData[f].includes(d[f])) {
-            filterData[f].push(d[f])
-          }
+    let devDate = null
+    let devices = null
+    localforage
+      .getItem(`devices`)
+      .then(value => {
+        devices = value
+        return localforage.getItem(`devicesDate`)
+      })
+      .then(dateValue => (devDate = moment(dateValue)))
+      .then(() => {
+        console.info(devDate, moment())
+        if (
+          devices === null ||
+          devDate === null ||
+          moment()
+            .subtract(30, `m`)
+            .isAfter(devDate)
+        ) {
+          return axios.get(`/devices.json`)
+        }
+        return null
+      })
+      .then(res => {
+        if (res != null) {
+          devices = res.data
+          localforage
+            .setItem(`devices`, devices)
+            .then(() => localforage.setItem(`devicesDate`, moment().valueOf()))
+            .catch(err => console.error(err))
+        }
+
+        const filterData = { Features: { Inputs: [], Outputs: [] } }
+        if (devices.length > 0) {
+          filterData.Features.Inputs = Object.getOwnPropertyNames(
+            devices[0].Features.Inputs
+          )
+          filterData.Features.Outputs = Object.getOwnPropertyNames(
+            devices[0].Features.Outputs
+          )
+        }
+        const fields = [`Availability`, `Type`]
+        devices.forEach(d => {
+          fields.forEach(f => {
+            if (filterData[f] === undefined) {
+              filterData[f] = []
+            }
+            if (!filterData[f].includes(d[f])) {
+              filterData[f].push(d[f])
+            }
+          })
         })
+        fields.forEach(f => {
+          filterData[f].sort()
+        })
+        this.setState({
+          devices,
+          data: devices,
+          filterData,
+        })
+        this.handleFilterChange()
       })
-      fields.forEach(f => {
-        filterData[f].sort()
-      })
-      this.setState({
-        devices: res.data,
-        data: res.data,
-        filterData,
-      })
-      this.handleFilterChange()
-    })
 
     this.reactUrlState = initializeReactUrlState(this)(
       reactUrlStateOptions,
@@ -170,13 +198,16 @@ class IndexComponent extends React.Component {
 
     return (
       <div>
-        <Navbar>
-          <Navbar.Collapse id="left-navbar-nav">
-            <NavLink variant="dark" onClick={this.addFilter}>
-              Add Filter
-            </NavLink>
-          </Navbar.Collapse>
-        </Navbar>
+        <Fab
+          variant="extended"
+          color="primary"
+          size="medium"
+          style={{ margin: `8px` }}
+          onClick={this.addFilter}
+        >
+          <FilterListIcon />
+          Add Filter
+        </Fab>
         {filterNavs}
         <DeviceList data={this.state.data} />
       </div>

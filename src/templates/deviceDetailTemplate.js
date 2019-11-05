@@ -1,10 +1,18 @@
-import React, { Fragment, useState } from "react"
-import { Col, Container, Row, Table } from "react-bootstrap"
+import React, { useState } from "react"
 import Carousel, { Modal, ModalGateway } from "react-images"
-import { makeStyles } from "@material-ui/core"
+import { makeStyles, TableBody } from "@material-ui/core"
+import TableCell from "@material-ui/core/TableCell"
+import TableRow from "@material-ui/core/TableRow"
+import TableHead from "@material-ui/core/TableHead"
+import Grid from "@material-ui/core/Grid"
+import Table from "@material-ui/core/Table"
 
 const useStyles = makeStyles(() => {
   return {
+    page: {
+      margin: `50px`,
+      flexGrow: 1,
+    },
     gallery: {
       overflow: `hidden`,
       marginLeft: -2,
@@ -28,6 +36,10 @@ const useStyles = makeStyles(() => {
         position: `absolute`,
         maxWidth: `100%`,
       },
+    },
+    table: {
+      minWidth: 200,
+      width: `100%`,
     },
   }
 })
@@ -53,17 +65,15 @@ export default function Template({ pageContext }) {
   const [currentModal, setCurrentModal] = useState(false)
 
   return (
-    <Fragment>
-      <Container>
-        <Row>
-          <Col>
-            <h1>
-              {device.Brand} - {device.Device}
-            </h1>
-            <span>{device.Notes}</span>
-          </Col>
-        </Row>
-        <Row>
+    <div className={classes.page}>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <h1>
+            {device.Brand} - {device.Device}
+          </h1>
+          <span>{device.Notes}</span>
+        </Grid>
+        <Grid item xs={12}>
           <Gallery classes={classes}>
             {device.images.map((img, i) => (
               <Image
@@ -97,47 +107,46 @@ export default function Template({ pageContext }) {
               </Modal>
             </ModalGateway>
           )}
-        </Row>
-        <Row>
-          <Col>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Input</th>
-                  <th>Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(device.Features.Inputs).map((feat, i) => (
-                  <tr key={i}>
-                    <td>{feat}</td>
-                    <td>{device.Features.Inputs[feat]}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-          <Col>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Output</th>
-                  <th>Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(device.Features.Outputs).map((feat, i) => (
-                  <tr key={i}>
-                    <td>{feat}</td>
-                    <td>{device.Features.Outputs[feat]}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
-      </Container>
-    </Fragment>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Input</TableCell>
+                <TableCell>Count</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Object.keys(device.Features.Inputs).map((feat, i) => (
+                <TableRow key={i}>
+                  <TableCell>{feat}</TableCell>
+                  <TableCell>{device.Features.Inputs[feat]}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Grid>
+        <Grid item xs={6}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Output</TableCell>
+                <TableCell>Count</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Object.keys(device.Features.Outputs).map((feat, i) => (
+                <TableRow key={i}>
+                  <TableCell>{feat}</TableCell>
+                  <TableCell>{device.Features.Outputs[feat]}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Grid>
+      </Grid>
+    </div>
   )
 }
 

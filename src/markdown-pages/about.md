@@ -5,7 +5,7 @@ title: "About the Internet of Sex Tech Index"
 
 ## Who, What, Why?
 
-Hi there! Welcome to my (@blackspherefollower) curated list of just about every computer controllable sex toy I've been able to find, including some that others have told me about.
+Hi there! Welcome to my ([@blackspherefollower](https://github.com/blackspherefollower/)) curated list of just about every computer controllable sex toy I've been able to find, including some that others have told me about.
 I'm a generally quiet software engineer with a hobby of discovering and documenting the protocols used by sex toys (specifically the kind that are designed to be controlled by some form of computer).
 
 This site is a filterable/searchable list of all the devices I've found reference to online, including as much information as I can find regarding the device's technical attributes. Not all these devices ever made it it production (I've fairly sure a couple are April fools jokes), others have already been discontinued; they're still included here because I'm trying to make this as complete a list as possible.
@@ -28,6 +28,6 @@ There's way more that should be on this list, and I'll add to it over time.
 
 ## 3rd-party stuff
 
-This site is built with [GatsbyJS](https://www.gatsbyjs.org/) (React based) and styled with [react-bootstap](https://react-bootstrap.github.io/), [Open Iconic](https://useiconic.com/open) and [react-bootstrap-table2](https://react-bootstrap-table.github.io/react-bootstrap-table2/)
+This site is built with [ReactJS](https://reactjs.org/) and [GatsbyJS](https://www.gatsbyjs.org/), styled with [Material-UI](https://material-ui.com/) and hosted by [Netlify](https://www.netlify.com/).
 
 The source for the site is available on GitHub, here: [https://github.com/blackspherefollower/IoSTIndex](https://github.com/blackspherefollower/IoSTIndex)

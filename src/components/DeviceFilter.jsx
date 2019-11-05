@@ -1,117 +1,152 @@
 import React from "react"
-import { Form, Navbar, NavDropdown } from "react-bootstrap"
-import NavLink from "react-bootstrap/NavLink"
+import FormControl from "@material-ui/core/FormControl"
+import InputLabel from "@material-ui/core/InputLabel"
+import Select from "@material-ui/core/Select"
+import MenuItem from "@material-ui/core/MenuItem"
+import makeStyles from "@material-ui/core/styles/makeStyles"
+import TextField from "@material-ui/core/TextField"
+import DeleteIcon from "@material-ui/icons/Delete"
+import FormGroup from "@material-ui/core/FormGroup"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
+import Checkbox from "@material-ui/core/Checkbox"
+import Input from "@material-ui/core/Input"
+import ListItemText from "@material-ui/core/ListItemText"
+import IconButton from "@material-ui/core/IconButton"
+import debouncedInput from "./debouncedInput"
 
-class DeviceFilter extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
+const DebouncedTextField = debouncedInput(TextField, { timeout: 200 })
 
-    this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this)
-    this.handleBpChange = this.handleBpChange.bind(this)
-    this.handleFeatureChange = this.handleFeatureChange.bind(this)
-    this.handleFieldChange = this.handleFieldChange.bind(this)
-    this.handleSearchChange = this.handleSearchChange.bind(this)
-    this.handleTypeChange = this.handleTypeChange.bind(this)
-    this.handleConnectionChange = this.handleConnectionChange.bind(this)
+const useStyles = makeStyles(theme => {
+  return {
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 200,
+    },
+    button: {
+      margin: theme.spacing(1),
+    },
   }
+})
 
-  componentDidMount() {
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 8.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+}
+
+export default function DeviceFilter(props) {
+  const classes = useStyles()
+
+  console.log(props)
+
+  React.useEffect(() => {
     const features = { Inputs: [], Outputs: [] }
     let tmp = []
-    if (this.props.filter.urlData !== undefined) {
-      switch (this.props.filter.field) {
+    if (props.filter.urlData !== undefined) {
+      switch (props.filter.field) {
         case `Brand`:
         case `Device`:
-          this.handleSearchChange({
-            target: { value: decodeURI(this.props.filter.urlData) },
+          handleSearchChange({
+            target: { value: decodeURI(props.filter.urlData) },
           })
           break
 
         case `ButtplugSupport`:
-          if (!isNaN(parseInt(this.props.filter.urlData, 10))) {
-            this.handleBpChange(
+          if (!isNaN(parseInt(props.filter.urlData, 10))) {
+            handleBpChange(
               { target: { checked: true } },
-              parseInt(this.props.filter.urlData, 10)
+              parseInt(props.filter.urlData, 10)
             )
           }
           break
 
         case `Features`:
-          if (this.props.filter.features !== undefined) {
-            features.Inputs = [...this.props.filter.features.Inputs]
-            features.Outputs = [...this.props.filter.features.Outputs]
+          if (props.filter.features !== undefined) {
+            features.Inputs = [...props.filter.Features.Inputs]
+            features.Outputs = [...props.filter.Features.Outputs]
           }
-          decodeURI(this.props.filter.urlData)
+          decodeURI(props.filter.urlData)
             .split(`,`)
             .forEach(f => {
               const match = f.match(new RegExp(`(Inputs|Outputs)(.*)`))
               if (match !== null) {
-                features[match[1]].push([match[2]])
+                features[match[1]].push(match[2])
               }
             })
-          this.handleFeatureChange(null, `preset`, features)
+          handleFeatureChange(null, `preset`, features)
           break
 
         case `Type`:
-          if (this.props.filter.Type !== undefined) {
-            tmp = [...this.props.filter.Type]
+          if (props.filter.Type !== undefined) {
+            tmp = [...props.filter.Type]
           }
-          tmp = tmp.concat(decodeURI(this.props.filter.urlData).split(`,`))
-          this.handleTypeChange(null, tmp)
+          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
+          handleTypeChange(null, tmp)
           break
 
         case `Availability`:
-          if (this.props.filter.Availability !== undefined) {
-            tmp = [...this.props.filter.Availability]
+          if (props.filter.Availability !== undefined) {
+            tmp = [...props.filter.Availability]
           }
-          tmp = tmp.concat(decodeURI(this.props.filter.urlData).split(`,`))
-          this.handleAvailabilityChange(null, tmp)
+          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
+          handleAvailabilityChange(null, tmp)
           break
 
         case `Connection`:
-          if (this.props.filter.Connection !== undefined) {
-            tmp = [...this.props.filter.Connection]
+          if (props.filter.Connection !== undefined) {
+            tmp = [...props.filter.Connection]
           }
-          tmp = tmp.concat(decodeURI(this.props.filter.urlData).split(`,`))
-          this.handleConnectionChange(null, tmp)
+          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
+          handleConnectionChange(null, tmp)
           break
       }
     }
+  }, [])
+
+  const handleFieldChange = event => {
+    props.onChange(props.ident, { field: event.target.value })
   }
 
-  handleFieldChange(event) {
-    this.props.onChange(this.props.ident, { field: event.target.value })
-  }
-
-  doTextFilter = (data, filter) =>
+  const doTextFilter = (data, filter) =>
     data[filter.field].match(new RegExp(filter.search, `i`)) !== null
 
-  handleSearchChange(event) {
-    this.props.onChange(this.props.ident, {
-      field: this.props.filter.field,
+  const handleSearchChange = event => {
+    props.onChange(props.ident, {
+      field: props.filter.field,
       search: event.target.value,
-      filterData: this.doTextFilter,
-      toUrl: () => encodeURI(this.props.filter.search),
+      filterData: doTextFilter,
+      toUrl: () => encodeURI(event.target.value),
     })
   }
 
-  doBpFilter = (data, filter) =>
+  const doBpFilter = (data, filter) =>
     (data.Buttplug.ButtplugSupport & filter.bpSupport) !== 0
 
-  handleBpChange(event, mode) {
-    this.props.onChange(this.props.ident, {
-      field: this.props.filter.field,
+  const handleBpChange = (event, mode) => {
+    props.onChange(props.ident, {
+      field: props.filter.field,
       bpSupport:
-        (this.props.filter.bpSupport &= ~mode) |
-        (event.target.checked ? mode : 0),
-      filterData: this.doBpFilter,
-      toUrl: () => this.props.filter.bpSupport,
+        (props.filter.bpSupport &= ~mode) | (event.target.checked ? mode : 0),
+      filterData: doBpFilter,
+      toUrl: () => props.filter.bpSupport,
     })
   }
 
-  doFeatureFilter = (data, filter) => {
-    for (const i of filter.features.Inputs) {
+  const doFeatureFilter = (data, filter) => {
+    for (const i of filter.Features.Inputs) {
       if (
         data.Features.Inputs[i] === undefined ||
         data.Features.Inputs[i] === null ||
@@ -122,7 +157,7 @@ class DeviceFilter extends React.Component {
         return false
       }
     }
-    for (const i of filter.features.Outputs) {
+    for (const i of filter.Features.Outputs) {
       if (
         data.Features.Outputs[i] === undefined ||
         data.Features.Outputs[i] === null ||
@@ -136,27 +171,22 @@ class DeviceFilter extends React.Component {
     return true
   }
 
-  handleFeatureChange(event, type, feature) {
+  const handleFeatureChange = (event, type, feature) => {
     let features = { Inputs: [], Outputs: [] }
-    if (this.props.filter.features !== undefined) {
-      features.Inputs = [...this.props.filter.features.Inputs]
-      features.Outputs = [...this.props.filter.features.Outputs]
-    }
     if (type === `preset`) {
       features = feature
     } else {
-      const pos = features[type].indexOf(feature)
-      if (pos === -1) {
-        features[type].push(feature)
-      } else {
-        features[type].splice(pos, 1)
+      if (props.filter.Features !== undefined) {
+        features.Inputs = [...props.filter.Features.Inputs]
+        features.Outputs = [...props.filter.Features.Outputs]
       }
+      features[type] = event.target.value
     }
 
-    this.props.onChange(this.props.ident, {
-      field: this.props.filter.field,
-      features: features,
-      filterData: this.doFeatureFilter,
+    props.onChange(props.ident, {
+      field: props.filter.field,
+      Features: features,
+      filterData: doFeatureFilter,
       toUrl: () => {
         const data = []
         data.push(features.Inputs.map(i => `Inputs${i}`))
@@ -166,62 +196,46 @@ class DeviceFilter extends React.Component {
     })
   }
 
-  doSelectFilter = (data, filter) => {
+  const doSelectFilter = (data, filter) => {
     if (filter[filter.field].length === 0) {
       return true
     }
     return filter[filter.field].includes(data[filter.field])
   }
 
-  handleTypeChange(event, type) {
+  const handleTypeChange = (event, type) => {
     let types = []
-    if (this.props.filter.Type !== undefined) {
-      types = [...this.props.filter.Type]
-    }
     if (Array.isArray(type)) {
       types = types.concat(type)
     } else {
-      const pos = types.indexOf(type)
-      if (pos === -1) {
-        types.push(type)
-      } else {
-        types.splice(pos, 1)
-      }
+      types = event.target.value
     }
 
-    this.props.onChange(this.props.ident, {
-      field: this.props.filter.field,
+    props.onChange(props.ident, {
+      field: props.filter.field,
       Type: types,
-      filterData: this.doSelectFilter,
+      filterData: doSelectFilter,
       toUrl: () => encodeURI(types.join(`,`)),
     })
   }
 
-  handleAvailabilityChange(event, availability) {
+  const handleAvailabilityChange = (event, availability) => {
     let data = []
-    if (this.props.filter.Availability !== undefined) {
-      data = [...this.props.filter.Availability]
-    }
     if (Array.isArray(availability)) {
       data = data.concat(availability)
     } else {
-      const pos = data.indexOf(availability)
-      if (pos === -1) {
-        data.push(availability)
-      } else {
-        data.splice(pos, 1)
-      }
+      data = event.target.value
     }
 
-    this.props.onChange(this.props.ident, {
-      field: this.props.filter.field,
+    props.onChange(props.ident, {
+      field: props.filter.field,
       Availability: data,
-      filterData: this.doSelectFilter,
+      filterData: doSelectFilter,
       toUrl: () => encodeURI(data.join(`,`)),
     })
   }
 
-  doConnectFilter = (data, filter) => {
+  const doConnectFilter = (data, filter) => {
     if (filter[filter.field].length === 0) {
       return true
     }
@@ -254,187 +268,224 @@ class DeviceFilter extends React.Component {
     return false
   }
 
-  handleConnectionChange(event, connection) {
+  const handleConnectionChange = (event, connection) => {
     let data = []
-    if (this.props.filter.Connection !== undefined) {
-      data = [...this.props.filter.Connection]
-    }
     if (Array.isArray(connection)) {
       data = data.concat(connection)
     } else {
-      const pos = data.indexOf(connection)
-      if (pos === -1) {
-        data.push(connection)
-      } else {
-        data.splice(pos, 1)
-      }
+      data = event.target.value
     }
 
-    this.props.onChange(this.props.ident, {
-      field: this.props.filter.field,
+    props.onChange(props.ident, {
+      field: props.filter.field,
       Connection: data,
-      filterData: this.doConnectFilter,
+      filterData: doConnectFilter,
       toUrl: () => encodeURI(data.join(`,`)),
     })
   }
 
-  render() {
-    return (
-      <Navbar>
-        <Navbar.Collapse>
-          <Navbar.Text>
-            <Form.Control
-              as="select"
-              value={this.props.filter.field}
-              onChange={e => this.handleFieldChange(e)}
-            >
-              <option value={`none`}>Choose a field:</option>
-              <option value={`Brand`}>Brand</option>
-              <option value={`Device`}>Device Name</option>
-              <option value={`Availability`}>Availability</option>
-              <option value={`Connection`}>Connectivity</option>
-              <option value={`Type`}>Form Factor</option>
-              <option value={`ButtplugSupport`}>Buttplug Support</option>
-              <option value={`Features`}>Features</option>
-            </Form.Control>
-          </Navbar.Text>
-          {(this.props.filter.field === `Brand` ||
-            this.props.filter.field === `Device`) && (
-            <Navbar.Text>
-              <Form.Control
-                as="input"
-                value={this.props.filter.search ? this.props.filter.search : ``}
-                onChange={e => this.handleSearchChange(e)}
-              />
-            </Navbar.Text>
-          )}
-          {this.props.filter.field === `ButtplugSupport` && (
-            <Navbar.Text>
-              <Form.Check
-                inline
-                label="C#"
-                onChange={e => this.handleBpChange(e, 1)}
-                checked={this.props.filter.bpSupport & 1}
-              />
-              <Form.Check
-                inline
-                label="JS"
-                onChange={e => this.handleBpChange(e, 2)}
-                checked={this.props.filter.bpSupport & 2}
-              />
-            </Navbar.Text>
-          )}
-          {this.props.filter.field === `Features` && (
-            <NavDropdown title="Outputs" id="nav-out-dropdown">
-              {this.props.filterData.Features !== undefined &&
-                this.props.filterData.Features.Outputs.map((feat, i) => (
-                  <NavDropdown.Item
-                    key={i}
-                    onClick={e => this.handleFeatureChange(e, `Outputs`, feat)}
-                  >
-                    {this.props.filter.features !== undefined &&
-                      this.props.filter.features.Outputs.includes(feat) && (
-                        <span
-                          className="oi oi-check"
-                          title="icon check"
-                          aria-hidden="true"
-                        />
-                      )}
-                    {feat}
-                  </NavDropdown.Item>
-                ))}
-            </NavDropdown>
-          )}
-          {this.props.filter.field === `Features` && (
-            <NavDropdown title="Inputs" id="nav-in-dropdown">
-              {this.props.filterData.Features !== undefined &&
-                this.props.filterData.Features.Inputs.map((feat, i) => (
-                  <NavDropdown.Item
-                    key={i}
-                    onClick={e => this.handleFeatureChange(e, `Inputs`, feat)}
-                  >
-                    {this.props.filter.features !== undefined &&
-                      this.props.filter.features.Inputs.includes(feat) && (
-                        <span
-                          className="oi oi-check"
-                          title="icon check"
-                          aria-hidden="true"
-                        />
-                      )}
-                    {feat}
-                  </NavDropdown.Item>
-                ))}
-            </NavDropdown>
-          )}
-          {this.props.filter.field === `Type` && (
-            <NavDropdown title="Form Factors" id="nav-out-dropdown">
-              {this.props.filterData.Type !== undefined &&
-                this.props.filterData.Type.map((type, i) => (
-                  <NavDropdown.Item
-                    key={i}
-                    onClick={e => this.handleTypeChange(e, type)}
-                  >
-                    {this.props.filter.Type !== undefined &&
-                      this.props.filter.Type.includes(type) && (
-                        <span
-                          className="oi oi-check"
-                          title="icon check"
-                          aria-hidden="true"
-                        />
-                      )}
-                    {type}
-                  </NavDropdown.Item>
-                ))}
-            </NavDropdown>
-          )}
-          {this.props.filter.field === `Availability` && (
-            <NavDropdown title="Options" id="nav-out-dropdown">
-              {this.props.filterData.Availability !== undefined &&
-                this.props.filterData.Availability.map((a, i) => (
-                  <NavDropdown.Item
-                    key={i}
-                    onClick={e => this.handleAvailabilityChange(e, a)}
-                  >
-                    {this.props.filter.Availability !== undefined &&
-                      this.props.filter.Availability.includes(a) && (
-                        <span
-                          className="oi oi-check"
-                          title="icon check"
-                          aria-hidden="true"
-                        />
-                      )}
-                    {a}
-                  </NavDropdown.Item>
-                ))}
-            </NavDropdown>
-          )}
-          {this.props.filter.field === `Connection` && (
-            <NavDropdown title="Options" id="nav-out-dropdown">
-              {[`Bluetooth 2`, `Bluetooth 4 LE`, `USB`, `Other`].map((a, i) => (
-                <NavDropdown.Item
-                  key={i}
-                  onClick={e => this.handleConnectionChange(e, a)}
-                >
-                  {this.props.filter.Connection !== undefined &&
-                    this.props.filter.Connection.includes(a) && (
-                      <span
-                        className="oi oi-check"
-                        title="icon check"
-                        aria-hidden="true"
-                      />
-                    )}
-                  {a}
-                </NavDropdown.Item>
-              ))}
-            </NavDropdown>
-          )}
-          <NavLink onClick={() => this.props.onRemove(this.props.ident)}>
-            <span className="oi oi-circle-x" title="Close" aria-hidden="true" />
-          </NavLink>
-        </Navbar.Collapse>
-      </Navbar>
-    )
+  // Sanitise data
+  if (props.filter === undefined || props.filter.field === undefined) {
+    props.filter.field = `none`
   }
-}
 
-export default DeviceFilter
+  switch (props.filter.field) {
+    case `Brand`:
+    case `Device`:
+      if (props.filter.search === undefined) {
+        props.filter.search = ``
+      }
+      break
+
+    case `ButtplugSupport`:
+      if (props.filter[props.filter.field] === undefined) {
+        props.filter[props.filter.field] = 0
+      }
+      break
+
+    case `Features`:
+      if (props.filter[props.filter.field] === undefined) {
+        props.filter[props.filter.field] = { Inputs: [], Outputs: [] }
+      }
+      if (props.filterData[props.filter.field] === undefined) {
+        props.filterData[props.filter.field] = { Inputs: [], Outputs: [] }
+      }
+      break
+
+    case `Type`:
+    case `Availability`:
+    case `Connection`:
+      if (props.filter[props.filter.field] === undefined) {
+        props.filter[props.filter.field] = []
+      }
+      if (props.filterData[props.filter.field] === undefined) {
+        props.filterData[props.filter.field] = []
+      }
+      break
+  }
+
+  return (
+    <FormGroup row>
+      <FormControl className={classes.formControl}>
+        <InputLabel>Choose a field:</InputLabel>
+        <Select value={props.filter.field} onChange={handleFieldChange}>
+          <MenuItem value={`none`}>None</MenuItem>
+          <MenuItem value={`Brand`}>Brand</MenuItem>
+          <MenuItem value={`Device`}>Device Name</MenuItem>
+          <MenuItem value={`Availability`}>Availability</MenuItem>
+          <MenuItem value={`Connection`}>Connectivity</MenuItem>
+          <MenuItem value={`Type`}>Form Factor</MenuItem>
+          <MenuItem value={`ButtplugSupport`}>Buttplug Support</MenuItem>
+          <MenuItem value={`Features`}>Features</MenuItem>
+        </Select>
+      </FormControl>
+      {(props.filter.field === `Brand` || props.filter.field === `Device`) && (
+        <FormControl className={classes.formControl}>
+          <DebouncedTextField
+            label={`Search ${props.filter.field}`}
+            type="search"
+            className={classes.textField}
+            value={props.filter.search ? props.filter.search : ``}
+            onChange={e => handleSearchChange(e)}
+          />
+        </FormControl>
+      )}
+      {props.filter.field === `ButtplugSupport` && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={e => handleBpChange(e, 1)}
+              checked={props.filter.bpSupport & 1}
+            />
+          }
+          label="C#"
+        />
+      )}
+      {props.filter.field === `ButtplugSupport` && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={e => handleBpChange(e, 2)}
+              checked={props.filter.bpSupport & 2}
+            />
+          }
+          label="JS"
+        />
+      )}
+      {props.filter.field === `Features` && (
+        <FormControl className={classes.formControl}>
+          <InputLabel>Outputs</InputLabel>
+          <Select
+            multiple
+            value={props.filter.Features.Outputs}
+            input={<Input />}
+            renderValue={selected => selected.join(`, `)}
+            MenuProps={MenuProps}
+            onChange={e => handleFeatureChange(e, `Outputs`)}
+          >
+            {props.filterData.Features !== undefined &&
+              props.filterData.Features.Outputs.map((a, i) => (
+                <MenuItem key={i} value={a}>
+                  <Checkbox
+                    checked={props.filter.Features.Outputs.includes(a)}
+                  />
+                  <ListItemText primary={a} />
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      )}
+      {props.filter.field === `Features` && (
+        <FormControl className={classes.formControl}>
+          <InputLabel>Inputs</InputLabel>
+          <Select
+            multiple
+            value={props.filter.Features.Inputs}
+            input={<Input />}
+            renderValue={selected => selected.join(`, `)}
+            MenuProps={MenuProps}
+            onChange={e => handleFeatureChange(e, `Inputs`)}
+          >
+            {props.filterData.Features !== undefined &&
+              props.filterData.Features.Inputs.map((a, i) => (
+                <MenuItem key={i} value={a}>
+                  <Checkbox
+                    checked={props.filter.Features.Inputs.includes(a)}
+                  />
+                  <ListItemText primary={a} />
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      )}
+      {props.filter.field === `Type` && (
+        <FormControl className={classes.formControl}>
+          <InputLabel>Type</InputLabel>
+          <Select
+            multiple
+            value={props.filter.Type}
+            input={<Input />}
+            renderValue={selected => selected.join(`, `)}
+            MenuProps={MenuProps}
+            onChange={handleTypeChange}
+          >
+            {props.filterData.Type !== undefined &&
+              props.filterData.Type.map((a, i) => (
+                <MenuItem key={i} value={a}>
+                  <Checkbox checked={props.filter.Type.includes(a)} />
+                  <ListItemText primary={a} />
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      )}
+      {props.filter.field === `Availability` && (
+        <FormControl className={classes.formControl}>
+          <InputLabel>Availability</InputLabel>
+          <Select
+            multiple
+            value={props.filter.Availability}
+            input={<Input />}
+            renderValue={selected => selected.join(`, `)}
+            onChange={handleAvailabilityChange}
+            MenuProps={MenuProps}
+          >
+            {props.filterData.Availability.map((a, i) => (
+              <MenuItem key={i} value={a}>
+                <Checkbox checked={props.filter.Availability.includes(a)} />
+                <ListItemText primary={a} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+      {props.filter.field === `Connection` && (
+        <FormControl className={classes.formControl}>
+          <InputLabel>Connectivity</InputLabel>
+          <Select
+            multiple
+            value={props.filter.Connection}
+            input={<Input />}
+            onChange={handleConnectionChange}
+            renderValue={selected => selected.join(`, `)}
+            MenuProps={MenuProps}
+          >
+            {[`Bluetooth 2`, `Bluetooth 4 LE`, `USB`, `Other`].map((a, i) => (
+              <MenuItem key={i} value={a}>
+                <Checkbox checked={props.filter.Connection.includes(a)} />
+                <ListItemText primary={a} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+      <IconButton
+        className={classes.button}
+        aria-label="delete"
+        onClick={() => props.onRemove(props.ident)}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </FormGroup>
+  )
+}

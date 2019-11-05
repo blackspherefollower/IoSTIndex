@@ -8,6 +8,7 @@ import IconButton from "@material-ui/core/IconButton"
 import MenuIcon from "@material-ui/icons/Menu"
 import BackIcon from "@material-ui/icons/ArrowBack"
 import Button from "@material-ui/core/Button"
+import CssBaseline from "@material-ui/core/CssBaseline"
 
 const useStyles = makeStyles(theme => {
   return {
@@ -30,6 +31,7 @@ export default function Layout({ children }) {
 
   return (
     <div className={classes.root}>
+      <CssBaseline />
       <AppBar position="static">
         <Toolbar>
           <IconButton
