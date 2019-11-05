@@ -6,6 +6,7 @@ import TableRow from "@material-ui/core/TableRow"
 import TableHead from "@material-ui/core/TableHead"
 import Grid from "@material-ui/core/Grid"
 import Table from "@material-ui/core/Table"
+import SEO from "../components/seo"
 
 const useStyles = makeStyles(() => {
   return {
@@ -59,13 +60,21 @@ const galleryStyles = {
   },
 }
 
-export default function Template({ pageContext }) {
+export default function Template({ path, pageContext }) {
   const classes = useStyles()
   const device = pageContext.device
   const [currentModal, setCurrentModal] = useState(false)
 
+  console.log(pageContext)
   return (
     <div className={classes.page}>
+      <SEO
+        post={{
+          path,
+          title: `IoST Index: ${device.Brand} - ${device.Device}`,
+          image: device.images.length > 0 ? device.images[0] : undefined,
+        }}
+      />
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <h1>

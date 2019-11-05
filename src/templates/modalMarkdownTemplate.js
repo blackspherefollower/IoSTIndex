@@ -2,6 +2,7 @@ import React from "react"
 import { graphql } from "gatsby"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core"
+import SEO from "../components/seo"
 
 const useStyles = makeStyles(theme => {
   return {
@@ -13,12 +14,19 @@ const useStyles = makeStyles(theme => {
 
 export default function Template({
   data, // this prop will be injected by the GraphQL query below.
+  path,
 }) {
   const { markdownRemark } = data // data.markdownRemark holds our post data
   const { frontmatter, html } = markdownRemark
   const classes = useStyles()
   return (
     <div className={classes.markdown}>
+      <SEO
+        post={{
+          path,
+          title: `About IoST Index`,
+        }}
+      />
       <Typography variant="h5" component="h3">
         {frontmatter.title}
       </Typography>

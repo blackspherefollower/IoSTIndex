@@ -5,6 +5,12 @@
  */
 
 module.exports = {
+  siteMetadata: {
+    title: `IoST Index`,
+    description: `An index of all known sextech.`,
+    baseUrl: `https://iostindex.com`, // used to create absolute URLs for SEO
+    author: `@blackspherefollower`,
+  },
   plugins: [
     {
       resolve: `gatsby-source-filesystem`,
@@ -25,5 +31,6 @@ module.exports = {
     `gatsby-transformer-remark`,
     `gatsby-plugin-layout`,
     `gatsby-plugin-material-ui`,
+    `gatsby-plugin-react-helmet`,
   ],
 }

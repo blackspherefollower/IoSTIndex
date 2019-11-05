@@ -7,6 +7,7 @@ import * as localforage from "localforage"
 import * as moment from "moment"
 import Fab from "@material-ui/core/Fab"
 import FilterListIcon from "@material-ui/icons/FilterList"
+import SEO from "../components/seo"
 
 const reactUrlStateOptions = {
   fromIdResolvers: async (param, value, oldState) => {
@@ -198,6 +199,7 @@ class IndexComponent extends React.Component {
 
     return (
       <div>
+        <SEO />
         <Fab
           variant="extended"
           color="primary"

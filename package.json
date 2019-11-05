@@ -24,6 +24,7 @@
     "gatsby-plugin-layout": "^1.1.13",
     "gatsby-plugin-material-ui": "^2.1.6",
     "gatsby-plugin-modal-routing": "^1.0.3",
+    "gatsby-plugin-react-helmet": "^3.1.13",
     "gatsby-source-filesystem": "^2.1.35",
     "gatsby-source-graphql": "^2.1.21",
     "gatsby-transformer-csv": "^2.1.16",
@@ -35,6 +36,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
+    "react-helmet": "^5.2.1",
     "react-images": "^1.0.0",
     "react-url-state": "git+https://github.com/blackspherefollower/react-url-state.git"
   },
