@@ -34,3 +34,19 @@ module.exports = {
     `gatsby-plugin-react-helmet`,
   ],
 }
+
+if (
+  process.env.MATOMO_SITE_ID &&
+  process.env.MATOMO_URL &&
+  process.env.MATOMO_SITE_URL
+) {
+  module.exports.plugins.push({
+    resolve: `gatsby-plugin-matomo`,
+    options: {
+      siteId: process.env.MATOMO_SITE_ID,
+      matomoUrl: process.env.MATOMO_URL,
+      siteUrl: process.env.MATOMO_SITE_URL,
+      disableCookies: true,
+    },
+  })
+}
