@@ -84,12 +84,12 @@ export default function Template({ path, pageContext }) {
           </Typography>
           <span>
             Url:{` `}
-            <Link
-              to={device.Detail}
+            <a
+              href={device.Detail}
               title={`Product link: ${device.Brand} - ${device.Device}`}
             >
               {device.Detail}
-            </Link>
+            </a>
           </span>
           <span>{device.Notes}</span>
         </Grid>

@@ -77,12 +77,12 @@ const columns = [
     formatter: (cellContent, row) => (
       <div>
         {cellContent.length > 0 && (
-          <Link
-            to={cellContent}
+          <a
+            href={cellContent}
             title={`Product link: ${row.Brand} - ${row.Device}`}
           >
             {cellContent}
-          </Link>
+          </a>
         )}
       </div>
     ),
