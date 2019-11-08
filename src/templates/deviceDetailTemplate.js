@@ -1,11 +1,14 @@
 import React, { useState } from "react"
+import { Link } from "gatsby"
 import Carousel, { Modal, ModalGateway } from "react-images"
-import { makeStyles, TableBody } from "@material-ui/core"
+import { makeStyles, TableBody, Typography } from "@material-ui/core"
 import TableCell from "@material-ui/core/TableCell"
 import TableRow from "@material-ui/core/TableRow"
 import TableHead from "@material-ui/core/TableHead"
 import Grid from "@material-ui/core/Grid"
 import Table from "@material-ui/core/Table"
+import CheckBoxIcon from "@material-ui/icons/CheckBox"
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank"
 import SEO from "../components/seo"
 
 const useStyles = makeStyles(() => {
@@ -28,7 +31,7 @@ const useStyles = makeStyles(() => {
       overflow: `hidden`,
       paddingBottom: `15%`,
       position: `relative`,
-      width: `calc(25% - 4px)`,
+      width: `calc(20% - 4px)`,
       "&:hover": {
         opacity: 0.9,
       },
@@ -63,9 +66,8 @@ const galleryStyles = {
 export default function Template({ path, pageContext }) {
   const classes = useStyles()
   const device = pageContext.device
-  const [currentModal, setCurrentModal] = useState(false)
+  const [currentModal, setCurrentModal] = useState()
 
-  console.log(pageContext)
   return (
     <div className={classes.page}>
       <SEO
@@ -77,12 +79,24 @@ export default function Template({ path, pageContext }) {
       />
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <h1>
+          <Typography variant="h3" gutterBottom>
             {device.Brand} - {device.Device}
-          </h1>
+          </Typography>
+          <span>
+            Url:{` `}
+            <Link
+              to={device.Detail}
+              title={`Product link: ${device.Brand} - ${device.Device}`}
+            >
+              {device.Detail}
+            </Link>
+          </span>
           <span>{device.Notes}</span>
         </Grid>
         <Grid item xs={12}>
+          <Typography variant="h4" gutterBottom>
+            Product Images
+          </Typography>
           <Gallery classes={classes}>
             {device.images.map((img, i) => (
               <Image
@@ -118,6 +132,11 @@ export default function Template({ path, pageContext }) {
           )}
         </Grid>
 
+        <Grid item xs={12}>
+          <Typography variant="h4" gutterBottom>
+            Device Features
+          </Typography>
+        </Grid>
         <Grid item xs={6}>
           <Table className={classes.table}>
             <TableHead>
@@ -153,6 +172,31 @@ export default function Template({ path, pageContext }) {
               ))}
             </TableBody>
           </Table>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h4" gutterBottom>
+            Buttplug.io Support
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <span>
+            Buttplug-C#:
+            {(device.Buttplug.ButtplugSupport & 1) == 1 ? (
+              <CheckBoxIcon />
+            ) : (
+              <CheckBoxOutlineBlankIcon />
+            )}
+          </span>
+        </Grid>
+        <Grid item xs={12}>
+          <span>
+            Buttplug-JS:
+            {(device.Buttplug.ButtplugSupport & 2) == 2 ? (
+              <CheckBoxIcon />
+            ) : (
+              <CheckBoxOutlineBlankIcon />
+            )}
+          </span>
         </Grid>
       </Grid>
     </div>

@@ -9,6 +9,7 @@ import MenuIcon from "@material-ui/icons/Menu"
 import BackIcon from "@material-ui/icons/ArrowBack"
 import Button from "@material-ui/core/Button"
 import CssBaseline from "@material-ui/core/CssBaseline"
+import { Helmet } from "react-helmet"
 
 const useStyles = makeStyles(theme => {
   return {
@@ -31,6 +32,12 @@ export default function Layout({ children }) {
 
   return (
     <div className={classes.root}>
+      <Helmet>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
+      </Helmet>
       <CssBaseline />
       <AppBar position="static">
         <Toolbar>

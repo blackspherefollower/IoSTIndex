@@ -74,9 +74,16 @@ const columns = [
   {
     dataField: `Detail`,
     text: `Url`,
-    formatter: cellContent => (
+    formatter: (cellContent, row) => (
       <div>
-        {cellContent.length > 0 && <a href={cellContent}>{cellContent}</a>}
+        {cellContent.length > 0 && (
+          <Link
+            to={cellContent}
+            title={`Product link: ${row.Brand} - ${row.Device}`}
+          >
+            {cellContent}
+          </Link>
+        )}
       </div>
     ),
   },
