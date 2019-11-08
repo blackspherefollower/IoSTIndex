@@ -8,7 +8,7 @@ module.exports = {
   siteMetadata: {
     title: `IoST Index`,
     description: `An index of all known sextech.`,
-    baseUrl: `https://iostindex.com`, // used to create absolute URLs for SEO
+    siteUrl: `https://iostindex.com`, // used to create absolute URLs for SEO
     author: `@blackspherefollower`,
   },
   plugins: [
