@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
 import Carousel, { Modal, ModalGateway } from "react-images"
 import { makeStyles, TableBody, Typography } from "@material-ui/core"
 import TableCell from "@material-ui/core/TableCell"
@@ -82,6 +81,8 @@ export default function Template({ path, pageContext }) {
           <Typography variant="h3" gutterBottom>
             {device.Brand} - {device.Device}
           </Typography>
+        </Grid>
+        <Grid item xs={12}>
           <span>
             Url:{` `}
             <a
@@ -91,6 +92,8 @@ export default function Template({ path, pageContext }) {
               {device.Detail}
             </a>
           </span>
+        </Grid>
+        <Grid item xs={12}>
           <span>{device.Notes}</span>
         </Grid>
         <Grid item xs={12}>
