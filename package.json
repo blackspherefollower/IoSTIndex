@@ -25,7 +25,7 @@
     "gatsby-plugin-material-ui": "^2.1.6",
     "gatsby-plugin-matomo": "^0.7.2",
     "gatsby-plugin-modal-routing": "^1.0.3",
-    "gatsby-plugin-react-helmet": "^3.1.13",
+    "gatsby-plugin-react-helmet": "^3.1.14",
     "gatsby-plugin-sitemap": "^2.2.19",
     "gatsby-source-filesystem": "^2.1.35",
     "gatsby-source-graphql": "^2.1.21",
