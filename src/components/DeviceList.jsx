@@ -7,6 +7,7 @@ import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import { makeStyles } from "@material-ui/core/styles"
 import AddIcon from "@material-ui/icons/Add"
+import LazyLoad from "react-lazyload"
 import { Link } from "gatsby"
 
 function encode(string) {
@@ -26,11 +27,13 @@ const columns = [
     formatter: (cellContent, row, classes) => (
       <div>
         {cellContent && cellContent.length > 0 && (
-          <img
-            src={cellContent[0]}
-            className={classes.thumbnail}
-            alt={`${row.Brand} - ${row.Device} - Thumbnail`}
-          />
+          <LazyLoad height={50}>
+            <img
+              src={cellContent[0]}
+              className={classes.thumbnail}
+              alt={`${row.Brand} - ${row.Device} - Thumbnail`}
+            />
+          </LazyLoad>
         )}
       </div>
     ),

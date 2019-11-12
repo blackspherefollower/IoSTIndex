@@ -8,6 +8,7 @@ import * as moment from "moment"
 import Fab from "@material-ui/core/Fab"
 import FilterListIcon from "@material-ui/icons/FilterList"
 import SEO from "../components/seo"
+import { forceCheck } from "react-lazyload"
 
 const reactUrlStateOptions = {
   fromIdResolvers: async (param, value, oldState) => {
@@ -174,6 +175,7 @@ class IndexComponent extends React.Component {
       }
     })
     this.reactUrlState.setUrlState({ data, filters })
+    forceCheck()
   }
 
   addFilter() {
