@@ -4,17 +4,28 @@ import { makeStyles, TableBody, Typography } from "@material-ui/core"
 import TableCell from "@material-ui/core/TableCell"
 import TableRow from "@material-ui/core/TableRow"
 import TableHead from "@material-ui/core/TableHead"
-import Grid from "@material-ui/core/Grid"
 import Table from "@material-ui/core/Table"
 import CheckBoxIcon from "@material-ui/icons/CheckBox"
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank"
 import SEO from "../components/seo"
+import Container from "@material-ui/core/Container"
+import Box from "@material-ui/core/Box"
 
-const useStyles = makeStyles(() => {
+const useStyles = makeStyles(theme => {
   return {
-    page: {
-      margin: `50px`,
-      flexGrow: 1,
+    root: {},
+    content: {
+      paddingTop: theme.spacing(4),
+      flex: `1 1 100%`,
+      position: `relative`,
+      maxWidth: `100%`,
+      margin: `0 auto`,
+    },
+    flexbox: {
+      display: `flex`,
+      "flex-wrap": `wrap`,
+      "justify-content": `space-evenly`,
+      paddingBottom: theme.spacing(2),
     },
     gallery: {
       overflow: `hidden`,
@@ -41,8 +52,23 @@ const useStyles = makeStyles(() => {
       },
     },
     table: {
-      minWidth: 200,
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      flex: 1,
+      width: `40%`,
+      paddingBottom: theme.spacing(2),
+    },
+    notes: {
+      paddingTop: theme.spacing(2),
       width: `100%`,
+    },
+    "@media (max-width: 800px)": {
+      flexbox: {
+        display: `block`,
+      },
+      table: {
+        width: `100%`,
+      },
     },
   }
 })
@@ -68,7 +94,7 @@ export default function Template({ path, pageContext }) {
   const [currentModal, setCurrentModal] = useState()
 
   return (
-    <div className={classes.page}>
+    <Container className={classes.root}>
       <SEO
         post={{
           path,
@@ -76,71 +102,70 @@ export default function Template({ path, pageContext }) {
           image: device.images.length > 0 ? device.images[0] : undefined,
         }}
       />
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography variant="h3" gutterBottom>
-            {device.Brand} - {device.Device}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <span>
-            Url:{` `}
+      <Container className={classes.content}>
+        <Typography variant="h3" gutterBottom>
+          {device.Brand} - {device.Device}
+        </Typography>
+        <Container className={classes.flexbox}>
+          <Box className={classes.table}>
+            <b>Url:</b>
+            {` `}
             <a
               href={device.Detail}
               title={`Product link: ${device.Brand} - ${device.Device}`}
             >
               {device.Detail}
             </a>
-          </span>
-        </Grid>
-        <Grid item xs={12}>
-          <span>{device.Notes}</span>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h4" gutterBottom>
-            Product Images
-          </Typography>
-          <Gallery classes={classes}>
-            {device.images.map((img, i) => (
-              <Image
-                onClick={() => setCurrentModal(i)}
-                key={i}
-                classes={classes}
-              >
-                <img
-                  src={img}
-                  alt={`${device.Brand} - ${device.Device} - Image ${i}`}
-                  className={classes.galleryimageimg}
-                />
-              </Image>
-            ))}
-          </Gallery>
-          {Number.isInteger(currentModal) && (
-            <ModalGateway>
-              <Modal
-                styles={galleryStyles}
-                allowFullscreen={false}
-                closeOnBackdropClick={false}
-                onClose={() => setCurrentModal(null)}
-              >
-                <Carousel
-                  currentIndex={currentModal}
-                  frameProps={{ autoSize: `height` }}
-                  views={device.images.map(img => {
-                    return { src: img }
-                  })}
-                />
-              </Modal>
-            </ModalGateway>
+          </Box>
+          <Box className={classes.table}>
+            <b>Availability:</b> {device.Availability}
+          </Box>
+          <Box className={classes.table}>
+            <b>Form factor:</b> {device.Type}
+          </Box>
+          <Box className={classes.table}>
+            <b>Connectivity:</b> {device.Connection}
+          </Box>
+          {device.Notes.length > 0 && (
+            <Box className={classes.notes}>{device.Notes}</Box>
           )}
-        </Grid>
-
-        <Grid item xs={12}>
-          <Typography variant="h4" gutterBottom>
-            Device Features
-          </Typography>
-        </Grid>
-        <Grid item xs={6}>
+        </Container>
+        <Typography variant="h4" gutterBottom>
+          Product Images
+        </Typography>
+        <Gallery classes={classes}>
+          {device.images.map((img, i) => (
+            <Image onClick={() => setCurrentModal(i)} key={i} classes={classes}>
+              <img
+                src={img}
+                alt={`${device.Brand} - ${device.Device} - Image ${i}`}
+                className={classes.galleryimageimg}
+              />
+            </Image>
+          ))}
+        </Gallery>
+        {Number.isInteger(currentModal) && (
+          <ModalGateway>
+            <Modal
+              styles={galleryStyles}
+              allowFullscreen={false}
+              closeOnBackdropClick={false}
+              onClose={() => setCurrentModal(null)}
+            >
+              <Carousel
+                currentIndex={currentModal}
+                frameProps={{ autoSize: `height` }}
+                views={device.images.map(img => {
+                  return { src: img }
+                })}
+              />
+            </Modal>
+          </ModalGateway>
+        )}
+        <Typography variant="h4" gutterBottom>
+          Device Features
+        </Typography>
+        <Container className={classes.flexbox}>
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
@@ -157,8 +182,6 @@ export default function Template({ path, pageContext }) {
               ))}
             </TableBody>
           </Table>
-        </Grid>
-        <Grid item xs={6}>
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
@@ -175,34 +198,30 @@ export default function Template({ path, pageContext }) {
               ))}
             </TableBody>
           </Table>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h4" gutterBottom>
-            Buttplug.io Support
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <span>
+        </Container>
+        <Typography variant="h4" gutterBottom>
+          Buttplug.io Support
+        </Typography>
+        <Container className={classes.flexbox}>
+          <Box className={classes.table}>
             Buttplug-C#:
             {(device.Buttplug.ButtplugSupport & 1) == 1 ? (
               <CheckBoxIcon />
             ) : (
               <CheckBoxOutlineBlankIcon />
             )}
-          </span>
-        </Grid>
-        <Grid item xs={12}>
-          <span>
+          </Box>
+          <Box className={classes.table}>
             Buttplug-JS:
             {(device.Buttplug.ButtplugSupport & 2) == 2 ? (
               <CheckBoxIcon />
             ) : (
               <CheckBoxOutlineBlankIcon />
             )}
-          </span>
-        </Grid>
-      </Grid>
-    </div>
+          </Box>
+        </Container>
+      </Container>
+    </Container>
   )
 }
 
