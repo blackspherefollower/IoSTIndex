@@ -13,7 +13,7 @@ import { Link } from "gatsby"
 function encode(string) {
   return encodeURIComponent(string)
     .replace(/%20/g, ` `)
-    .replace(/%2F/g, `_`)
+    .replace(/%[0-9A-Fa-f]{2}/g, `_`)
 }
 
 const columns = [
