@@ -27,7 +27,7 @@
     "gatsby-plugin-modal-routing": "^1.0.3",
     "gatsby-plugin-react-helmet": "^3.1.15",
     "gatsby-plugin-sitemap": "^2.2.21",
-    "gatsby-source-filesystem": "^2.1.38",
+    "gatsby-source-filesystem": "^2.1.39",
     "gatsby-source-graphql": "^2.1.24",
     "gatsby-transformer-csv": "^2.1.18",
     "gatsby-transformer-remark": "^2.6.37",
