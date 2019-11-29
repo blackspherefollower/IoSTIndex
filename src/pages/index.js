@@ -202,16 +202,19 @@ class IndexComponent extends React.Component {
     return (
       <div>
         <SEO />
-        <Fab
-          variant="extended"
-          color="primary"
-          size="medium"
-          style={{ margin: `8px` }}
-          onClick={this.addFilter}
-        >
-          <FilterListIcon />
-          Add Filter
-        </Fab>
+        <div>
+          <Fab
+            variant="extended"
+            color="primary"
+            size="medium"
+            style={{ margin: `8px` }}
+            onClick={this.addFilter}
+          >
+            <FilterListIcon />
+            Add Filter
+          </Fab>
+          <span>{this.state.data.length} devices found</span>
+        </div>
         {filterNavs}
         <DeviceList data={this.state.data} />
       </div>
