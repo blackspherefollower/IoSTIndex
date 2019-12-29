@@ -136,12 +136,13 @@ export default function DeviceFilter(props) {
     (data.Buttplug.ButtplugSupport & filter.bpSupport) !== 0
 
   const handleBpChange = (event, mode) => {
+    const bpSupport =
+      (props.filter.bpSupport &= ~mode) | (event.target.checked ? mode : 0)
     props.onChange(props.ident, {
       field: props.filter.field,
-      bpSupport:
-        (props.filter.bpSupport &= ~mode) | (event.target.checked ? mode : 0),
+      bpSupport,
       filterData: doBpFilter,
-      toUrl: () => props.filter.bpSupport,
+      toUrl: () => bpSupport,
     })
   }
 
