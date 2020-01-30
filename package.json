@@ -30,7 +30,7 @@
     "gatsby-source-filesystem": "^2.1.46",
     "gatsby-source-graphql": "^2.1.32",
     "gatsby-transformer-csv": "^2.1.24",
-    "gatsby-transformer-remark": "^2.6.48",
+    "gatsby-transformer-remark": "^2.6.49",
     "localforage": "^1.7.3",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.24.0",
