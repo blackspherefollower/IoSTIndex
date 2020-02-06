@@ -4,7 +4,7 @@ Kiiroo,Onyx,https://www.kiiroo.com/onyx/,Discontinued,1,Onahole,"BT2 (Serial), B
 Kiiroo,Pearl,https://www.kiiroo.com/pearl/,Discontinued,1,Insertable Vibrator,"BT2 (Serial), BT4LE",Vibrator,Capacitive zones,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,,0,0,0,,,,,,,,,,
 Kiiroo,Pearl2,https://www.kiiroo.com/product/kiiroo-pearl2-black/,Available,0,Insertable Vibrator,BT4LE,Vibrator,Capacitive zones,1,0,0,0,0,0,0,0,0,0,0,3,0,1,0,0,0,,1,1,0,,,,buttplug-c#,buttplug-js,buttplug-js,buttplug-js,buttplug-js,,
 Kiiroo,Onyx2,https://www.kiiroo.com/products/onyx-2,Available,1,Onahole,BT4LE,Constriction rings,Capacitive slider,0,0,0,4,0,0,0,0,0,0,0,3,0,1,0,0,0,Onahole,1,1,0,,,,buttplug-c#,buttplug-js,buttplug-js,buttplug-js,buttplug-js,,
-Kiiroo,Onyx+,https://www.kiiroo.com/collections/for-him/products/onyx-plus,Available,0,Onahole,BT4LE,Constriction rings,Capacitive slider,0,0,0,4,0,0,0,0,0,0,0,3,0,1,0,0,0,Onahole,0,0,,,,,,,,,,,
+Kiiroo,Onyx+,https://sextechguide.com/news/kiiroo-launches-onyx-third-gen-interactive,Unreleased,0,Onahole,BT4LE,Constriction rings,Capacitive slider,0,0,0,4,0,0,0,0,0,0,0,3,0,1,0,0,0,Onahole,0,0,,,,,,,,,,,
 Kiiroo,Cliona,https://www.kiiroo.com/products/cliona-by-kiiroo-clit-stim-vibrator,Available,1,Bullet,BT4LE,Vibrator,None,1,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,,0,0,0,,,,buttplug-c#,,,,,,
 Kiiroo,Titan,https://www.kiiroo.com/products/titan-by-kiiroo-interactive-male-masturbator,Available,1,Onahole,BT4LE,Vibrator (9 in 3 groups),Capacitive zones,9,0,0,0,0,0,0,0,0,0,0,3,0,3,0,0,0,Also branded as Pornhub Blowbot,1,1,0,,,,buttplug-c#,buttplug-js,buttplug-js,buttplug-js,buttplug-js,,"The original Titan is supported, but the Titan1.1 version uses a different controller and changed the protocol (this has yet to be implemented in Buttplug).
 "
@@ -357,7 +357,8 @@ Pavlok,Pavlok 1,https://www.amazon.com/Pavlok-Habit-Conditioning-Device-Change/d
 Pavlok,Pavlok 2,https://pavlok.com/products/pavlok-2/,Available,1,Wearable,BT4LE,Shock,None,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,
 Pavlok,Shock Clock 1,https://www.amazon.com/Shock-Clock-Wake-Up-Trainer/dp/B01EZ77IOY,Discontinued,0,Wearable,BT4LE,Shock,None,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,
 Pavlok,Shock Clock 2,https://pavlok.com/products/shock-clock-2/,Available,0,Wearable,BT4LE,Shock,None,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,
-TempestVR,Open source Stroker Robot (3-axis),https://www.patreon.com/tempestvr,DIY,0,Onahole,USB (Serial),"Linear actuator 2, Rotational actuator",None,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,
+TempestVR,Open source Stroker Robot (3-axis),https://www.patreon.com/tempestvr,DIY,0,Onahole,USB (Serial),"2 Linear actuators, Rotational actuator",None,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,
+TempestVR,Open source Stroker Robot (2-axis),https://www.patreon.com/tempestvr,DIY,0,Onahole,USB (Serial),"Linear actuator, Rotational actuator",None,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,
 Luoge,LG-361,http://luogechina.com/product/70_815.html,Available,1,Onahole,BT4LE,"Linear actuator, Rotator",None,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,
 Luoge,LG-839,http://luogechina.com/product/70_805.html,Available,0,Rabbit,BT4LE,Vibrator,None,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,
 VDOM,VDOM,https://www.thevdom.com/,Unreleased,0,Strap-on,BT4LE?,"Vibrator, Erecting",None?,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,
