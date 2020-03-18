@@ -39,7 +39,7 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-helmet": "^5.2.1",
-    "react-images": "^1.0.0",
+    "react-images": "^1.1.0",
     "react-lazyload": "^2.6.5",
     "react-url-state": "git+https://github.com/blackspherefollower/react-url-state.git"
   },
