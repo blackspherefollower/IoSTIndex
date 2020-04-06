@@ -44,7 +44,7 @@
     "react-url-state": "git+https://github.com/blackspherefollower/react-url-state.git"
   },
   "devDependencies": {
-    "prettier": "^2.0.2"
+    "prettier": "^2.0.3"
   },
   "repository": {
     "type": "git",
