@@ -373,6 +373,17 @@ export default function DeviceFilter(props) {
           label="JS"
         />
       )}
+      {props.filter.field === `ButtplugSupport` && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={e => handleBpChange(e, 4)}
+              checked={props.filter.bpSupport & 4}
+            />
+          }
+          label="Rust"
+        />
+      )}
       {props.filter.field === `Features` && (
         <FormControl className={classes.formControl}>
           <InputLabel>Outputs</InputLabel>

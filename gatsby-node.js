@@ -59,6 +59,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             Notes
             Buttplug_C_
             Buttplug_JS
+            Buttplug_Rust
             Buttplug_Support_Notes
             Win10_14939
             Win10_15063
@@ -106,16 +107,19 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     dev.id = i
     const cs = dev.Buttplug_C_.length > 0 && dev.Buttplug_C_ !== `0`
     const js = dev.Buttplug_JS.length > 0 && dev.Buttplug_JS !== `0`
+    const rs = dev.Buttplug_Rust.length > 0 && dev.Buttplug_Rust !== `0`
     dev.Buttplug_CSharp = dev.Buttplug_C_
     delete dev.Buttplug_C_
     dev.ButtplugSupport = 0
     if (cs) dev.ButtplugSupport |= 1
     if (js) dev.ButtplugSupport |= 2
+    if (rs) dev.ButtplugSupport |= 4
 
     const bpProps = [
       `ButtplugSupport`,
       `Buttplug_CSharp`,
       `Buttplug_JS`,
+      `Buttplug_Rust`,
       `Buttplug_Support_Notes`,
       `Win10_14939`,
       `Win10_15063`,

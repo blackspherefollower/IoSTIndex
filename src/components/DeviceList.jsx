@@ -71,6 +71,7 @@ const columns = [
       <div>
         {(row.Buttplug.ButtplugSupport & 1 && <span> C#</span>) || ``}
         {(row.Buttplug.ButtplugSupport & 2 && <span> JS</span>) || ``}
+        {(row.Buttplug.ButtplugSupport & 4 && <span> Rust</span>) || ``}
       </div>
     ),
   },
