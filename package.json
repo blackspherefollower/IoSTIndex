@@ -28,7 +28,7 @@
     "gatsby-plugin-react-helmet": "^3.2.5",
     "gatsby-plugin-sitemap": "^2.3.6",
     "gatsby-source-filesystem": "^2.2.5",
-    "gatsby-source-graphql": "^2.4.3",
+    "gatsby-source-graphql": "^2.5.0",
     "gatsby-transformer-csv": "^2.2.4",
     "gatsby-transformer-remark": "^2.7.5",
     "localforage": "^1.7.3",
