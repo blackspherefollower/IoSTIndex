@@ -7,8 +7,10 @@ import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import { makeStyles } from "@material-ui/core/styles"
 import AddIcon from "@material-ui/icons/Add"
+import InfoIcon from "@material-ui/icons/Info"
 import LazyLoad from "react-lazyload"
 import { Link } from "gatsby"
+import Tooltip from "@material-ui/core/Tooltip"
 
 function encode(string) {
   return encodeURIComponent(string)
@@ -67,11 +69,40 @@ const columns = [
     dataField: `Buttplug.ButtplugSupport`,
     text: `Buttplug.io Support`,
     sort: true,
-    formatter: (cellContent, row) => (
-      <div>
-        {(row.Buttplug.ButtplugSupport & 1 && <span> C#</span>) || ``}
-        {(row.Buttplug.ButtplugSupport & 2 && <span> JS</span>) || ``}
-        {(row.Buttplug.ButtplugSupport & 4 && <span> Rust</span>) || ``}
+    formatter: (cellContent, row, classes) => (
+      <div className={classes.bpsupp}>
+        {(row.Buttplug.ButtplugSupport & 1 && (
+          <span>
+            {` C#`}
+            {row.Buttplug.Buttplug_CSharp === `Untested` && ` (Untested)`}
+            {row.Buttplug.Buttplug_CSharp === `Issues` && ` (Known Issues)`}
+          </span>
+        )) ||
+          ``}
+        {(row.Buttplug.ButtplugSupport & 2 && (
+          <span>
+            {` JS`}
+            {row.Buttplug.Buttplug_JS === `Untested` && ` (Untested)`}
+            {row.Buttplug.Buttplug_JS === `Issues` && ` (Known Issues)`}
+          </span>
+        )) ||
+          ``}
+        {(row.Buttplug.ButtplugSupport & 4 && (
+          <span>
+            {` Rust`}
+            {row.Buttplug.Buttplug_Rust === `Untested` && ` (Untested)`}
+            {row.Buttplug.Buttplug_Rust === `Issues` && ` (Known Issues)`}
+          </span>
+        )) ||
+          ``}
+        {row.Buttplug.Buttplug_Support_Notes.length > 0 && (
+          <Tooltip
+            title={row.Buttplug.Buttplug_Support_Notes}
+            classes={{ tooltip: classes.tooltip }}
+          >
+            <InfoIcon />
+          </Tooltip>
+        )}
       </div>
     ),
   },
@@ -118,7 +149,7 @@ function EnhancedTableHead() {
   )
 }
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     devList: {
       width: `100%`,
@@ -146,6 +177,17 @@ const useStyles = makeStyles(theme => {
       width: `50px`,
       height: `50px`,
     },
+    tooltip: {
+      maxWidth: 500,
+      fontSize: `1em`,
+    },
+    bpsupp: {
+      display: `flex`,
+      alignItems: `center`,
+      "& span": {
+        margin: 5,
+      },
+    },
   }
 })
 
@@ -159,7 +201,7 @@ export default function DeviceList(props) {
         <Table className={classes.table} aria-label="device table">
           <EnhancedTableHead />
           <TableBody>
-            {data.map(row => (
+            {data.map((row) => (
               <TableRow hover tabIndex={-1} key={row.id}>
                 <TableCell>
                   <Link
