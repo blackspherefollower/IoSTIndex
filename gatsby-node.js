@@ -204,7 +204,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
         }
       }
     }`)
-    dev.images = images.data.allFile.edges.map(e => `/` + e.node.relativePath)
+    dev.images = images.data.allFile.edges.map(e => `/` + e.node.relativePath).sort()
     if (dev.images == null) {
       dev.images = []
     }
