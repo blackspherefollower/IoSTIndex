@@ -25,19 +25,33 @@ const reactUrlStateOptions = {
       }
       newState.filters[fId] = { field: found[2], urlData: value }
     }
+
+    if (param === `locks`) {
+      value.split(`,`).forEach((s) => {
+        const i = parseInt(s, 10)
+        if (!isNaN(i) && i < newState.filters.length) {
+          newState.filters[i].lock = true
+        }
+      })
+    }
+
     return newState
   },
   toIdMappers: (param, state) => {
     if (param === `filters`) {
-      return state.filters
-        .map((f, i) => {
-          if (typeof f.toUrl === `function`) {
-            return `filter${i}${f.field}=${f.toUrl()}`
-          }
-          return undefined
-        })
-        .filter(p => p !== undefined && p !== null)
-        .join(`&`)
+      const locks = []
+      return (
+        state.filters
+          .map((f, i) => {
+            if (typeof f.toUrl === `function`) {
+              if (f.lock) locks.push(i)
+              return `filter${i}${f.field}=${f.toUrl()}`
+            }
+            return undefined
+          })
+          .filter((p) => p !== undefined && p !== null)
+          .join(`&`) + (locks.length > 0 ? `&locks=${locks.join(`,`)}` : ``)
+      )
     }
     return undefined
   },
@@ -64,31 +78,28 @@ class IndexComponent extends React.Component {
     let devices = null
     localforage
       .getItem(`devices`)
-      .then(value => {
+      .then((value) => {
         devices = value
         return localforage.getItem(`devicesDate`)
       })
-      .then(dateValue => (devDate = moment(dateValue)))
+      .then((dateValue) => (devDate = moment(dateValue)))
       .then(() => {
-        console.info(devDate, moment())
         if (
           devices === null ||
           devDate === null ||
-          moment()
-            .subtract(30, `m`)
-            .isAfter(devDate)
+          moment().subtract(30, `m`).isAfter(devDate)
         ) {
           return axios.get(`/devices.json`)
         }
         return null
       })
-      .then(res => {
+      .then((res) => {
         if (res != null) {
           devices = res.data
           localforage
             .setItem(`devices`, devices)
             .then(() => localforage.setItem(`devicesDate`, moment().valueOf()))
-            .catch(err => console.error(err))
+            .catch((err) => console.error(err))
         }
 
         const filterData = { Features: { Inputs: [], Outputs: [] } }
@@ -101,8 +112,8 @@ class IndexComponent extends React.Component {
           )
         }
         const fields = [`Availability`, `Type`]
-        devices.forEach(d => {
-          fields.forEach(f => {
+        devices.forEach((d) => {
+          fields.forEach((f) => {
             if (filterData[f] === undefined) {
               filterData[f] = []
             }
@@ -111,7 +122,7 @@ class IndexComponent extends React.Component {
             }
           })
         })
-        fields.forEach(f => {
+        fields.forEach((f) => {
           filterData[f].sort()
         })
         this.setState({
@@ -169,9 +180,9 @@ class IndexComponent extends React.Component {
       filters[ident] = filter
     }
     let data = this.state.devices
-    filters.forEach(f => {
+    filters.forEach((f) => {
       if (f.filterData !== undefined) {
-        data = data.filter(d => f.filterData(d, f))
+        data = data.filter((d) => f.filterData(d, f))
       }
     })
     this.reactUrlState.setUrlState({ data, filters })

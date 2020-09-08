@@ -33,7 +33,7 @@ const theme = createMuiTheme({
   },
 })
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     root: {
       flexGrow: 1,
@@ -57,7 +57,7 @@ export default function Layout({ children }) {
     typeof location !== `undefined` && location && location.pathname === `/`
 
   return (
-    <ThemeProvider theme={theme} className={classes.root}>
+    <ThemeProvider theme={theme}>
       <Helmet>
         <link
           rel="stylesheet"

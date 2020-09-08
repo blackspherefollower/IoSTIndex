@@ -50,8 +50,6 @@ const MenuProps = {
 export default function DeviceFilter(props) {
   const classes = useStyles()
 
-  console.log(props)
-
   React.useEffect(() => {
     const features = { Inputs: [], Outputs: [] }
     let tmp = []
@@ -126,6 +124,7 @@ export default function DeviceFilter(props) {
   const handleSearchChange = (event) => {
     props.onChange(props.ident, {
       field: props.filter.field,
+      lock: props.filter.lock,
       search: event.target.value,
       filterData: doTextFilter,
       toUrl: () => encodeURI(event.target.value),
@@ -140,6 +139,7 @@ export default function DeviceFilter(props) {
       (props.filter.bpSupport &= ~mode) | (event.target.checked ? mode : 0)
     props.onChange(props.ident, {
       field: props.filter.field,
+      lock: props.filter.lock,
       bpSupport,
       filterData: doBpFilter,
       toUrl: () => bpSupport,
@@ -186,6 +186,7 @@ export default function DeviceFilter(props) {
 
     props.onChange(props.ident, {
       field: props.filter.field,
+      lock: props.filter.lock,
       Features: features,
       filterData: doFeatureFilter,
       toUrl: () => {
@@ -214,6 +215,7 @@ export default function DeviceFilter(props) {
 
     props.onChange(props.ident, {
       field: props.filter.field,
+      lock: props.filter.lock,
       Type: types,
       filterData: doSelectFilter,
       toUrl: () => encodeURI(types.join(`,`)),
@@ -230,6 +232,7 @@ export default function DeviceFilter(props) {
 
     props.onChange(props.ident, {
       field: props.filter.field,
+      lock: props.filter.lock,
       Availability: data,
       filterData: doSelectFilter,
       toUrl: () => encodeURI(data.join(`,`)),
@@ -280,6 +283,7 @@ export default function DeviceFilter(props) {
 
     props.onChange(props.ident, {
       field: props.filter.field,
+      lock: props.filter.lock,
       Connection: data,
       filterData: doConnectFilter,
       toUrl: () => encodeURI(data.join(`,`)),
@@ -289,6 +293,10 @@ export default function DeviceFilter(props) {
   // Sanitise data
   if (props.filter === undefined || props.filter.field === undefined) {
     props.filter.field = `none`
+  }
+  console.log(props.filter.lock)
+  if (props.filter.lock === undefined) {
+    props.filter.lock = false
   }
 
   switch (props.filter.field) {
@@ -330,7 +338,11 @@ export default function DeviceFilter(props) {
     <FormGroup row>
       <FormControl className={classes.formControl}>
         <InputLabel>Choose a field:</InputLabel>
-        <Select value={props.filter.field} onChange={handleFieldChange}>
+        <Select
+          value={props.filter.field}
+          onChange={handleFieldChange}
+          inputProps={{ readOnly: props.filter.lock }}
+        >
           <MenuItem value={`none`}>None</MenuItem>
           <MenuItem value={`Brand`}>Brand</MenuItem>
           <MenuItem value={`Device`}>Device Name</MenuItem>
@@ -349,6 +361,7 @@ export default function DeviceFilter(props) {
             className={classes.textField}
             value={props.filter.search ? props.filter.search : ``}
             onChange={(e) => handleSearchChange(e)}
+            inputProps={{ readOnly: props.filter.lock }}
           />
         </FormControl>
       )}
@@ -357,7 +370,8 @@ export default function DeviceFilter(props) {
           control={
             <Checkbox
               onChange={(e) => handleBpChange(e, 1)}
-              checked={props.filter.bpSupport & 1}
+              checked={(props.filter.bpSupport & 1) !== 0}
+              disabled={props.filter.lock}
             />
           }
           label="C#"
@@ -368,7 +382,8 @@ export default function DeviceFilter(props) {
           control={
             <Checkbox
               onChange={(e) => handleBpChange(e, 2)}
-              checked={props.filter.bpSupport & 2}
+              checked={(props.filter.bpSupport & 2) !== 0}
+              disabled={props.filter.lock}
             />
           }
           label="JS"
@@ -379,7 +394,8 @@ export default function DeviceFilter(props) {
           control={
             <Checkbox
               onChange={(e) => handleBpChange(e, 4)}
-              checked={props.filter.bpSupport & 4}
+              checked={(props.filter.bpSupport & 4) !== 0}
+              disabled={props.filter.lock}
             />
           }
           label="Rust"
@@ -395,6 +411,7 @@ export default function DeviceFilter(props) {
             renderValue={(selected) => selected.join(`, `)}
             MenuProps={MenuProps}
             onChange={(e) => handleFeatureChange(e, `Outputs`)}
+            inputProps={{ readOnly: props.filter.lock }}
           >
             {props.filterData.Features !== undefined &&
               props.filterData.Features.Outputs.map((a, i) => (
@@ -418,6 +435,7 @@ export default function DeviceFilter(props) {
             renderValue={(selected) => selected.join(`, `)}
             MenuProps={MenuProps}
             onChange={(e) => handleFeatureChange(e, `Inputs`)}
+            inputProps={{ readOnly: props.filter.lock }}
           >
             {props.filterData.Features !== undefined &&
               props.filterData.Features.Inputs.map((a, i) => (
@@ -441,6 +459,7 @@ export default function DeviceFilter(props) {
             renderValue={(selected) => selected.join(`, `)}
             MenuProps={MenuProps}
             onChange={handleTypeChange}
+            inputProps={{ readOnly: props.filter.lock }}
           >
             {props.filterData.Type !== undefined &&
               props.filterData.Type.map((a, i) => (
@@ -462,6 +481,7 @@ export default function DeviceFilter(props) {
             renderValue={(selected) => selected.join(`, `)}
             onChange={handleAvailabilityChange}
             MenuProps={MenuProps}
+            inputProps={{ readOnly: props.filter.lock }}
           >
             {props.filterData.Availability.map((a, i) => (
               <MenuItem key={i} value={a}>
@@ -482,6 +502,7 @@ export default function DeviceFilter(props) {
             onChange={handleConnectionChange}
             renderValue={(selected) => selected.join(`, `)}
             MenuProps={MenuProps}
+            inputProps={{ readOnly: props.filter.lock }}
           >
             {[`Bluetooth 2`, `Bluetooth 4 LE`, `USB`, `Other`].map((a, i) => (
               <MenuItem key={i} value={a}>
@@ -492,13 +513,15 @@ export default function DeviceFilter(props) {
           </Select>
         </FormControl>
       )}
-      <IconButton
-        className={classes.button}
-        aria-label="delete"
-        onClick={() => props.onRemove(props.ident)}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {!props.filter.lock && (
+        <IconButton
+          className={classes.button}
+          aria-label="delete"
+          onClick={() => props.onRemove(props.ident)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
     </FormGroup>
   )
 }
