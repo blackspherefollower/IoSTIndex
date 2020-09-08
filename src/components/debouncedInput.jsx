@@ -16,12 +16,12 @@ export default function debouncedInput(
       this.sendTextChange = debounce(this.sendTextChange, config.timeout)
     }
 
-    handleTextChange = e => {
+    handleTextChange = (e) => {
       this.setState({ value: e.target.value })
       this.sendTextChange({ target: { value: e.target.value } })
     }
 
-    sendTextChange = e => {
+    sendTextChange = (e) => {
       this.props.onChange(e)
     }
 

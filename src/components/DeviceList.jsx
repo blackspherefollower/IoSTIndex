@@ -11,6 +11,7 @@ import InfoIcon from "@material-ui/icons/Info"
 import LazyLoad from "react-lazyload"
 import { Link } from "gatsby"
 import Tooltip from "@material-ui/core/Tooltip"
+import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"
 
 function encode(string) {
   return encodeURIComponent(string)
@@ -97,6 +98,7 @@ const columns = [
           ``}
         {row.Buttplug.Buttplug_Support_Notes.length > 0 && (
           <Tooltip
+            interactive
             title={row.Buttplug.Buttplug_Support_Notes}
             classes={{ tooltip: classes.tooltip }}
           >
@@ -109,18 +111,61 @@ const columns = [
   {
     dataField: `Detail`,
     text: `Url`,
-    formatter: (cellContent, row) => (
-      <div>
-        {cellContent.length > 0 && (
-          <a
-            href={cellContent}
-            title={`Product link: ${row.Brand} - ${row.Device}`}
-          >
-            {cellContent}
-          </a>
-        )}
-      </div>
-    ),
+    formatter: (cellContent, row, classes) => {
+      const hasUrl = cellContent.length > 0
+      const hasAUrl = row.Affiliate_Link.length > 0
+
+      if (hasAUrl) {
+        return (
+          <div className={classes.tooltipcolumn}>
+            <a
+              href={row.Affiliate_Link}
+              title={`Affiliate link: ${row.Brand} - ${row.Device}`}
+            >
+              {row.Affiliate_Link}
+            </a>
+            <Tooltip
+              interactive
+              title={
+                <React.Fragment>
+                  This URL is an affiliate link: purchases made via this link
+                  contribute towards maintaining this site and buying devices
+                  for more thorough technical reviews.
+                  {hasUrl && (
+                    <span>
+                      {` `}
+                      The direct link to the product is:{` `}
+                      <a
+                        href={cellContent}
+                        title={`Product link: ${row.Brand} - ${row.Device}`}
+                      >
+                        {cellContent}
+                      </a>
+                    </span>
+                  )}
+                </React.Fragment>
+              }
+              classes={{ tooltip: classes.tooltip }}
+            >
+              <MonetizationOnIcon />
+            </Tooltip>
+          </div>
+        )
+      } else if (hasUrl) {
+        return (
+          <div>
+            <a
+              href={cellContent}
+              title={`Product link: ${row.Brand} - ${row.Device}`}
+            >
+              {cellContent}
+            </a>
+          </div>
+        )
+      } else {
+        return <div />
+      }
+    },
   },
 ]
 
@@ -179,7 +224,9 @@ const useStyles = makeStyles((theme) => {
     },
     tooltip: {
       maxWidth: 500,
-      fontSize: `1em`,
+      fontSize: theme.typography.pxToRem(12),
+      backgroundColor: `#ffffff`,
+      color: `#000000`,
     },
     bpsupp: {
       display: `flex`,
@@ -187,6 +234,10 @@ const useStyles = makeStyles((theme) => {
       "& span": {
         margin: 5,
       },
+    },
+    tooltipcolumn: {
+      display: `flex`,
+      alignItems: `center`,
     },
   }
 })

@@ -89,6 +89,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             Vibrators
             Oscillators
             Pump
+            Affiliate_Link
           }
         }
       }

@@ -16,7 +16,7 @@ import debouncedInput from "./debouncedInput"
 
 const DebouncedTextField = debouncedInput(TextField, { timeout: 200 })
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     formControl: {
       margin: theme.spacing(1),
@@ -80,7 +80,7 @@ export default function DeviceFilter(props) {
           }
           decodeURI(props.filter.urlData)
             .split(`,`)
-            .forEach(f => {
+            .forEach((f) => {
               const match = f.match(new RegExp(`(Inputs|Outputs)(.*)`))
               if (match !== null) {
                 features[match[1]].push(match[2])
@@ -116,14 +116,14 @@ export default function DeviceFilter(props) {
     }
   }, [])
 
-  const handleFieldChange = event => {
+  const handleFieldChange = (event) => {
     props.onChange(props.ident, { field: event.target.value })
   }
 
   const doTextFilter = (data, filter) =>
     data[filter.field].match(new RegExp(filter.search, `i`)) !== null
 
-  const handleSearchChange = event => {
+  const handleSearchChange = (event) => {
     props.onChange(props.ident, {
       field: props.filter.field,
       search: event.target.value,
@@ -190,8 +190,8 @@ export default function DeviceFilter(props) {
       filterData: doFeatureFilter,
       toUrl: () => {
         const data = []
-        data.push(features.Inputs.map(i => `Inputs${i}`))
-        data.push(features.Outputs.map(o => `Outputs${o}`))
+        data.push(features.Inputs.map((i) => `Inputs${i}`))
+        data.push(features.Outputs.map((o) => `Outputs${o}`))
         return encodeURI(data.flat().join(`,`))
       },
     })
@@ -262,7 +262,8 @@ export default function DeviceFilter(props) {
       const bits = data[filter.field].split(`,`)
       return (
         bits.filter(
-          v => !v.includes(`USB`) && !v.includes(`BT2`) && !v.includes(`BT4LE`)
+          (v) =>
+            !v.includes(`USB`) && !v.includes(`BT2`) && !v.includes(`BT4LE`)
         ).length > 0
       )
     }
@@ -347,7 +348,7 @@ export default function DeviceFilter(props) {
             type="search"
             className={classes.textField}
             value={props.filter.search ? props.filter.search : ``}
-            onChange={e => handleSearchChange(e)}
+            onChange={(e) => handleSearchChange(e)}
           />
         </FormControl>
       )}
@@ -355,7 +356,7 @@ export default function DeviceFilter(props) {
         <FormControlLabel
           control={
             <Checkbox
-              onChange={e => handleBpChange(e, 1)}
+              onChange={(e) => handleBpChange(e, 1)}
               checked={props.filter.bpSupport & 1}
             />
           }
@@ -366,7 +367,7 @@ export default function DeviceFilter(props) {
         <FormControlLabel
           control={
             <Checkbox
-              onChange={e => handleBpChange(e, 2)}
+              onChange={(e) => handleBpChange(e, 2)}
               checked={props.filter.bpSupport & 2}
             />
           }
@@ -377,7 +378,7 @@ export default function DeviceFilter(props) {
         <FormControlLabel
           control={
             <Checkbox
-              onChange={e => handleBpChange(e, 4)}
+              onChange={(e) => handleBpChange(e, 4)}
               checked={props.filter.bpSupport & 4}
             />
           }
@@ -391,9 +392,9 @@ export default function DeviceFilter(props) {
             multiple
             value={props.filter.Features.Outputs}
             input={<Input />}
-            renderValue={selected => selected.join(`, `)}
+            renderValue={(selected) => selected.join(`, `)}
             MenuProps={MenuProps}
-            onChange={e => handleFeatureChange(e, `Outputs`)}
+            onChange={(e) => handleFeatureChange(e, `Outputs`)}
           >
             {props.filterData.Features !== undefined &&
               props.filterData.Features.Outputs.map((a, i) => (
@@ -414,9 +415,9 @@ export default function DeviceFilter(props) {
             multiple
             value={props.filter.Features.Inputs}
             input={<Input />}
-            renderValue={selected => selected.join(`, `)}
+            renderValue={(selected) => selected.join(`, `)}
             MenuProps={MenuProps}
-            onChange={e => handleFeatureChange(e, `Inputs`)}
+            onChange={(e) => handleFeatureChange(e, `Inputs`)}
           >
             {props.filterData.Features !== undefined &&
               props.filterData.Features.Inputs.map((a, i) => (
@@ -437,7 +438,7 @@ export default function DeviceFilter(props) {
             multiple
             value={props.filter.Type}
             input={<Input />}
-            renderValue={selected => selected.join(`, `)}
+            renderValue={(selected) => selected.join(`, `)}
             MenuProps={MenuProps}
             onChange={handleTypeChange}
           >
@@ -458,7 +459,7 @@ export default function DeviceFilter(props) {
             multiple
             value={props.filter.Availability}
             input={<Input />}
-            renderValue={selected => selected.join(`, `)}
+            renderValue={(selected) => selected.join(`, `)}
             onChange={handleAvailabilityChange}
             MenuProps={MenuProps}
           >
@@ -479,7 +480,7 @@ export default function DeviceFilter(props) {
             value={props.filter.Connection}
             input={<Input />}
             onChange={handleConnectionChange}
-            renderValue={selected => selected.join(`, `)}
+            renderValue={(selected) => selected.join(`, `)}
             MenuProps={MenuProps}
           >
             {[`Bluetooth 2`, `Bluetooth 4 LE`, `USB`, `Other`].map((a, i) => (
