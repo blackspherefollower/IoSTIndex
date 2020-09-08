@@ -113,7 +113,8 @@ const columns = [
     text: `Url`,
     formatter: (cellContent, row, classes) => {
       const hasUrl = cellContent.length > 0
-      const hasAUrl = row.Affiliate_Link.length > 0
+      const hasAUrl =
+        row.Affiliate_Link !== undefined && row.Affiliate_Link.length > 0
 
       if (hasAUrl) {
         return (
