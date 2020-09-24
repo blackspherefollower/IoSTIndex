@@ -10,8 +10,10 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank"
 import SEO from "../components/seo"
 import Container from "@material-ui/core/Container"
 import Box from "@material-ui/core/Box"
+import Tooltip from "@material-ui/core/Tooltip"
+import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     root: {},
     content: {
@@ -70,22 +72,89 @@ const useStyles = makeStyles(theme => {
         width: `100%`,
       },
     },
+    tooltip: {
+      maxWidth: 500,
+      fontSize: theme.typography.pxToRem(12),
+      backgroundColor: `#ffffff`,
+      color: `#000000`,
+    },
+    tooltipcolumn: {
+      display: `flex`,
+      alignItems: `center`,
+    },
   }
 })
 
 const galleryStyles = {
-  blanket: base => {
+  blanket: (base) => {
     return {
       ...base,
       zIndex: 2000,
     }
   },
-  positioner: base => {
+  positioner: (base) => {
     return {
       ...base,
       zIndex: 2000,
     }
   },
+}
+
+function renderUrl(device, classes) {
+  const hasUrl = device.Detail.length > 0
+  const hasAUrl =
+    device.Affiliate_Link !== undefined && device.Affiliate_Link.length > 0
+
+  if (hasAUrl) {
+    return (
+      <div className={classes.tooltipcolumn}>
+        <a
+          href={device.Affiliate_Link}
+          title={`Affiliate link: ${device.Brand} - ${device.Device}`}
+        >
+          {device.Affiliate_Link}
+        </a>
+        <Tooltip
+          interactive
+          title={
+            <React.Fragment>
+              This URL is an affiliate link: purchases made via this link
+              contribute towards maintaining this site and buying devices for
+              more thorough technical reviews.
+              {hasUrl && (
+                <span>
+                  {` `}
+                  The direct link to the product is:{` `}
+                  <a
+                    href={device.Detail}
+                    title={`Product link: ${device.Brand} - ${device.Device}`}
+                  >
+                    {device.Detail}
+                  </a>
+                </span>
+              )}
+            </React.Fragment>
+          }
+          classes={{ tooltip: classes.tooltip }}
+        >
+          <MonetizationOnIcon />
+        </Tooltip>
+      </div>
+    )
+  } else if (hasUrl) {
+    return (
+      <div>
+        <a
+          href={device.Detail}
+          title={`Product link: ${device.Brand} - ${device.Device}`}
+        >
+          {device.Detail}
+        </a>
+      </div>
+    )
+  } else {
+    return <div />
+  }
 }
 
 export default function Template({ path, pageContext }) {
@@ -110,12 +179,7 @@ export default function Template({ path, pageContext }) {
           <Box className={classes.table}>
             <b>Url:</b>
             {` `}
-            <a
-              href={device.Detail}
-              title={`Product link: ${device.Brand} - ${device.Device}`}
-            >
-              {device.Detail}
-            </a>
+            {renderUrl(device, classes)}
           </Box>
           <Box className={classes.table}>
             <b>Availability:</b> {device.Availability}
@@ -155,7 +219,7 @@ export default function Template({ path, pageContext }) {
               <Carousel
                 currentIndex={currentModal}
                 frameProps={{ autoSize: `height` }}
-                views={device.images.map(img => {
+                views={device.images.map((img) => {
                   return { src: img }
                 })}
               />
@@ -203,17 +267,25 @@ export default function Template({ path, pageContext }) {
           Buttplug.io Support
         </Typography>
         <Container className={classes.flexbox}>
-          <Box className={classes.table}>
+          <Box className={[classes.table, classes.tooltipcolumn]}>
             Buttplug-C#:
-            {(device.Buttplug.ButtplugSupport & 1) == 1 ? (
+            {(device.Buttplug.ButtplugSupport & 1) === 1 ? (
               <CheckBoxIcon />
             ) : (
               <CheckBoxOutlineBlankIcon />
             )}
           </Box>
-          <Box className={classes.table}>
+          <Box className={[classes.table, classes.tooltipcolumn]}>
             Buttplug-JS:
-            {(device.Buttplug.ButtplugSupport & 2) == 2 ? (
+            {(device.Buttplug.ButtplugSupport & 2) === 2 ? (
+              <CheckBoxIcon />
+            ) : (
+              <CheckBoxOutlineBlankIcon />
+            )}
+          </Box>
+          <Box className={[classes.table, classes.tooltipcolumn]}>
+            Buttplug-Rust:
+            {(device.Buttplug.ButtplugSupport & 4) === 4 ? (
               <CheckBoxIcon />
             ) : (
               <CheckBoxOutlineBlankIcon />
@@ -225,6 +297,8 @@ export default function Template({ path, pageContext }) {
   )
 }
 
-const Gallery = props => <div className={props.classes.gallery} {...props} />
+const Gallery = (props) => <div className={props.classes.gallery} {...props} />
 
-const Image = props => <div className={props.classes.galleryimage} {...props} />
+const Image = (props) => (
+  <div className={props.classes.galleryimage} {...props} />
+)
