@@ -157,6 +157,16 @@ function renderUrl(device, classes) {
   }
 }
 
+function featureSort(a, b) {
+  const valA = parseInt(a[1], 10)
+  const valB = parseInt(b[1], 10)
+
+  if ((valA === 0) !== (valB === 0)) {
+    return valB - valA
+  }
+  return a[0].localeCompare(b[0])
+}
+
 export default function Template({ path, pageContext }) {
   const classes = useStyles()
   const device = pageContext.device
@@ -238,12 +248,14 @@ export default function Template({ path, pageContext }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.keys(device.Features.Inputs).map((feat, i) => (
-                <TableRow key={i}>
-                  <TableCell>{feat}</TableCell>
-                  <TableCell>{device.Features.Inputs[feat]}</TableCell>
-                </TableRow>
-              ))}
+              {Object.entries(device.Features.Inputs)
+                .sort(featureSort)
+                .map((feat, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{feat[0]}</TableCell>
+                    <TableCell>{feat[1]}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
           <Table className={classes.table}>
@@ -254,12 +266,14 @@ export default function Template({ path, pageContext }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.keys(device.Features.Outputs).map((feat, i) => (
-                <TableRow key={i}>
-                  <TableCell>{feat}</TableCell>
-                  <TableCell>{device.Features.Outputs[feat]}</TableCell>
-                </TableRow>
-              ))}
+              {Object.entries(device.Features.Outputs)
+                .sort(featureSort)
+                .map((feat, i) => (
+                  <TableRow key={i}>
+                    <TableCell>{feat[0]}</TableCell>
+                    <TableCell>{feat[1]}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </Container>
