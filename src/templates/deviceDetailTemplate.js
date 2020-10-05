@@ -10,8 +10,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank"
 import SEO from "../components/seo"
 import Container from "@material-ui/core/Container"
 import Box from "@material-ui/core/Box"
-import Tooltip from "@material-ui/core/Tooltip"
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"
+import AffiliateLink from "../components/AffiliateLink"
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -72,16 +71,6 @@ const useStyles = makeStyles((theme) => {
         width: `100%`,
       },
     },
-    tooltip: {
-      maxWidth: 500,
-      fontSize: theme.typography.pxToRem(12),
-      backgroundColor: `#ffffff`,
-      color: `#000000`,
-    },
-    tooltipcolumn: {
-      display: `flex`,
-      alignItems: `center`,
-    },
   }
 })
 
@@ -98,63 +87,6 @@ const galleryStyles = {
       zIndex: 2000,
     }
   },
-}
-
-function renderUrl(device, classes) {
-  const hasUrl = device.Detail.length > 0
-  const hasAUrl =
-    device.Affiliate_Link !== undefined && device.Affiliate_Link.length > 0
-
-  if (hasAUrl) {
-    return (
-      <div className={classes.tooltipcolumn}>
-        <a
-          href={device.Affiliate_Link}
-          title={`Affiliate link: ${device.Brand} - ${device.Device}`}
-        >
-          {device.Affiliate_Link}
-        </a>
-        <Tooltip
-          interactive
-          title={
-            <React.Fragment>
-              This URL is an affiliate link: purchases made via this link
-              contribute towards maintaining this site and buying devices for
-              more thorough technical reviews.
-              {hasUrl && (
-                <span>
-                  {` `}
-                  The direct link to the product is:{` `}
-                  <a
-                    href={device.Detail}
-                    title={`Product link: ${device.Brand} - ${device.Device}`}
-                  >
-                    {device.Detail}
-                  </a>
-                </span>
-              )}
-            </React.Fragment>
-          }
-          classes={{ tooltip: classes.tooltip }}
-        >
-          <MonetizationOnIcon />
-        </Tooltip>
-      </div>
-    )
-  } else if (hasUrl) {
-    return (
-      <div>
-        <a
-          href={device.Detail}
-          title={`Product link: ${device.Brand} - ${device.Device}`}
-        >
-          {device.Detail}
-        </a>
-      </div>
-    )
-  } else {
-    return <div />
-  }
 }
 
 function featureSort(a, b) {
@@ -187,9 +119,7 @@ export default function Template({ path, pageContext }) {
         </Typography>
         <Container className={classes.flexbox}>
           <Box className={classes.table}>
-            <b>Url:</b>
-            {` `}
-            {renderUrl(device, classes)}
+            <b>Url:</b> <AffiliateLink device={device} />
           </Box>
           <Box className={classes.table}>
             <b>Availability:</b> {device.Availability}

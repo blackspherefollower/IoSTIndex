@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import TableRow from "@material-ui/core/TableRow"
 import TableSortLabel from "@material-ui/core/TableSortLabel"
 import Table from "@material-ui/core/Table"
@@ -8,12 +8,20 @@ import TableHead from "@material-ui/core/TableHead"
 import { makeStyles } from "@material-ui/core/styles"
 import AddIcon from "@material-ui/icons/Add"
 import InfoIcon from "@material-ui/icons/Info"
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank"
+import CheckBoxIcon from "@material-ui/icons/CheckBox"
+import CompareIcon from "@material-ui/icons/Compare"
 import LazyLoad from "react-lazyload"
 import { Link } from "gatsby"
 import Tooltip from "@material-ui/core/Tooltip"
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"
+import AffiliateLink from "./AffiliateLink"
+import Snackbar from "@material-ui/core/Snackbar"
+import Button from "@material-ui/core/Button"
+import CloseIcon from "@material-ui/icons/Close"
+import IconButton from "@material-ui/core/IconButton"
+import { navigate } from "gatsby-link"
 
-function encode(string) {
+export function encode(string) {
   return encodeURIComponent(string)
     .replace(/%20/g, ` `)
     .replace(/%[0-9A-Fa-f]{2}/g, `_`)
@@ -111,70 +119,30 @@ const columns = [
   {
     dataField: `Detail`,
     text: `Url`,
-    formatter: (cellContent, row, classes) => {
-      const hasUrl = cellContent.length > 0
-      const hasAUrl =
-        row.Affiliate_Link !== undefined && row.Affiliate_Link.length > 0
-
-      if (hasAUrl) {
-        return (
-          <div className={classes.tooltipcolumn}>
-            <a
-              href={row.Affiliate_Link}
-              title={`Affiliate link: ${row.Brand} - ${row.Device}`}
-            >
-              {row.Affiliate_Link}
-            </a>
-            <Tooltip
-              interactive
-              title={
-                <React.Fragment>
-                  This URL is an affiliate link: purchases made via this link
-                  contribute towards maintaining this site and buying devices
-                  for more thorough technical reviews.
-                  {hasUrl && (
-                    <span>
-                      {` `}
-                      The direct link to the product is:{` `}
-                      <a
-                        href={cellContent}
-                        title={`Product link: ${row.Brand} - ${row.Device}`}
-                      >
-                        {cellContent}
-                      </a>
-                    </span>
-                  )}
-                </React.Fragment>
-              }
-              classes={{ tooltip: classes.tooltip }}
-            >
-              <MonetizationOnIcon />
-            </Tooltip>
-          </div>
-        )
-      } else if (hasUrl) {
-        return (
-          <div>
-            <a
-              href={cellContent}
-              title={`Product link: ${row.Brand} - ${row.Device}`}
-            >
-              {cellContent}
-            </a>
-          </div>
-        )
-      } else {
-        return <div />
-      }
-    },
+    formatter: (cellContent, row) => <AffiliateLink device={row} />,
   },
 ]
 
-function EnhancedTableHead() {
+function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding={`checkbox`} />
+        <TableCell>
+          <a
+            href={
+              location.pathname + location.search + props.compareMode
+                ? `#compare`
+                : ``
+            }
+            onClick={() => {
+              props.setCompareMode(!props.compareMode)
+              props.setCompares([])
+            }}
+            className={props.classes.notalink}
+          >
+            {(props.compareMode && <CompareIcon />) || <InfoIcon />}
+          </a>
+        </TableCell>
         {columns.map((col, id) =>
           col.hidden ? null : (
             <TableCell
@@ -240,29 +208,126 @@ const useStyles = makeStyles((theme) => {
       display: `flex`,
       alignItems: `center`,
     },
+    close: {
+      padding: theme.spacing(0.5),
+    },
+    notalink: {
+      color: `black`,
+    },
   }
 })
+
+function toggleCompare(dev, compares, setCompares) {
+  const idx = compares.indexOf(dev)
+  if (idx === -1) {
+    compares.push(dev)
+  } else {
+    compares.splice(idx, 1)
+  }
+  setCompares(compares)
+}
+
+function CompareSnackbar(props) {
+  const handleClose = (event, reason) => {
+    if (reason === `clickaway`) {
+      return
+    }
+    console.log(reason)
+    props.setCompareMode(false)
+    props.setCompares([])
+  }
+
+  return (
+    <Snackbar
+      open={props.compareMode}
+      onClose={handleClose}
+      message={
+        props.compareCount < 2
+          ? `Select at least 2 devices to compare`
+          : `Compare ${props.compareCount} devices`
+      }
+      action={
+        <React.Fragment>
+          {props.compareCount > 1 && (
+            <Button color="inherit" size="small" onClick={props.doCompare}>
+              Compare
+            </Button>
+          )}
+          <IconButton
+            aria-label="close"
+            color="inherit"
+            className={props.classes.close}
+            onClick={handleClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        </React.Fragment>
+      }
+    />
+  )
+}
 
 export default function DeviceList(props) {
   const classes = useStyles()
   const data = props.data
+  const [compareMode, setCompareMode] = useState(false)
+  const [compares, setCompares] = useState([])
+
+  const doCompare = () => {
+    navigate(`/compare?` + compares.join(`&`))
+  }
 
   return (
     <div className={classes.devList}>
+      <CompareSnackbar
+        compareMode={compareMode}
+        setCompareMode={setCompareMode}
+        setCompares={setCompares}
+        compareCount={compares.length}
+        doCompare={doCompare}
+        classes={classes}
+      />
       <div className={classes.tableWrapper}>
         <Table className={classes.table} aria-label="device table">
-          <EnhancedTableHead />
+          <EnhancedTableHead
+            compareMode={compareMode}
+            setCompareMode={setCompareMode}
+            setCompares={setCompares}
+            classes={classes}
+          />
           <TableBody>
             {data.map((row) => (
               <TableRow hover tabIndex={-1} key={row.id}>
                 <TableCell>
-                  <Link
-                    to={
-                      `/devices/` + encode(row.Brand) + `/` + encode(row.Device)
-                    }
-                  >
-                    <AddIcon />
-                  </Link>
+                  {!compareMode && (
+                    <Link
+                      to={
+                        `/devices/` +
+                        encode(row.Brand) +
+                        `/` +
+                        encode(row.Device)
+                      }
+                    >
+                      <AddIcon />
+                    </Link>
+                  )}
+                  {compareMode && (
+                    <a
+                      href={location.pathname + location.search + `#compare`}
+                      onClick={() =>
+                        toggleCompare(
+                          encode(row.Brand) + `/` + encode(row.Device),
+                          [...compares],
+                          setCompares
+                        )
+                      }
+                      className={classes.notalink}
+                    >
+                      {(compares.includes(
+                        encode(row.Brand) + `/` + encode(row.Device)
+                      ) && <CheckBoxIcon />) || <CheckBoxOutlineBlankIcon />}
+                    </a>
+                  )}
                 </TableCell>
                 {columns.map((col, id) =>
                   col.hidden ? null : (
