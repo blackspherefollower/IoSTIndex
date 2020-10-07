@@ -22,7 +22,7 @@
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-prettier": "^3.1.4",
-    "gatsby": "^2.24.67",
+    "gatsby": "^2.24.68",
     "gatsby-plugin-layout": "^1.3.12",
     "gatsby-plugin-material-ui": "^2.1.10",
     "gatsby-plugin-matomo": "^0.8.3",
