@@ -27,7 +27,7 @@ export default function ComparePage() {
   const [errors, setErrors] = useState([])
   const classes = useStyles()
 
-  const search = typeof window !== 'undefined' ? window.location.search : ""
+  const search = typeof window !== `undefined` ? window.location.search : ``
 
   useEffect(() => {
     let devDate = null
@@ -50,6 +50,12 @@ export default function ComparePage() {
         return null
       })
       .then((res) => {
+        devices.forEach((d) => {
+          if (d.path === undefined) {
+            d.path = encode(d.Brand) + `/` + encode(d.Device)
+          }
+        })
+
         if (res != null) {
           devices = res.data
           localforage
@@ -143,9 +149,7 @@ export default function ComparePage() {
             <TableCell />
             {compares.map((d, i) => (
               <TableCell key={i}>
-                <Link
-                  to={`/devices/` + encode(d.Brand) + `/` + encode(d.Device)}
-                >
+                <Link to={`/devices/${d.path}`}>
                   {d.Brand} - {d.Device}
                 </Link>
               </TableCell>

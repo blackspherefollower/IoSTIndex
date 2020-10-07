@@ -1,12 +1,13 @@
 import React from "react"
 import axios from "axios"
 import DeviceFilter from "../components/DeviceFilter"
-import DeviceList from "../components/DeviceList"
+import DeviceList, { encode } from "../components/DeviceList"
 import { initializeReactUrlState } from "react-url-state"
 import * as localforage from "localforage"
 import * as moment from "moment"
 import Fab from "@material-ui/core/Fab"
 import FilterListIcon from "@material-ui/icons/FilterList"
+import CompareIcon from "@material-ui/icons/Compare"
 import SEO from "../components/seo"
 import { forceCheck } from "react-lazyload"
 
@@ -66,11 +67,13 @@ class IndexComponent extends React.Component {
       data: [],
       filters: [],
       filterData: {},
+      compareMode: false,
     }
     this.handleFilterRemove = this.handleFilterRemove.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
     this.handleTableChange = this.handleTableChange.bind(this)
     this.addFilter = this.addFilter.bind(this)
+    this.setCompareMode = this.setCompareMode.bind(this)
   }
 
   componentDidMount() {
@@ -94,6 +97,12 @@ class IndexComponent extends React.Component {
         return null
       })
       .then((res) => {
+        devices.forEach((d) => {
+          if (d.path === undefined) {
+            d.path = encode(d.Brand) + `/` + encode(d.Device)
+          }
+        })
+
         if (res != null) {
           devices = res.data
           localforage
@@ -195,6 +204,10 @@ class IndexComponent extends React.Component {
     this.setState({ filters })
   }
 
+  setCompareMode(mode) {
+    this.setState({ compareMode: mode })
+  }
+
   render() {
     const filterNavs = []
     this.state.filters.forEach((f, i) =>
@@ -224,10 +237,24 @@ class IndexComponent extends React.Component {
             <FilterListIcon />
             Add Filter
           </Fab>
+          <Fab
+            variant="extended"
+            color="primary"
+            size="medium"
+            style={{ margin: `8px` }}
+            onClick={() => this.setCompareMode(true)}
+          >
+            <CompareIcon />
+            Compare Devices
+          </Fab>
           <span>{this.state.data.length} devices found</span>
         </div>
         {filterNavs}
-        <DeviceList data={this.state.data} />
+        <DeviceList
+          data={this.state.data}
+          compareMode={this.state.compareMode}
+          setCompareMode={this.setCompareMode}
+        />
       </div>
     )
   }

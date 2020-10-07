@@ -124,23 +124,11 @@ const columns = [
 ]
 
 function EnhancedTableHead(props) {
-  const baseUrl = typeof windows !== 'undefined' ? (window.location.pathname + window.location.search) : ""
   return (
     <TableHead>
       <TableRow>
         <TableCell>
-          <a
-            href={
-              baseUrl + props.compareMode ? `#compare` : ``
-            }
-            onClick={() => {
-              props.setCompareMode(!props.compareMode)
-              props.setCompares([])
-            }}
-            className={props.classes.notalink}
-          >
-            {(props.compareMode && <CompareIcon />) || <InfoIcon />}
-          </a>
+          {(props.compareMode && <CompareIcon />) || <InfoIcon />}
         </TableCell>
         {columns.map((col, id) =>
           col.hidden ? null : (
@@ -269,7 +257,6 @@ function CompareSnackbar(props) {
 export default function DeviceList(props) {
   const classes = useStyles()
   const data = props.data
-  const [compareMode, setCompareMode] = useState(false)
   const [compares, setCompares] = useState([])
 
   const doCompare = () => {
@@ -279,8 +266,8 @@ export default function DeviceList(props) {
   return (
     <div className={classes.devList}>
       <CompareSnackbar
-        compareMode={compareMode}
-        setCompareMode={setCompareMode}
+        compareMode={props.compareMode}
+        setCompareMode={props.setCompareMode}
         setCompares={setCompares}
         compareCount={compares.length}
         doCompare={doCompare}
@@ -289,8 +276,8 @@ export default function DeviceList(props) {
       <div className={classes.tableWrapper}>
         <Table className={classes.table} aria-label="device table">
           <EnhancedTableHead
-            compareMode={compareMode}
-            setCompareMode={setCompareMode}
+            compareMode={props.compareMode}
+            setCompareMode={props.setCompareMode}
             setCompares={setCompares}
             classes={classes}
           />
@@ -298,33 +285,22 @@ export default function DeviceList(props) {
             {data.map((row) => (
               <TableRow hover tabIndex={-1} key={row.id}>
                 <TableCell>
-                  {!compareMode && (
-                    <Link
-                      to={
-                        `/devices/` +
-                        encode(row.Brand) +
-                        `/` +
-                        encode(row.Device)
-                      }
-                    >
+                  {!props.compareMode && (
+                    <Link to={`/devices/${row.path}`}>
                       <AddIcon />
                     </Link>
                   )}
-                  {compareMode && (
+                  {props.compareMode && (
                     <a
                       href={location.pathname + location.search + `#compare`}
                       onClick={() =>
-                        toggleCompare(
-                          encode(row.Brand) + `/` + encode(row.Device),
-                          [...compares],
-                          setCompares
-                        )
+                        toggleCompare(row.path, [...compares], setCompares)
                       }
                       className={classes.notalink}
                     >
-                      {(compares.includes(
-                        encode(row.Brand) + `/` + encode(row.Device)
-                      ) && <CheckBoxIcon />) || <CheckBoxOutlineBlankIcon />}
+                      {(compares.includes(row.path) && <CheckBoxIcon />) || (
+                        <CheckBoxOutlineBlankIcon />
+                      )}
                     </a>
                   )}
                 </TableCell>
