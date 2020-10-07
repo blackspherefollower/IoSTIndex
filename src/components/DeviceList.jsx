@@ -124,15 +124,14 @@ const columns = [
 ]
 
 function EnhancedTableHead(props) {
+  const baseUrl = typeof windows !== 'undefined' ? (window.location.pathname + window.location.search) : ""
   return (
     <TableHead>
       <TableRow>
         <TableCell>
           <a
             href={
-              location.pathname + location.search + props.compareMode
-                ? `#compare`
-                : ``
+              baseUrl + props.compareMode ? `#compare` : ``
             }
             onClick={() => {
               props.setCompareMode(!props.compareMode)

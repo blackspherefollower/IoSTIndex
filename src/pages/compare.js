@@ -27,6 +27,8 @@ export default function ComparePage() {
   const [errors, setErrors] = useState([])
   const classes = useStyles()
 
+  const search = typeof window !== 'undefined' ? window.location.search : ""
+
   useEffect(() => {
     let devDate = null
     let devices = null
@@ -56,7 +58,7 @@ export default function ComparePage() {
             .catch((err) => console.error(err))
         }
 
-        const params = new URLSearchParams(location.search)
+        const params = new URLSearchParams(search)
         const rawComps = []
         params.forEach((v, k) => {
           if (v.length === 0) {
@@ -119,7 +121,7 @@ export default function ComparePage() {
     <div>
       <SEO
         post={{
-          path: `compare?${location.search}`,
+          path: `compare?${search}`,
           title: `IoST Index: Compare devices`,
           description: `Comparing:\n${compares
             .map((d) => d.Brand + ` - ` + d.Device)
