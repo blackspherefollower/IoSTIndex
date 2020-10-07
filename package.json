@@ -35,7 +35,7 @@
     "gatsby-transformer-remark": "^2.8.37",
     "localforage": "^1.9.0",
     "lodash.debounce": "^4.0.8",
-    "moment": "^2.29.0",
+    "moment": "^2.29.1",
     "open-iconic": "^1.1.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
