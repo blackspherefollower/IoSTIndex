@@ -97,18 +97,23 @@ class IndexComponent extends React.Component {
         return null
       })
       .then((res) => {
-        devices.forEach((d) => {
-          if (d.path === undefined) {
-            d.path = encode(d.Brand) + `/` + encode(d.Device)
-          }
-        })
-
         if (res != null) {
           devices = res.data
+          devices.forEach((d) => {
+            if (d.path === undefined) {
+              d.path = encode(d.Brand) + `/` + encode(d.Device)
+            }
+          })
           localforage
             .setItem(`devices`, devices)
             .then(() => localforage.setItem(`devicesDate`, moment().valueOf()))
             .catch((err) => console.error(err))
+        } else {
+          devices.forEach((d) => {
+            if (d.path === undefined) {
+              d.path = encode(d.Brand) + `/` + encode(d.Device)
+            }
+          })
         }
 
         const filterData = { Features: { Inputs: [], Outputs: [] } }
