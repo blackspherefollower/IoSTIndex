@@ -219,7 +219,7 @@ function CompareSnackbar(props) {
     if (reason === `clickaway`) {
       return
     }
-    console.log(reason)
+
     props.setCompareMode(false)
     props.setCompares([])
   }

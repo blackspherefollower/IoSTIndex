@@ -294,7 +294,7 @@ export default function DeviceFilter(props) {
   if (props.filter === undefined || props.filter.field === undefined) {
     props.filter.field = `none`
   }
-  console.log(props.filter.lock)
+
   if (props.filter.lock === undefined) {
     props.filter.lock = false
   }
