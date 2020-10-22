@@ -150,6 +150,27 @@ class IndexComponent extends React.Component {
     this.reactUrlState = initializeReactUrlState(this)(
       reactUrlStateOptions,
       () => {
+        if (performance !== undefined) {
+          if (
+            performance
+              .getEntriesByType(`navigation`)
+              .findIndex(
+                (pnt) => pnt.type === `reload` || pnt.type === `back_forward`
+              ) !== -1
+          ) {
+            return
+          }
+        } else if (performance !== undefined) {
+          if (
+            performance.navigation.type ===
+              performance.navigation.TYPE_RELOAD ||
+            PerformanceNavigation.type ===
+              performance.navigation.TYPE_BACK_FORWARD
+          ) {
+            return
+          }
+        }
+
         if (this.state.filters.length === 0) {
           this.setState({
             filters: [{ field: `Availability`, urlData: `Available,DIY` }],
