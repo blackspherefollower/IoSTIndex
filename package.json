@@ -42,7 +42,7 @@
     "react-dom": "^16.14.0",
     "react-helmet": "^6.1.0",
     "react-images": "^1.1.7",
-    "react-lazyload": "^3.0.0",
+    "react-lazyload": "^3.1.0",
     "react-url-state": "git+https://github.com/blackspherefollower/react-url-state.git"
   },
   "devDependencies": {
