@@ -30,7 +30,7 @@
     "gatsby-plugin-react-helmet": "^3.3.14",
     "gatsby-plugin-sitemap": "^2.4.17",
     "gatsby-source-filesystem": "^2.3.35",
-    "gatsby-source-graphql": "^2.7.6",
+    "gatsby-source-graphql": "^2.7.7",
     "gatsby-transformer-csv": "^2.3.14",
     "gatsby-transformer-remark": "^2.8.45",
     "localforage": "^1.9.0",
