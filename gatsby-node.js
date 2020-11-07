@@ -1,5 +1,13 @@
 const path = require(`path`)
 const fs = require(`fs`)
+const imageThumbnail = require(`image-thumbnail`)
+
+const thumbOpts = {
+  width: 100,
+  height: 100,
+  responseType: `buffer`,
+  jpegOptions: { force: true, quality: 90 },
+}
 
 function encode(string) {
   return encodeURIComponent(string)
@@ -134,7 +142,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     ]
 
     dev.Buttplug = {}
-    bpProps.forEach(prop => {
+    bpProps.forEach((prop) => {
       dev.Buttplug[prop] = dev[prop]
       delete dev[prop]
     })
@@ -173,11 +181,11 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     }
     delete dev.Inputs
     delete dev.Outputs
-    inputFeatures.forEach(prop => {
+    inputFeatures.forEach((prop) => {
       dev.Features.Inputs[prop] = dev[prop]
       delete dev[prop]
     })
-    outputFeatures.forEach(prop => {
+    outputFeatures.forEach((prop) => {
       dev.Features.Outputs[prop] = dev[prop]
       delete dev[prop]
     })
@@ -205,7 +213,9 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
         }
       }
     }`)
-    dev.images = images.data.allFile.edges.map(e => `/` + e.node.relativePath).sort()
+    dev.images = images.data.allFile.edges
+      .map((e) => `/` + e.node.relativePath)
+      .sort()
     if (dev.images == null) {
       dev.images = []
     }
@@ -225,13 +235,24 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     if (!fs.existsSync(`public/devices/${brand}/${device}`)) {
       fs.mkdirSync(`public/devices/${brand}/${device}`)
     }
-    dev.images.forEach(img =>
-      fs.copyFileSync(`src/data/${img}`, `public/${img}`, err => {
+    dev.images.forEach((img) =>
+      fs.copyFileSync(`src/data/${img}`, `public/${img}`, (err) => {
         if (err) {
           console.error(err)
         }
       })
     )
+
+    if (dev.images.length > 0) {
+      imageThumbnail(`src/data/${dev.images[0]}`, thumbOpts)
+        .then((thumbnail) => {
+          fs.writeFileSync(
+            `public/devices/${brand}/${device}/thumb.jpeg`,
+            thumbnail
+          )
+        })
+        .catch((err) => console.error(err))
+    }
   }
 
   devices.sort((a, b) => {
@@ -251,14 +272,14 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   const rawJson = JSON.stringify(devices)
 
   await new Promise((resolve, reject) => {
-    fs.writeFile(`public/devices.json`, rawJson, `utf8`, function(err) {
+    fs.writeFile(`public/devices.json`, rawJson, `utf8`, function (err) {
       if (err) {
         reject(err)
         return
       }
       resolve(true)
     })
-  }).catch(err => {
+  }).catch((err) => {
     reporter.panicOnBuild(
       `An error occured while writing JSON Object to File.`,
       err
@@ -270,7 +291,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       `public/devices.jsonp`,
       `getIoSTData(${rawJson})`,
       `utf8`,
-      function(err) {
+      function (err) {
         if (err) {
           reject(err)
           return
@@ -278,7 +299,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
         resolve(true)
       }
     )
-  }).catch(err => {
+  }).catch((err) => {
     reporter.panicOnBuild(
       `An error occured while writing JSONP Object to File.`,
       err

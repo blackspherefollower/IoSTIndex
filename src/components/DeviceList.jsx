@@ -40,7 +40,7 @@ const columns = [
         {cellContent && cellContent.length > 0 && (
           <LazyLoad height={50}>
             <img
-              src={cellContent[0]}
+              src={`devices/${row.Brand}/${row.Device}/thumb.jpeg`}
               className={classes.thumbnail}
               alt={`${row.Brand} - ${row.Device} - Thumbnail`}
             />

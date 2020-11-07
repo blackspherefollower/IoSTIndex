@@ -46,6 +46,7 @@
     "react-url-state": "git+https://github.com/blackspherefollower/react-url-state.git"
   },
   "devDependencies": {
+    "image-thumbnail": "^1.0.11",
     "prettier": "^2.1.2"
   },
   "repository": {
