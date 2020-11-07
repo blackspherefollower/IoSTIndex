@@ -1,13 +1,6 @@
 const path = require(`path`)
 const fs = require(`fs`)
-const imageThumbnail = require(`image-thumbnail`)
-
-const thumbOpts = {
-  width: 100,
-  height: 100,
-  responseType: `buffer`,
-  jpegOptions: { force: true, quality: 90 },
-}
+const sharp = require(`sharp`)
 
 function encode(string) {
   return encodeURIComponent(string)
@@ -244,13 +237,34 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     )
 
     if (dev.images.length > 0) {
-      imageThumbnail(`src/data/${dev.images[0]}`, thumbOpts)
-        .then((thumbnail) => {
-          fs.writeFileSync(
-            `public/devices/${brand}/${device}/thumb.jpeg`,
-            thumbnail
-          )
+      const fImg = sharp(`src/data/${dev.images[0]}`).resize({
+        width: 100,
+        height: 100,
+        fit: `contain`,
+        background: `#fff`,
+      })
+      fImg
+        .metadata()
+        .then(async function (metadata) {
+          if (metadata.hasAlpha) {
+            return sharp({
+              create: {
+                width: 100,
+                height: 100,
+                background: `#fff`,
+                channels: 4,
+              },
+            })
+              .composite([{ input: await fImg.toBuffer() }])
+              .flatten()
+          }
+          return fImg
         })
+        .then((img) =>
+          img
+            .jpeg({ quality: 90 })
+            .toFile(`public/devices/${brand}/${device}/thumb.jpeg`)
+        )
         .catch((err) => console.error(err))
     }
   }
