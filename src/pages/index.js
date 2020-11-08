@@ -36,6 +36,10 @@ const reactUrlStateOptions = {
       })
     }
 
+    if (param === `filtersChanged`) {
+      newState.filtersChanged = true
+    }
+
     return newState
   },
   toIdMappers: (param, state) => {
@@ -54,6 +58,9 @@ const reactUrlStateOptions = {
           .join(`&`) + (locks.length > 0 ? `&locks=${locks.join(`,`)}` : ``)
       )
     }
+    if (param === `filtersChanged`) {
+      return state.filtersChanged ? `filtersChanged=1` : undefined
+    }
     return undefined
   },
   pathname: `/`,
@@ -68,6 +75,7 @@ class IndexComponent extends React.Component {
       filters: [],
       filterData: {},
       compareMode: false,
+      filtersChanged: false,
     }
     this.handleFilterRemove = this.handleFilterRemove.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
@@ -171,7 +179,7 @@ class IndexComponent extends React.Component {
           }
         }
 
-        if (this.state.filters.length === 0) {
+        if (this.state.filters.length === 0 && !this.state.filtersChanged) {
           this.setState({
             filters: [{ field: `Availability`, urlData: `Available,DIY` }],
           })
@@ -220,7 +228,7 @@ class IndexComponent extends React.Component {
         data = data.filter((d) => f.filterData(d, f))
       }
     })
-    this.reactUrlState.setUrlState({ data, filters })
+    this.reactUrlState.setUrlState({ data, filters, filtersChanged: true })
     forceCheck()
   }
 
