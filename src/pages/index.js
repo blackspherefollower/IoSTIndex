@@ -223,12 +223,17 @@ class IndexComponent extends React.Component {
     const filters = this.state.filters
     if (ident !== undefined) {
       filters[ident] = filter
-      trackCustomEvent(
-        `Filters`,
-        `Changed`,
-        `${filter.field}: ${filter.toUrl()}`,
-        ident
-      )
+      if (
+        typeof filter.field === `string` &&
+        typeof filter.toUrl === `function`
+      ) {
+        trackCustomEvent(
+          `Filters`,
+          `Changed`,
+          `${filter.field}: ${filter.toUrl()}`,
+          ident
+        )
+      }
     }
     let data = this.state.devices
     filters.forEach((f) => {
