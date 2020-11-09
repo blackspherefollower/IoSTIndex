@@ -10,6 +10,7 @@ import FilterListIcon from "@material-ui/icons/FilterList"
 import CompareIcon from "@material-ui/icons/Compare"
 import SEO from "../components/seo"
 import { forceCheck } from "react-lazyload"
+import trackCustomEvent from "../components/trackCustomEvent"
 
 const reactUrlStateOptions = {
   fromIdResolvers: async (param, value, oldState) => {
@@ -212,6 +213,7 @@ class IndexComponent extends React.Component {
 
   handleFilterRemove(ident) {
     const filters = this.state.filters
+    trackCustomEvent(`Filters`, `Removed`, `${filters[ident].field}`, ident)
     filters.splice(ident, 1)
     this.setState({ filters })
     this.handleFilterChange()
@@ -221,6 +223,12 @@ class IndexComponent extends React.Component {
     const filters = this.state.filters
     if (ident !== undefined) {
       filters[ident] = filter
+      trackCustomEvent(
+        `Filters`,
+        `Changed`,
+        `${filter.field}: ${filter.toUrl()}`,
+        ident
+      )
     }
     let data = this.state.devices
     filters.forEach((f) => {
