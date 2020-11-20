@@ -6,13 +6,16 @@ schedules:
   branches:
     include:
     - master
-    
+
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
 - script: |
+    wget https://github.com/Clever/csvlint/releases/download/0.2.0/csvlint-v0.2.0-linux-amd64.tar.gz
+    tar zxvf csvlint-v0.2.0-linux-amd64.tar.gz --strip-components 1
     wget -O src/data/devices.csv $DEVICESURL
+    ./csvlint src/data/devices.csv || exit 1
     if [ -z "$(git diff src/data)" ]; then
       echo '##vso[task.setvariable variable=dev-diff]skip'
       exit 0
