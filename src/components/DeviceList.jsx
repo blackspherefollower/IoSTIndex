@@ -20,6 +20,9 @@ import Button from "@material-ui/core/Button"
 import CloseIcon from "@material-ui/icons/Close"
 import IconButton from "@material-ui/core/IconButton"
 import { navigate } from "gatsby-link"
+import CheckCircleIcon from "@material-ui/icons/CheckCircle"
+import HighlightOffIcon from "@material-ui/icons/HighlightOff"
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
 
 export function encode(string) {
   return encodeURIComponent(string)
@@ -80,6 +83,13 @@ const columns = [
     sort: true,
     formatter: (cellContent, row, classes) => (
       <div className={classes.bpsupp}>
+        {(row.Buttplug.ButtplugSupport & 7) === 7 ? (
+          <CheckCircleIcon style={{ color: `green` }} />
+        ) : row.Buttplug.ButtplugSupport !== 0 ? (
+          <CheckCircleOutlineIcon style={{ color: `Orange` }} />
+        ) : (
+          <HighlightOffIcon color="error" />
+        )}
         {(row.Buttplug.ButtplugSupport & 1 && (
           <span>
             {` C#`}

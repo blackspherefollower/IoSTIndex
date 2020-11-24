@@ -5,8 +5,8 @@ import TableCell from "@material-ui/core/TableCell"
 import TableRow from "@material-ui/core/TableRow"
 import TableHead from "@material-ui/core/TableHead"
 import Table from "@material-ui/core/Table"
-import CheckBoxIcon from "@material-ui/icons/CheckBox"
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank"
+import CheckCircleIcon from "@material-ui/icons/CheckCircle"
+import HighlightOffIcon from "@material-ui/icons/HighlightOff"
 import SEO from "../components/seo"
 import Container from "@material-ui/core/Container"
 import Box from "@material-ui/core/Box"
@@ -70,6 +70,10 @@ const useStyles = makeStyles((theme) => {
       table: {
         width: `100%`,
       },
+    },
+    tooltipcolumn: {
+      display: `flex`,
+      alignItems: `center`,
     },
   }
 })
@@ -212,27 +216,27 @@ export default function Template({ path, pageContext }) {
         </Typography>
         <Container className={classes.flexbox}>
           <Box className={[classes.table, classes.tooltipcolumn]}>
-            Buttplug-C#:
+            Buttplug-C#:&nbsp;
             {(device.Buttplug.ButtplugSupport & 1) === 1 ? (
-              <CheckBoxIcon />
+              <CheckCircleIcon style={{ color: `green` }} />
             ) : (
-              <CheckBoxOutlineBlankIcon />
+              <HighlightOffIcon color="error" />
             )}
           </Box>
           <Box className={[classes.table, classes.tooltipcolumn]}>
-            Buttplug-JS:
+            Buttplug-JS:&nbsp;
             {(device.Buttplug.ButtplugSupport & 2) === 2 ? (
-              <CheckBoxIcon />
+              <CheckCircleIcon style={{ color: `green` }} />
             ) : (
-              <CheckBoxOutlineBlankIcon />
+              <HighlightOffIcon color="error" />
             )}
           </Box>
           <Box className={[classes.table, classes.tooltipcolumn]}>
-            Buttplug-Rust:
+            Buttplug-Rust:&nbsp;
             {(device.Buttplug.ButtplugSupport & 4) === 4 ? (
-              <CheckBoxIcon />
+              <CheckCircleIcon style={{ color: `green` }} />
             ) : (
-              <CheckBoxOutlineBlankIcon />
+              <HighlightOffIcon color="error" />
             )}
           </Box>
         </Container>
