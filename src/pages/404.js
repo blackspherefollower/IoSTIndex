@@ -29,7 +29,7 @@ export default function Error404() {
         }}
       />
       <Container className={classes.content}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h1" gutterBottom>
           404 - SexTech Not Found!
         </Typography>
         <p>

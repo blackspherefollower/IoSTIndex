@@ -118,7 +118,7 @@ export default function Template({ path, pageContext }) {
         }}
       />
       <Container className={classes.content}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h1" gutterBottom>
           {device.Brand} - {device.Device}
         </Typography>
         <Container className={classes.flexbox}>

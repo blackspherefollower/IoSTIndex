@@ -11,6 +11,7 @@ import CompareIcon from "@material-ui/icons/Compare"
 import SEO from "../components/seo"
 import { forceCheck } from "react-lazyload"
 import trackCustomEvent from "../components/trackCustomEvent"
+import { Typography } from "@material-ui/core"
 
 const reactUrlStateOptions = {
   fromIdResolvers: async (param, value, oldState) => {
@@ -273,6 +274,9 @@ class IndexComponent extends React.Component {
     return (
       <div>
         <SEO />
+        <Typography variant="h1" hidden={true}>
+          IoST Index: Device List
+        </Typography>
         <div>
           <Fab
             variant="extended"

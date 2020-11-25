@@ -27,7 +27,7 @@ export default function Template({
           title: `About IoST Index`,
         }}
       />
-      <Typography variant="h3" gutterBottom>
+      <Typography variant="h1" gutterBottom>
         {frontmatter.title}
       </Typography>
       <div

@@ -13,6 +13,7 @@ import { encode } from "../components/DeviceList"
 import Alert from "@material-ui/lab/Alert"
 import { makeStyles } from "@material-ui/core/styles"
 import SEO from "../components/seo"
+import { Typography } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -134,6 +135,9 @@ export default function ComparePage() {
             .join(`\n`)}`,
         }}
       />
+      <Typography variant="h1" hidden={true}>
+        IoST Index: Compare devices
+      </Typography>
       {errors.length !== 0 && (
         <div className={errors}>
           {errors.map((e, i) => (

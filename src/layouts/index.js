@@ -31,6 +31,14 @@ const theme = createMuiTheme({
       contrastText: `#000000`,
     },
   },
+  typography: {
+    h1: {
+      fontWeight: 400,
+      fontSize: `3rem`,
+      lineHeight: 1.167,
+      letterSpacing: `0em`,
+    },
+  },
 })
 
 const useStyles = makeStyles((theme) => {
@@ -63,6 +71,7 @@ export default function Layout({ children }) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
+        <meta httpEquiv="content-language" content="en-gb" />
       </Helmet>
       <CssBaseline />
       <AppBar position="static">
