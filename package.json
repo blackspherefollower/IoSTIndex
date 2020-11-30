@@ -47,7 +47,7 @@
     "sharp": "^0.26.3"
   },
   "devDependencies": {
-    "prettier": "^2.2.0"
+    "prettier": "^2.2.1"
   },
   "repository": {
     "type": "git",
