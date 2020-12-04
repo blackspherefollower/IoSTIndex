@@ -110,6 +110,15 @@ export default function DeviceFilter(props) {
           tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
           handleConnectionChange(null, tmp)
           break
+
+        case `Images`:
+          if (!isNaN(parseInt(props.filter.urlData, 10))) {
+            handleImagesChange(
+              { target: { checked: true } },
+              parseInt(props.filter.urlData, 10)
+            )
+          }
+          break
       }
     }
   }, [])
@@ -143,6 +152,22 @@ export default function DeviceFilter(props) {
       bpSupport,
       filterData: doBpFilter,
       toUrl: () => bpSupport,
+    })
+  }
+
+  const doImagesFilter = (data, filter) =>
+    filter.hasImages === undefined ||
+    (filter.hasImages === 1 && data.images.length > 0) ||
+    (filter.hasImages === 0 && data.images.length === 0)
+
+  const handleImagesChange = (event, mode) => {
+    const hasImages = event.target.checked ? mode : 0
+    props.onChange(props.ident, {
+      field: props.filter.field,
+      lock: props.filter.lock,
+      hasImages,
+      filterData: doImagesFilter,
+      toUrl: () => hasImages,
     })
   }
 
