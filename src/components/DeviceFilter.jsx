@@ -119,6 +119,15 @@ export default function DeviceFilter(props) {
             )
           }
           break
+
+        case `XToysSupport`:
+          if (!isNaN(parseInt(props.filter.urlData, 10))) {
+            handleXtoysChange(
+              { target: { checked: true } },
+              parseInt(props.filter.urlData, 10)
+            )
+          }
+          break
       }
     }
   }, [])
@@ -152,6 +161,20 @@ export default function DeviceFilter(props) {
       bpSupport,
       filterData: doBpFilter,
       toUrl: () => bpSupport,
+    })
+  }
+
+  const doXtoysFilter = (data, filter) =>
+    data.XToys.XToysSupport === filter.xtoysSupport
+
+  const handleXtoysChange = (event, mode) => {
+    const xtoysSupport = event.target.checked ? mode : 0
+    props.onChange(props.ident, {
+      field: props.filter.field,
+      lock: props.filter.lock,
+      xtoysSupport,
+      filterData: doXtoysFilter,
+      toUrl: () => xtoysSupport,
     })
   }
 
@@ -374,7 +397,8 @@ export default function DeviceFilter(props) {
           <MenuItem value={`Availability`}>Availability</MenuItem>
           <MenuItem value={`Connection`}>Connectivity</MenuItem>
           <MenuItem value={`Type`}>Form Factor</MenuItem>
-          <MenuItem value={`ButtplugSupport`}>Buttplug Support</MenuItem>
+          <MenuItem value={`ButtplugSupport`}>Buttplug.io Support</MenuItem>
+          <MenuItem value={`XToysSupport`}>XToys.app Support</MenuItem>
           <MenuItem value={`Features`}>Features</MenuItem>
         </Select>
       </FormControl>
@@ -537,6 +561,18 @@ export default function DeviceFilter(props) {
             ))}
           </Select>
         </FormControl>
+      )}
+      {props.filter.field === `XToysSupport` && (
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={(e) => handleXtoysChange(e, 1)}
+              checked={props.filter.xtoysSupport === 1}
+              disabled={props.filter.lock}
+            />
+          }
+          label="Supported"
+        />
       )}
       {!props.filter.lock && (
         <IconButton

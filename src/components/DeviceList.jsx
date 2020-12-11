@@ -43,7 +43,9 @@ const columns = [
         {cellContent && cellContent.length > 0 && (
           <LazyLoad height={50}>
             <img
-              src={`devices/${encode(row.Brand)}/${encode(row.Device)}/thumb.jpeg`}
+              src={`devices/${encode(row.Brand)}/${encode(
+                row.Device
+              )}/thumb.jpeg`}
               className={classes.thumbnail}
               alt={`${row.Brand} - ${row.Device} - Thumbnail`}
             />
@@ -118,6 +120,29 @@ const columns = [
           <Tooltip
             interactive
             title={row.Buttplug.Buttplug_Support_Notes}
+            classes={{ tooltip: classes.tooltip }}
+          >
+            <InfoIcon />
+          </Tooltip>
+        )}
+      </div>
+    ),
+  },
+  {
+    dataField: `XToys.XToysSupport`,
+    text: `XToys.app Support`,
+    sort: true,
+    formatter: (cellContent, row, classes) => (
+      <div className={classes.bpsupp}>
+        {row.XToys.XToysSupport === 1 ? (
+          <CheckCircleIcon style={{ color: `green` }} />
+        ) : (
+          <HighlightOffIcon color="error" />
+        )}
+        {row.XToys.XToys_Support_Notes.length > 0 && (
+          <Tooltip
+            interactive
+            title={row.XToys.XToys_Support_Notes}
             classes={{ tooltip: classes.tooltip }}
           >
             <InfoIcon />

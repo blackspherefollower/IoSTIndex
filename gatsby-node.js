@@ -91,6 +91,8 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             Oscillators
             Pump
             Affiliate_Link
+            XToys
+            XToys_Support_Notes
           }
         }
       }
@@ -137,6 +139,16 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     dev.Buttplug = {}
     bpProps.forEach((prop) => {
       dev.Buttplug[prop] = dev[prop]
+      delete dev[prop]
+    })
+
+    const xtoysProps = [`XToysSupport`, `XToys_Support_Notes`]
+
+    dev.XToysSupport = dev.XToys === `1` ? 1 : 0
+    delete dev.XToys
+    dev.XToys = {}
+    xtoysProps.forEach((prop) => {
+      dev.XToys[prop] = dev[prop]
       delete dev[prop]
     })
 

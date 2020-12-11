@@ -145,6 +145,17 @@ class IndexComponent extends React.Component {
               filterData[f].push(d[f])
             }
           })
+
+          // Ensure data is complete or stubbed
+          if (d.XToys === undefined) {
+            d.XToys = {}
+          }
+          if (d.XToys.XToysSupport === undefined) {
+            d.XToys.XToysSupport = 0
+          }
+          if (d.XToys.XToys_Support_Notes === undefined) {
+            d.XToys.XToys_Support_Notes = ``
+          }
         })
         fields.forEach((f) => {
           filterData[f].sort()
