@@ -44,7 +44,7 @@
     "react-images": "^1.1.7",
     "react-lazyload": "^3.1.0",
     "react-url-state": "git+https://github.com/blackspherefollower/react-url-state.git",
-    "sharp": "^0.26.3"
+    "sharp": "^0.27.0"
   },
   "devDependencies": {
     "prettier": "^2.2.1"
