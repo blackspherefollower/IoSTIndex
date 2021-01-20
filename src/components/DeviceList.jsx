@@ -22,7 +22,6 @@ import IconButton from "@material-ui/core/IconButton"
 import { navigate } from "gatsby-link"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import HighlightOffIcon from "@material-ui/icons/HighlightOff"
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline"
 
 export function encode(string) {
   return encodeURIComponent(string)
@@ -85,36 +84,42 @@ const columns = [
     sort: true,
     formatter: (cellContent, row, classes) => (
       <div className={classes.bpsupp}>
-        {(row.Buttplug.ButtplugSupport & 7) === 7 ? (
+        {(row.Buttplug.ButtplugSupport & 4) === 4 ? (
           <CheckCircleIcon style={{ color: `green` }} />
         ) : row.Buttplug.ButtplugSupport !== 0 ? (
-          <CheckCircleOutlineIcon style={{ color: `Orange` }} />
+          <HighlightOffIcon style={{ color: `Grey` }} />
         ) : (
           <HighlightOffIcon color="error" />
         )}
-        {(row.Buttplug.ButtplugSupport & 1 && (
-          <span>
-            {` C#`}
-            {row.Buttplug.Buttplug_CSharp === `Untested` && ` (Untested)`}
-            {row.Buttplug.Buttplug_CSharp === `Issues` && ` (Known Issues)`}
-          </span>
-        )) ||
-          ``}
-        {(row.Buttplug.ButtplugSupport & 2 && (
-          <span>
-            {` JS`}
-            {row.Buttplug.Buttplug_JS === `Untested` && ` (Untested)`}
-            {row.Buttplug.Buttplug_JS === `Issues` && ` (Known Issues)`}
-          </span>
-        )) ||
-          ``}
         {(row.Buttplug.ButtplugSupport & 4 && (
           <span>
-            {` Rust`}
             {row.Buttplug.Buttplug_Rust === `Untested` && ` (Untested)`}
             {row.Buttplug.Buttplug_Rust === `Issues` && ` (Known Issues)`}
           </span>
         )) ||
+          (row.Buttplug.ButtplugSupport & 3 && (
+            <span>
+              Deprecated support:
+              {(row.Buttplug.ButtplugSupport & 1 && ` C#`) || ``}
+              {(row.Buttplug.ButtplugSupport & 1 &&
+                row.Buttplug.Buttplug_CSharp === `Untested` &&
+                ` (Untested)`) ||
+                ``}
+              {(row.Buttplug.ButtplugSupport & 1 &&
+                row.Buttplug.Buttplug_CSharp === `Issues` &&
+                ` (Known Issues)`) ||
+                ``}
+              {(row.Buttplug.ButtplugSupport & 2 && ` JS`) || ``}
+              {((row.Buttplug.ButtplugSupport & 2 &&
+                row.Buttplug.Buttplug_JS === `Untested`) ||
+                ``) &&
+                ` (Untested)`}
+              {((row.Buttplug.ButtplugSupport & 2 &&
+                row.Buttplug.Buttplug_JS === `Issues`) ||
+                ``) &&
+                ` (Known Issues)`}
+            </span>
+          )) ||
           ``}
         {row.Buttplug.Buttplug_Support_Notes.length > 0 && (
           <Tooltip

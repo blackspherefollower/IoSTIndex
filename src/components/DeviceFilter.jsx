@@ -418,36 +418,12 @@ export default function DeviceFilter(props) {
         <FormControlLabel
           control={
             <Checkbox
-              onChange={(e) => handleBpChange(e, 1)}
-              checked={(props.filter.bpSupport & 1) !== 0}
-              disabled={props.filter.lock}
-            />
-          }
-          label="C#"
-        />
-      )}
-      {props.filter.field === `ButtplugSupport` && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              onChange={(e) => handleBpChange(e, 2)}
-              checked={(props.filter.bpSupport & 2) !== 0}
-              disabled={props.filter.lock}
-            />
-          }
-          label="JS"
-        />
-      )}
-      {props.filter.field === `ButtplugSupport` && (
-        <FormControlLabel
-          control={
-            <Checkbox
               onChange={(e) => handleBpChange(e, 4)}
               checked={(props.filter.bpSupport & 4) !== 0}
               disabled={props.filter.lock}
             />
           }
-          label="Rust"
+          label="Supported"
         />
       )}
       {props.filter.field === `Features` && (
