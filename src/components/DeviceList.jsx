@@ -22,6 +22,8 @@ import IconButton from "@material-ui/core/IconButton"
 import { navigate } from "gatsby-link"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import HighlightOffIcon from "@material-ui/icons/HighlightOff"
+import HelpIcon from "@material-ui/icons/Help"
+import ErrorIcon from "@material-ui/icons/Error"
 
 export function encode(string) {
   return encodeURIComponent(string)
@@ -84,10 +86,16 @@ const columns = [
     sort: true,
     formatter: (cellContent, row, classes) => (
       <div className={classes.bpsupp}>
-        {(row.Buttplug.ButtplugSupport & 4) === 4 ? (
+        {(row.Buttplug.ButtplugSupport & 4) === 4 &&
+        row.Buttplug.Buttplug_Rust === `Issues` ? (
+          <ErrorIcon style={{ color: `orange` }} />
+        ) : (row.Buttplug.ButtplugSupport & 4) === 4 &&
+          row.Buttplug.Buttplug_Rust === `Untested` ? (
+          <HelpIcon style={{ color: `blue` }} />
+        ) : (row.Buttplug.ButtplugSupport & 4) === 4 ? (
           <CheckCircleIcon style={{ color: `green` }} />
         ) : row.Buttplug.ButtplugSupport !== 0 ? (
-          <HighlightOffIcon style={{ color: `Grey` }} />
+          <HighlightOffIcon style={{ color: `grey` }} />
         ) : (
           <HighlightOffIcon color="error" />
         )}
