@@ -241,11 +241,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       fs.mkdirSync(`public/devices/${brand}/${device}`)
     }
     dev.images.forEach((img) =>
-      fs.copyFileSync(`src/data/${img}`, `public/${img}`, (err) => {
-        if (err) {
-          console.error(err)
-        }
-      })
+      fs.copyFileSync(`src/data/${img}`, `public/${img}`)
     )
 
     if (dev.images.length > 0) {

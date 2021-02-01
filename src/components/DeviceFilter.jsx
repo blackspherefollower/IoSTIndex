@@ -12,9 +12,8 @@ import Checkbox from "@material-ui/core/Checkbox"
 import Input from "@material-ui/core/Input"
 import ListItemText from "@material-ui/core/ListItemText"
 import IconButton from "@material-ui/core/IconButton"
-import debouncedInput from "./debouncedInput"
+import DebouncedInput from "./DebouncedInput"
 
-const DebouncedTextField = debouncedInput(TextField, { timeout: 200 })
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -404,14 +403,16 @@ export default function DeviceFilter(props) {
       </FormControl>
       {(props.filter.field === `Brand` || props.filter.field === `Device`) && (
         <FormControl className={classes.formControl}>
-          <DebouncedTextField
-            label={`Search ${props.filter.field}`}
-            type="search"
-            className={classes.textField}
-            value={props.filter.search ? props.filter.search : ``}
-            onChange={(e) => handleSearchChange(e)}
-            inputProps={{ readOnly: props.filter.lock }}
-          />
+          <DebouncedInput timeout={200}>
+            <TextField
+              label={`Search ${props.filter.field}`}
+              type="search"
+              className={classes.textField}
+              value={props.filter.search ? props.filter.search : ``}
+              onChange={(e) => handleSearchChange(e)}
+              inputProps={{ readOnly: props.filter.lock }}
+            />
+          </DebouncedInput>
         </FormControl>
       )}
       {props.filter.field === `ButtplugSupport` && (
