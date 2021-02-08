@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import debounce from "lodash/debounce"
 
-const DebouncedInput = (Component, timeout = 500) => ({
+const debouncedInput = (Component, timeout = 500) => ({
   onChange,
   value,
   ...props
@@ -20,4 +20,4 @@ const DebouncedInput = (Component, timeout = 500) => ({
   )
 }
 
-export default DebouncedInput
+export default debouncedInput
