@@ -11,6 +11,10 @@ import SEO from "../components/seo"
 import Container from "@material-ui/core/Container"
 import Box from "@material-ui/core/Box"
 import AffiliateLink from "../components/AffiliateLink"
+import ErrorIcon from "@material-ui/icons/Error"
+import HelpIcon from "@material-ui/icons/Help"
+import Tooltip from "@material-ui/core/Tooltip"
+import InfoIcon from "@material-ui/icons/Info"
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -216,27 +220,79 @@ export default function Template({ path, pageContext }) {
         </Typography>
         <Container className={classes.flexbox}>
           <Box className={[classes.table, classes.tooltipcolumn]}>
-            Buttplug-C#:&nbsp;
-            {(device.Buttplug.ButtplugSupport & 1) === 1 ? (
+            {(device.Buttplug.ButtplugSupport & 4) === 4 &&
+            device.Buttplug.Buttplug_Rust === `Issues` ? (
+              <ErrorIcon style={{ color: `orange` }} />
+            ) : (device.Buttplug.ButtplugSupport & 4) === 4 &&
+              device.Buttplug.Buttplug_Rust === `Untested` ? (
+              <HelpIcon style={{ color: `blue` }} />
+            ) : (device.Buttplug.ButtplugSupport & 4) === 4 ? (
+              <CheckCircleIcon style={{ color: `green` }} />
+            ) : device.Buttplug.ButtplugSupport !== 0 ? (
+              <HighlightOffIcon style={{ color: `grey` }} />
+            ) : (
+              <HighlightOffIcon color="error" />
+            )}
+            {(device.Buttplug.ButtplugSupport & 4 && (
+              <span>
+                {device.Buttplug.Buttplug_Rust === `Untested` && ` (Untested)`}
+                {device.Buttplug.Buttplug_Rust === `Issues` &&
+                  ` (Known Issues)`}
+              </span>
+            )) ||
+              (device.Buttplug.ButtplugSupport & 3 && (
+                <span>
+                  Deprecated support:
+                  {(device.Buttplug.ButtplugSupport & 1 && ` C#`) || ``}
+                  {(device.Buttplug.ButtplugSupport & 1 &&
+                    device.Buttplug.Buttplug_CSharp === `Untested` &&
+                    ` (Untested)`) ||
+                    ``}
+                  {(device.Buttplug.ButtplugSupport & 1 &&
+                    device.Buttplug.Buttplug_CSharp === `Issues` &&
+                    ` (Known Issues)`) ||
+                    ``}
+                  {(device.Buttplug.ButtplugSupport & 2 && ` JS`) || ``}
+                  {((device.Buttplug.ButtplugSupport & 2 &&
+                    device.Buttplug.Buttplug_JS === `Untested`) ||
+                    ``) &&
+                    ` (Untested)`}
+                  {((device.Buttplug.ButtplugSupport & 2 &&
+                    device.Buttplug.Buttplug_JS === `Issues`) ||
+                    ``) &&
+                    ` (Known Issues)`}
+                </span>
+              )) ||
+              ``}
+            {device.Buttplug.Buttplug_Support_Notes.length > 0 && (
+              <Tooltip
+                interactive
+                title={device.Buttplug.Buttplug_Support_Notes}
+                classes={{ tooltip: classes.tooltip }}
+              >
+                <InfoIcon />
+              </Tooltip>
+            )}
+          </Box>
+        </Container>
+        <Typography variant="h4" gutterBottom>
+          XToys.app Support
+        </Typography>
+        <Container className={classes.flexbox}>
+          <Box className={[classes.table, classes.tooltipcolumn]}>
+            {device.XToys.XToysSupport === 1 ? (
               <CheckCircleIcon style={{ color: `green` }} />
             ) : (
               <HighlightOffIcon color="error" />
             )}
-          </Box>
-          <Box className={[classes.table, classes.tooltipcolumn]}>
-            Buttplug-JS:&nbsp;
-            {(device.Buttplug.ButtplugSupport & 2) === 2 ? (
-              <CheckCircleIcon style={{ color: `green` }} />
-            ) : (
-              <HighlightOffIcon color="error" />
-            )}
-          </Box>
-          <Box className={[classes.table, classes.tooltipcolumn]}>
-            Buttplug-Rust:&nbsp;
-            {(device.Buttplug.ButtplugSupport & 4) === 4 ? (
-              <CheckCircleIcon style={{ color: `green` }} />
-            ) : (
-              <HighlightOffIcon color="error" />
+            {device.XToys.XToys_Support_Notes.length > 0 && (
+              <Tooltip
+                interactive
+                title={device.XToys.XToys_Support_Notes}
+                classes={{ tooltip: classes.tooltip }}
+              >
+                <InfoIcon />
+              </Tooltip>
             )}
           </Box>
         </Container>
