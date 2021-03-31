@@ -27,7 +27,6 @@ module.exports = {
       },
     },
     `gatsby-transformer-csv`,
-    `gatsby-plugin-modal-routing`,
     `gatsby-transformer-remark`,
     `gatsby-plugin-layout`,
     `gatsby-plugin-material-ui`,
