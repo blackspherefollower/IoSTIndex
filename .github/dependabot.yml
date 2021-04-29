@@ -1,0 +1,72 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  assignees:
+  - blackspherefollower
+  ignore:
+  - dependency-name: eslint-plugin-prettier
+    versions:
+    - 3.4.0
+  - dependency-name: gatsby-plugin-react-helmet
+    versions:
+    - 3.10.0
+    - 4.2.0
+    - 4.3.0
+  - dependency-name: gatsby-transformer-remark
+    versions:
+    - 2.16.0
+    - 2.16.1
+    - 3.2.0
+    - 4.0.0
+  - dependency-name: gatsby-plugin-sitemap
+    versions:
+    - 2.12.0
+    - 3.2.0
+    - 3.3.0
+  - dependency-name: gatsby
+    versions:
+    - 2.32.0
+    - 2.32.4
+    - 2.32.6
+    - 2.32.9
+    - 3.2.0
+    - 3.3.0
+  - dependency-name: gatsby-source-filesystem
+    versions:
+    - 2.11.0
+    - 2.11.1
+    - 3.2.0
+    - 3.3.0
+  - dependency-name: eslint-config-prettier
+    versions:
+    - 8.0.0
+    - 8.1.0
+    - 8.2.0
+  - dependency-name: gatsby-source-graphql
+    versions:
+    - 2.14.0
+    - 3.2.0
+    - 3.3.0
+  - dependency-name: gatsby-plugin-layout
+    versions:
+    - 1.10.0
+    - 2.2.0
+    - 2.3.0
+  - dependency-name: gatsby-transformer-csv
+    versions:
+    - 2.10.0
+    - 3.2.0
+    - 3.3.0
+  - dependency-name: gatsby-plugin-material-ui
+    versions:
+    - 3.0.0
+  - dependency-name: react-lazyload
+    versions:
+    - 3.2.0
+  - dependency-name: gatsby-plugin-matomo
+    versions:
+    - 0.9.0
