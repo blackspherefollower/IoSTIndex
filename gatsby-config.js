@@ -34,7 +34,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-sitemap`,
       options: {
-        exclude: [`/compare`, `/data`],
+        excludes: [`/compare`, `/data`],
       },
     },
   ],
