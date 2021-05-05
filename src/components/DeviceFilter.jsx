@@ -133,15 +133,97 @@ export default function DeviceFilter(props) {
   }, [])
 
   const handleFieldChange = (event) => {
-    props.onChange(props.ident, { field: event.target.value })
+    switch (event.target.value) {
+      case `Brand`:
+      case `Device`: {
+        handleSearchChange(
+          {
+            target: { value: props.filter.search || `` },
+          },
+          event.target.value
+        )
+        break
+      }
+
+      case `ButtplugSupport`: {
+        const value = parseInt(props.filter.bpSupport, 10)
+        handleBpChange(
+          { target: { checked: true } },
+          isNaN(value) ? 4 : value,
+          event.target.value
+        )
+        break
+      }
+
+      case `Features`: {
+        const features = {}
+        if (props.filter.features !== undefined) {
+          features.Inputs = [...props.filter.Features.Inputs]
+          features.Outputs = [...props.filter.Features.Outputs]
+        }
+        handleFeatureChange(null, `preset`, features, event.target.value)
+        break
+      }
+
+      case `Type`: {
+        let tmp = []
+        if (props.filter.Type !== undefined) {
+          tmp = [...props.filter.Type]
+        }
+        handleTypeChange(null, tmp, event.target.value)
+        break
+      }
+
+      case `Availability`: {
+        let tmp = []
+        if (props.filter.Availability !== undefined) {
+          tmp = [...props.filter.Availability]
+        }
+        handleAvailabilityChange(null, tmp, event.target.value)
+        break
+      }
+
+      case `Connection`: {
+        let tmp = []
+        if (props.filter.Connection !== undefined) {
+          tmp = [...props.filter.Connection]
+        }
+        handleConnectionChange(null, tmp, event.target.value)
+        break
+      }
+
+      case `Images`: {
+        const value = parseInt(props.filter.xtoysSupport, 10)
+        handleImagesChange(
+          { target: { checked: true } },
+          isNaN(value) ? 1 : value,
+          event.target.value
+        )
+        break
+      }
+
+      case `XToysSupport`: {
+        const value = parseInt(props.filter.xtoysSupport, 10)
+        handleXtoysChange(
+          { target: { checked: true } },
+          isNaN(value) ? 1 : value,
+          event.target.value
+        )
+        break
+      }
+
+      default:
+        props.onChange(props.ident, { field: event.target.value })
+        break
+    }
   }
 
   const doTextFilter = (data, filter) =>
     data[filter.field].match(new RegExp(filter.search, `i`)) !== null
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = (event, field) => {
     props.onChange(props.ident, {
-      field: props.filter.field,
+      field: field || props.filter.field,
       lock: props.filter.lock,
       search: event.target.value,
       filterData: doTextFilter,
@@ -150,13 +232,18 @@ export default function DeviceFilter(props) {
   }
 
   const doBpFilter = (data, filter) =>
-    (data.Buttplug.ButtplugSupport & filter.bpSupport) !== 0
+    filter.bpSupport === undefined ||
+    (filter.bpSupport === 0 &&
+      (data.Buttplug.ButtplugSupport === 0 ||
+        isNaN(data.Buttplug.ButtplugSupport))) ||
+    (filter.bpSupport !== 0 &&
+      (data.Buttplug.ButtplugSupport & filter.bpSupport) === filter.bpSupport)
 
-  const handleBpChange = (event, mode) => {
+  const handleBpChange = (event, mode, field) => {
     const bpSupport =
       (props.filter.bpSupport &= ~mode) | (event.target.checked ? mode : 0)
     props.onChange(props.ident, {
-      field: props.filter.field,
+      field: field || props.filter.field,
       lock: props.filter.lock,
       bpSupport,
       filterData: doBpFilter,
@@ -165,12 +252,13 @@ export default function DeviceFilter(props) {
   }
 
   const doXtoysFilter = (data, filter) =>
+    filter.xtoysSupport === undefined ||
     data.XToys.XToysSupport === filter.xtoysSupport
 
-  const handleXtoysChange = (event, mode) => {
+  const handleXtoysChange = (event, mode, field) => {
     const xtoysSupport = event.target.checked ? mode : 0
     props.onChange(props.ident, {
-      field: props.filter.field,
+      field: field || props.filter.field,
       lock: props.filter.lock,
       xtoysSupport,
       filterData: doXtoysFilter,
@@ -183,10 +271,10 @@ export default function DeviceFilter(props) {
     (filter.hasImages === 1 && data.images.length > 0) ||
     (filter.hasImages === 0 && data.images.length === 0)
 
-  const handleImagesChange = (event, mode) => {
+  const handleImagesChange = (event, mode, field) => {
     const hasImages = event.target.checked ? mode : 0
     props.onChange(props.ident, {
-      field: props.filter.field,
+      field: field || props.filter.field,
       lock: props.filter.lock,
       hasImages,
       filterData: doImagesFilter,
@@ -220,7 +308,7 @@ export default function DeviceFilter(props) {
     return true
   }
 
-  const handleFeatureChange = (event, type, feature) => {
+  const handleFeatureChange = (event, type, feature, field) => {
     let features = { Inputs: [], Outputs: [] }
     if (type === `preset`) {
       features = feature
@@ -233,7 +321,7 @@ export default function DeviceFilter(props) {
     }
 
     props.onChange(props.ident, {
-      field: props.filter.field,
+      field: field || props.filter.field,
       lock: props.filter.lock,
       Features: features,
       filterData: doFeatureFilter,
@@ -253,7 +341,7 @@ export default function DeviceFilter(props) {
     return filter[filter.field].includes(data[filter.field])
   }
 
-  const handleTypeChange = (event, type) => {
+  const handleTypeChange = (event, type, field) => {
     let types = []
     if (Array.isArray(type)) {
       types = types.concat(type)
@@ -262,7 +350,7 @@ export default function DeviceFilter(props) {
     }
 
     props.onChange(props.ident, {
-      field: props.filter.field,
+      field: field || props.filter.field,
       lock: props.filter.lock,
       Type: types,
       filterData: doSelectFilter,
@@ -270,7 +358,7 @@ export default function DeviceFilter(props) {
     })
   }
 
-  const handleAvailabilityChange = (event, availability) => {
+  const handleAvailabilityChange = (event, availability, field) => {
     let data = []
     if (Array.isArray(availability)) {
       data = data.concat(availability)
@@ -279,7 +367,7 @@ export default function DeviceFilter(props) {
     }
 
     props.onChange(props.ident, {
-      field: props.filter.field,
+      field: field || props.filter.field,
       lock: props.filter.lock,
       Availability: data,
       filterData: doSelectFilter,
@@ -321,7 +409,7 @@ export default function DeviceFilter(props) {
     return false
   }
 
-  const handleConnectionChange = (event, connection) => {
+  const handleConnectionChange = (event, connection, field) => {
     let data = []
     if (Array.isArray(connection)) {
       data = data.concat(connection)
@@ -330,7 +418,7 @@ export default function DeviceFilter(props) {
     }
 
     props.onChange(props.ident, {
-      field: props.filter.field,
+      field: field || props.filter.field,
       lock: props.filter.lock,
       Connection: data,
       filterData: doConnectFilter,
@@ -419,7 +507,10 @@ export default function DeviceFilter(props) {
           control={
             <Checkbox
               onChange={(e) => handleBpChange(e, 4)}
-              checked={(props.filter.bpSupport & 4) !== 0}
+              checked={
+                props.filter.bpSupport === undefined ||
+                (props.filter.bpSupport & 4) !== 0
+              }
               disabled={props.filter.lock}
             />
           }
@@ -543,7 +634,10 @@ export default function DeviceFilter(props) {
           control={
             <Checkbox
               onChange={(e) => handleXtoysChange(e, 1)}
-              checked={props.filter.xtoysSupport === 1}
+              checked={
+                props.filter.xtoysSupport === undefined ||
+                props.filter.xtoysSupport === 1
+              }
               disabled={props.filter.lock}
             />
           }

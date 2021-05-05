@@ -38,8 +38,8 @@ const reactUrlStateOptions = {
       })
     }
 
-    if (param === `filtersChanged`) {
-      newState.filtersChanged = true
+    if (param === `noFilter`) {
+      newState.noFilter = true
     }
 
     return newState
@@ -60,8 +60,8 @@ const reactUrlStateOptions = {
           .join(`&`) + (locks.length > 0 ? `&locks=${locks.join(`,`)}` : ``)
       )
     }
-    if (param === `filtersChanged`) {
-      return state.filtersChanged ? `filtersChanged=1` : undefined
+    if (param === `noFilter`) {
+      return state.noFilter ? `noFilter` : undefined
     }
     return undefined
   },
@@ -95,7 +95,11 @@ class IndexComponent extends React.Component {
         devices = value
         return localforage.getItem(`devicesDate`)
       })
-      .then((dateValue) => (devDate = moment(dateValue)))
+      .then((dateValue) => {
+        if (!isNaN(dateValue)) {
+          devDate = moment.unix(dateValue)
+        }
+      })
       .then(() => {
         if (
           devices === null ||
@@ -171,7 +175,10 @@ class IndexComponent extends React.Component {
     this.reactUrlState = initializeReactUrlState(this)(
       reactUrlStateOptions,
       () => {
-        if (performance !== undefined) {
+        if (
+          performance !== undefined &&
+          typeof performance.getEntriesByType === `function`
+        ) {
           if (
             performance
               .getEntriesByType(`navigation`)
@@ -182,6 +189,7 @@ class IndexComponent extends React.Component {
             return
           }
         } else if (performance !== undefined) {
+          // noinspection JSDeprecatedSymbols
           if (
             performance.navigation.type ===
               performance.navigation.TYPE_RELOAD ||
@@ -247,13 +255,21 @@ class IndexComponent extends React.Component {
         )
       }
     }
-    let data = this.state.devices
-    filters.forEach((f) => {
-      if (f.filterData !== undefined) {
-        data = data.filter((d) => f.filterData(d, f))
+    const data = this.state.devices.filter((d) => {
+      let res = true
+      for (let i = 0; res === true && i < filters.length; i++) {
+        const f = filters[i]
+        if (f.filterData !== undefined) {
+          res = f.filterData(d, f)
+        }
       }
+      return res
     })
-    this.reactUrlState.setUrlState({ data, filters, filtersChanged: true })
+    this.reactUrlState.setUrlState({
+      data,
+      filters,
+      noFilter: filters.length === 0,
+    })
     forceCheck()
   }
 
