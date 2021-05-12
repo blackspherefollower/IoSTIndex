@@ -14,7 +14,7 @@ import ListItemText from "@material-ui/core/ListItemText"
 import IconButton from "@material-ui/core/IconButton"
 import debouncedInput from "./debouncedInput"
 
-const DebouncedTextField = debouncedInput(TextField, { timeout: 500 })
+const DebouncedTextField = debouncedInput(TextField, 500)
 
 const useStyles = makeStyles((theme) => {
   return {
