@@ -380,6 +380,20 @@ export default function DeviceFilter(props) {
       return true
     }
     if (
+      filter[filter.field].includes(`Digital`) &&
+      Array.from(data[filter.field].toString().split(`,`)).filter(
+        (b) => !b.includes(`Audio`)
+      ).length > 0
+    ) {
+      return true
+    }
+    if (
+      filter[filter.field].includes(`Analogue`) &&
+      data[filter.field].includes(`Audio`)
+    ) {
+      return true
+    }
+    if (
       filter[filter.field].includes(`Bluetooth 2`) &&
       data[filter.field].includes(`BT2`)
     ) {
@@ -620,7 +634,14 @@ export default function DeviceFilter(props) {
             MenuProps={MenuProps}
             inputProps={{ readOnly: props.filter.lock }}
           >
-            {[`Bluetooth 2`, `Bluetooth 4 LE`, `USB`, `Other`].map((a, i) => (
+            {[
+              `Digital`,
+              `Analogue`,
+              `Bluetooth 2`,
+              `Bluetooth 4 LE`,
+              `USB`,
+              `Other`,
+            ].map((a, i) => (
               <MenuItem key={i} value={a}>
                 <Checkbox checked={props.filter.Connection.includes(a)} />
                 <ListItemText primary={a} />

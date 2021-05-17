@@ -202,7 +202,10 @@ class IndexComponent extends React.Component {
 
         if (this.state.filters.length === 0 && !this.state.filtersChanged) {
           this.setState({
-            filters: [{ field: `Availability`, urlData: `Available,DIY` }],
+            filters: [
+              { field: `Availability`, urlData: `Available,DIY` },
+              { field: `Connection`, urlData: `Digital` },
+            ],
           })
         }
       }
