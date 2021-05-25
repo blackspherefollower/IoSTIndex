@@ -22,7 +22,7 @@ export default function AffiliateLink(props) {
   const classes = useStyles()
   const device = props.device
 
-  const hasUrl = device.Detail.length > 0
+  const hasUrl = device.Detail !== undefined && device.Detail.length > 0
   const hasAUrl =
     device.Affiliate_Link !== undefined && device.Affiliate_Link.length > 0
 
