@@ -312,6 +312,12 @@ export default function DeviceFilter(props) {
     let features = { Inputs: [], Outputs: [] }
     if (type === `preset`) {
       features = feature
+      if (features[`Inputs`] === undefined) {
+        features.Inputs = []
+      }
+      if (features[`Outputs`] === undefined) {
+        features.Outputs = []
+      }
     } else {
       if (props.filter.Features !== undefined) {
         features.Inputs = [...props.filter.Features.Inputs]
