@@ -112,7 +112,7 @@ Svakom,Siime Eye,https://www.svakom.net/siime-eye,Discontinued,1,Insertable Vibr
 Svakom,Ella,https://www.svakom.net/ella,Available,1,Love Egg,BT4LE,Vibrator,None,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,Supported,0,Supported,svakom,,,,buttplug-c# buttplug-rs,buttplug-rs,buttplug-rs,,,,,1,Web app only,
 Svakom,Ella Neo,https://www.svakom.net/ella-neo,Available,0,Love Egg,BT4LE,Vibrator,None,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,Untested,svakom,,,,buttplug-rs,buttplug-rs,buttplug-rs,,,,,,,
 Svakom,Phoenix Neo,https://www.svakom.net/phoenix-neo,Available,0,Love Egg,BT4LE,Vibrator,None,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,Untested,svakom,,,,buttplug-rs,buttplug-rs,buttplug-rs,,,,,,,
-Svakom,Vick Neo,https://www.svakom.net/vick-neo,Available,0,Prostate Vibrator,BT4LE,Dual-Vibrator,None,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,Supported,svakom,,,,buttplug-rs,buttplug-rs,buttplug-rs,,,,,,,
+Svakom,Vick Neo,https://www.svakom.net/vick-neo,Available,1,Prostate Vibrator,BT4LE,Dual-Vibrator,None,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,Supported,svakom,,,,buttplug-rs,buttplug-rs,buttplug-rs,,,,,,,
 Svakom,Alex Neo,https://www.svakom.net/alex-neo,Available,1,Onahole,BT4LE,Linear actuator,None,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,buttplug-rs,buttplug-rs,buttplug-rs,,,,,,,
 Svakom,Emma Neo,https://www.svakom.net/emma-neo,Available,0,Wand,BT4LE,Vibrator,None,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,Untested,svakom,,,,,,,,,,,,,
 IMTOY,Gazelle,https://www.amazon.com/dp/B071KCVF4B,Discontinued,0,External Vibrator,BT4LE,Vibrator,None,,,,,,,0,0,0,0,0,,,,,,0,,0,0,0,,,,,buttplug-rs,buttplug-rs,buttplug-rs,,,,,,,
@@ -173,7 +173,7 @@ Klic-Klic,Klic-1002 Male,http://klic-klic.com/,Discontinued,0,Onahole,BT4LE?,Vib
 Je Joue,Dua,http://jejoue.com/our-collection/dua.html,Available,1,Clip Vibrator,BT4LE,Dual-Vibrator,None,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,Supported,jejoue,,,,buttplug-rs,buttplug-rs,buttplug-rs,,,,,1,,
 Je Joue,Nuo,http://jejoue.com/our-collection/nuo.html,Available,0,Buttplug,BT4LE,Dual-Vibrator,None,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,Supported,jejoue,,,,buttplug-rs,buttplug-rs,buttplug-rs,,,,,1,,
 PelviFly,PelviFly,https://pelvifly.com/en/,Available,0,Kegel,BT4LE,None,Pressure sensor,,,,,,,0,0,0,0,0,,,,,,0,Looks a lot like the Minnia kGoal,0,0,0,,,,,,,,,,,,,,
-Perifit,Perifit,http://www.perifit.io/,Available,0,Kegel,BT4LE,None,Duel Pressure sensor,0,0,0,0,0,0,0,0,0,0,0,,,,,2,0,,0,0,0,,,,,,,,,,,,,,
+Perifit,Perifit,http://www.perifit.io/,Available,0,Kegel,BT4LE,None,Duel Pressure sensor,0,0,0,0,0,0,0,0,0,0,0,,,,,2,0,,0,0,0,,,,,,,,,,,,,,http://perifit.refr.cc/iostindex
 CST Group,Venuz Bala,http://cst2002.com/?page_id=1179,Unknown,0,Rabbit,BT4LE,3 Vibrators,None,,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,,,,,
 CST Group,Smart Dito A,http://cst2002.com/?portfolio=ramboat-mambo,Unknown,0,Rabbit,BT4LE,Dual-Vibrator,None,,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,,,,,
 CST Group,Smart Dito B,http://cst2002.com/?portfolio=panoramix,Unknown,0,Insertable Vibrator,BT4LE,Vibrator,None,,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,0,0,0,,,,,,,,,,,,,,
