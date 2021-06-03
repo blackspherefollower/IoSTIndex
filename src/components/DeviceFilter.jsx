@@ -239,6 +239,28 @@ export default function DeviceFilter(props) {
     (filter.bpSupport !== 0 &&
       (data.Buttplug.ButtplugSupport & filter.bpSupport) === filter.bpSupport)
 
+  const validateBpFilter = (filter) => {
+    const errors = []
+    if (
+      filter.field === `ButtplugSupport` &&
+      (filter.bpSupport != 0 || filter.bpSupport === undefined)
+    ) {
+      if ((filter.bpSupport & 1) !== 0) {
+        errors.push(
+          `Buttplug C# has been deprecated in favour of Buttplug Rust and FFI based wrappers. ` +
+            `Consider resetting the Buttplug Support filter.`
+        )
+      }
+      if ((filter.bpSupport & 2) !== 0) {
+        errors.push(
+          `Buttplug C# has been deprecated in favour of Buttplug Rust and WASM bindings. ` +
+            `Consider resetting the Buttplug Support filter.`
+        )
+      }
+    }
+    return errors
+  }
+
   const handleBpChange = (event, mode, field) => {
     const bpSupport =
       (props.filter.bpSupport &= ~mode) | (event.target.checked ? mode : 0)
@@ -248,6 +270,7 @@ export default function DeviceFilter(props) {
       bpSupport,
       filterData: doBpFilter,
       toUrl: () => bpSupport,
+      validateFilter: validateBpFilter,
     })
   }
 

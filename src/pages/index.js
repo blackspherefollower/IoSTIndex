@@ -12,6 +12,7 @@ import SEO from "../components/seo"
 import { forceCheck } from "react-lazyload"
 import trackCustomEvent from "../components/trackCustomEvent"
 import { Typography } from "@material-ui/core"
+import { Alert } from "@material-ui/lab"
 
 const reactUrlStateOptions = {
   fromIdResolvers: async (param, value, oldState) => {
@@ -106,7 +107,7 @@ class IndexComponent extends React.Component {
           devDate === null ||
           moment().subtract(30, `m`).isAfter(devDate)
         ) {
-          return axios.get(`/devices.json`)
+          return axios.get(`/devices.json?` + Math.floor(Math.random() * 1000))
         }
         return null
       })
@@ -288,7 +289,8 @@ class IndexComponent extends React.Component {
 
   render() {
     const filterNavs = []
-    this.state.filters.forEach((f, i) =>
+    const filterErrors = []
+    this.state.filters.forEach((f, i) => {
       filterNavs.push(
         <DeviceFilter
           filter={f}
@@ -299,7 +301,16 @@ class IndexComponent extends React.Component {
           filterData={this.state.filterData}
         />
       )
-    )
+      if (typeof f.validateFilter === `function`) {
+        f.validateFilter(f).forEach((e) =>
+          filterErrors.push(
+            <Alert severity="error" key={filterErrors.length}>
+              {e}
+            </Alert>
+          )
+        )
+      }
+    })
 
     return (
       <div>
@@ -331,6 +342,7 @@ class IndexComponent extends React.Component {
           <span>{this.state.data.length} devices found</span>
         </div>
         {filterNavs}
+        {filterErrors}
         <DeviceList
           data={this.state.data}
           compareMode={this.state.compareMode}
