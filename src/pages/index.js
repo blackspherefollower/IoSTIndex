@@ -98,14 +98,14 @@ class IndexComponent extends React.Component {
       })
       .then((dateValue) => {
         if (!isNaN(dateValue)) {
-          devDate = moment.unix(dateValue)
+          devDate = moment(dateValue)
         }
       })
       .then(() => {
         if (
           devices === null ||
           devDate === null ||
-          moment().subtract(30, `m`).isAfter(devDate)
+          devDate.add(30, `m`).isBefore(moment())
         ) {
           return axios.get(`/devices.json?` + Math.floor(Math.random() * 1000))
         }
