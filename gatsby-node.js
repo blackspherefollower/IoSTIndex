@@ -58,6 +58,8 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             Connection
             Type
             Notes
+            Class
+            Anatomy
             Buttplug_C_
             Buttplug_JS
             Buttplug_Rust
@@ -118,6 +120,11 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     if (cs) dev.ButtplugSupport |= 1
     if (js) dev.ButtplugSupport |= 2
     if (rs) dev.ButtplugSupport |= 4
+
+    dev.Anatomy = (dev.Anatomy === undefined ? `` : dev.Anatomy)
+      .split(`,`)
+      .map((a) => a.trim())
+      .filter((a) => a.length > 0)
 
     const bpProps = [
       `ButtplugSupport`,

@@ -88,6 +88,15 @@ class IndexComponent extends React.Component {
   }
 
   componentDidMount() {
+    const fields = [`Availability`, `Type`, `Class`, `Anatomy`]
+    const csv = [`Anatomy`]
+    const filterData = { Features: { Inputs: [], Outputs: [] } }
+    fields.forEach((f) => {
+      if (filterData[f] === undefined) {
+        filterData[f] = []
+      }
+    })
+
     let devDate = null
     let devices = null
     localforage
@@ -131,7 +140,6 @@ class IndexComponent extends React.Component {
           })
         }
 
-        const filterData = { Features: { Inputs: [], Outputs: [] } }
         if (devices.length > 0) {
           filterData.Features.Inputs = Object.getOwnPropertyNames(
             devices[0].Features.Inputs
@@ -140,14 +148,26 @@ class IndexComponent extends React.Component {
             devices[0].Features.Outputs
           )
         }
-        const fields = [`Availability`, `Type`]
+
         devices.forEach((d) => {
           fields.forEach((f) => {
-            if (filterData[f] === undefined) {
-              filterData[f] = []
+            if (d[f] === undefined) {
+              return
             }
-            if (!filterData[f].includes(d[f])) {
-              filterData[f].push(d[f])
+            if (csv.includes(f)) {
+              String(d[f])
+                .split(`,`)
+                .forEach((fb) => {
+                  const fs = fb.trim()
+                  if (fs.length !== 0 && !filterData[f].includes(fs)) {
+                    filterData[f].push(fs)
+                  }
+                })
+            } else {
+              const fs = String(d[f]).trim()
+              if (fs.length !== 0 && !filterData[f].includes(fs)) {
+                filterData[f].push(fs)
+              }
             }
           })
 
