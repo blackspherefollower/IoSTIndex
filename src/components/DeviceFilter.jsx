@@ -212,6 +212,24 @@ export default function DeviceFilter(props) {
         break
       }
 
+      case `MarketedAs`: {
+        let tmp = []
+        if (props.filter.MarketedAs !== undefined) {
+          tmp = [...props.filter.MarketedAs]
+        }
+        handleMarketedAsChange(null, tmp, event.target.value)
+        break
+      }
+
+      case `TargetAnatomy`: {
+        let tmp = []
+        if (props.filter.TargetAnatomy !== undefined) {
+          tmp = [...props.filter.TargetAnatomy]
+        }
+        handleTargetAnatomyChange(null, tmp, event.target.value)
+        break
+      }
+
       default:
         props.onChange(props.ident, { field: event.target.value })
         break
@@ -367,7 +385,14 @@ export default function DeviceFilter(props) {
     if (filter[filter.field].length === 0) {
       return true
     }
-    return filter[filter.field].includes(data[filter.field])
+    const f = filter.filterOn === undefined ? filter.field : filter.filterOn
+    if (Array.isArray(data[f])) {
+      for (let i = 0; i < data[f].length; i++) {
+        if (filter[filter.field].includes(data[f][i])) return true
+      }
+      return false
+    }
+    return filter[filter.field].includes(data[f])
   }
 
   const handleTypeChange = (event, type, field) => {
@@ -469,6 +494,43 @@ export default function DeviceFilter(props) {
     })
   }
 
+  const handleMarketedAsChange = (event, market, field) => {
+    let data = []
+    if (Array.isArray(market)) {
+      data = data.concat(market)
+    } else {
+      data = event.target.value
+    }
+
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      MarketedAs: data,
+      filterOn: `Class`,
+      filterData: doSelectFilter,
+      toUrl: () => encodeURI(data.join(`,`)),
+    })
+  }
+
+  const handleTargetAnatomyChange = (event, anatomy, field) => {
+    let data = []
+    if (Array.isArray(anatomy)) {
+      data = data.concat(anatomy)
+    } else {
+      data = event.target.value
+    }
+
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      TargetAnatomy: data,
+      filterOn: `Anatomy`,
+      csvField: `true`,
+      filterData: doSelectFilter,
+      toUrl: () => encodeURI(data.join(`,`)),
+    })
+  }
+
   // Sanitise data
   if (props.filter === undefined || props.filter.field === undefined) {
     props.filter.field = `none`
@@ -504,6 +566,8 @@ export default function DeviceFilter(props) {
     case `Type`:
     case `Availability`:
     case `Connection`:
+    case `TargetAnatomy`:
+    case `MarketedAs`:
       if (props.filter[props.filter.field] === undefined) {
         props.filter[props.filter.field] = []
       }
@@ -531,6 +595,8 @@ export default function DeviceFilter(props) {
           <MenuItem value={`ButtplugSupport`}>Buttplug.io Support</MenuItem>
           <MenuItem value={`XToysSupport`}>XToys.app Support</MenuItem>
           <MenuItem value={`Features`}>Features</MenuItem>
+          <MenuItem value={`TargetAnatomy`}>Vendor's Target Anatomy</MenuItem>
+          <MenuItem value={`MarketedAs`}>Marketed As</MenuItem>s
         </Select>
       </FormControl>
       {(props.filter.field === `Brand` || props.filter.field === `Device`) && (
@@ -693,6 +759,50 @@ export default function DeviceFilter(props) {
           }
           label="Supported"
         />
+      )}
+      {props.filter.field === `MarketedAs` && (
+        <FormControl className={classes.formControl}>
+          <InputLabel>Marketed As</InputLabel>
+          <Select
+            multiple
+            value={props.filter.MarketedAs}
+            input={<Input />}
+            renderValue={(selected) => selected.join(`, `)}
+            onChange={handleMarketedAsChange}
+            MenuProps={MenuProps}
+            inputProps={{ readOnly: props.filter.lock }}
+          >
+            {props.filterData.Class !== undefined &&
+              props.filterData.Class.map((a, i) => (
+                <MenuItem key={i} value={a}>
+                  <Checkbox checked={props.filter.MarketedAs.includes(a)} />
+                  <ListItemText primary={a} />
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+      )}
+      {props.filter.field === `TargetAnatomy` && (
+        <FormControl className={classes.formControl}>
+          <InputLabel>Anatomy</InputLabel>
+          <Select
+            multiple
+            value={props.filter.TargetAnatomy}
+            input={<Input />}
+            renderValue={(selected) => selected.join(`, `)}
+            onChange={handleTargetAnatomyChange}
+            MenuProps={MenuProps}
+            inputProps={{ readOnly: props.filter.lock }}
+          >
+            {props.filterData.Anatomy !== undefined &&
+              props.filterData.Anatomy.map((a, i) => (
+                <MenuItem key={i} value={a}>
+                  <Checkbox checked={props.filter.TargetAnatomy.includes(a)} />
+                  <ListItemText primary={a} />
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
       )}
       {!props.filter.lock && (
         <IconButton
