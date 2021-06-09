@@ -10,6 +10,7 @@ module.exports = {
     description: `An index of all known sextech.`,
     siteUrl: `https://iostindex.com`, // used to create absolute URLs for SEO
     author: `@bpherefollower`,
+    feederId: ``,
   },
   plugins: [
     {
@@ -54,4 +55,8 @@ if (
       disableCookies: true,
     },
   })
+}
+
+if (process.env.FEEDER_ID) {
+  module.exports.siteMetadata.feederId = process.env.FEEDER_ID
 }

@@ -1,5 +1,5 @@
 import React from "react"
-import { navigate } from "gatsby"
+import { graphql, navigate, useStaticQuery } from "gatsby"
 import {
   makeStyles,
   createMuiTheme,
@@ -15,6 +15,9 @@ import Button from "@material-ui/core/Button"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { Helmet } from "react-helmet"
 import SvgIcon from "@material-ui/core/SvgIcon"
+import loadable from "@loadable/component"
+const Feedback = loadable(() => import(`feeder-react-feedback/dist/Feedback`))
+import "feeder-react-feedback/dist/feeder-react-feedback.css"
 
 const theme = createMuiTheme({
   palette: {
@@ -63,6 +66,15 @@ export default function Layout({ children }) {
   const classes = useStyles(theme)
   const isRoot =
     typeof location !== `undefined` && location && location.pathname === `/`
+  const data = useStaticQuery(graphql`
+    {
+      site {
+        siteMetadata {
+          feederId
+        }
+      }
+    }
+  `)
 
   return (
     <ThemeProvider theme={theme}>
@@ -124,6 +136,15 @@ export default function Layout({ children }) {
         </Toolbar>
       </AppBar>
       {children}
+      {data.site.siteMetadata.feederId.length > 0 && (
+        <Feedback
+          projectId={data.site.siteMetadata.feederId}
+          email={true}
+          primaryColor={theme.palette.primary.main}
+          hoverBorderColor={theme.palette.primary.light}
+          projectName={`IoST Index`}
+        />
+      )}
     </ThemeProvider>
   )
 }
