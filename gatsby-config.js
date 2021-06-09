@@ -9,7 +9,7 @@ module.exports = {
     title: `IoST Index`,
     description: `An index of all known sextech.`,
     siteUrl: `https://iostindex.com`, // used to create absolute URLs for SEO
-    author: `@blackspherefollower`,
+    author: `@bpherefollower`,
   },
   plugins: [
     {
