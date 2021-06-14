@@ -596,7 +596,7 @@ export default function DeviceFilter(props) {
           <MenuItem value={`XToysSupport`}>XToys.app Support</MenuItem>
           <MenuItem value={`Features`}>Features</MenuItem>
           <MenuItem value={`TargetAnatomy`}>Vendor's Target Anatomy</MenuItem>
-          <MenuItem value={`MarketedAs`}>Marketed As</MenuItem>s
+          <MenuItem value={`MarketedAs`}>Marketed As</MenuItem>
         </Select>
       </FormControl>
       {(props.filter.field === `Brand` || props.filter.field === `Device`) && (
