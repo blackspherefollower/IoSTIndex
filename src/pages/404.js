@@ -3,7 +3,7 @@ import SEO from "../components/seo"
 import Container from "@material-ui/core/Container"
 import { makeStyles, Typography } from "@material-ui/core"
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     root: {},
     content: {

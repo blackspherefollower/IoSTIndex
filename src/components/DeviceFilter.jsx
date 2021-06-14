@@ -261,7 +261,7 @@ export default function DeviceFilter(props) {
     const errors = []
     if (
       filter.field === `ButtplugSupport` &&
-      (filter.bpSupport != 0 || filter.bpSupport === undefined)
+      (filter.bpSupport !== 0 || filter.bpSupport === undefined)
     ) {
       if ((filter.bpSupport & 1) !== 0) {
         errors.push(

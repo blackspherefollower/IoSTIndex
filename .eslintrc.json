@@ -8,6 +8,7 @@
   "plugins": ["prettier", "react", "filenames"],
   "parserOptions": {
     "ecmaVersion": 2020,
+    "classProperties": true,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true

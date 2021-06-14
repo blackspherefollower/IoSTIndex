@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => {
       backgroundColor: `#ffffff`,
       color: `#000000`,
     },
-    tooltipcolumn: {
+    tooltipColumn: {
       display: `flex`,
       alignItems: `center`,
     },
@@ -22,13 +22,25 @@ export default function AffiliateLink(props) {
   const classes = useStyles()
   const device = props.device
 
+  if (device.Brand === undefined) {
+    device.Brand = ``
+  }
+  if (device.Device === undefined) {
+    device.Device = ``
+  }
+  if (device.Detail === undefined) {
+    device.Detail = ``
+  }
+  if (device.Affiliate_Link === undefined) {
+    device.Affiliate_Link = ``
+  }
+
   const hasUrl = device.Detail.length > 0
-  const hasAUrl =
-    device.Affiliate_Link !== undefined && device.Affiliate_Link.length > 0
+  const hasAUrl = device.Affiliate_Link.length > 0
 
   if (hasAUrl) {
     return (
-      <div className={classes.tooltipcolumn}>
+      <div className={classes.tooltipColumn}>
         <a
           href={device.Affiliate_Link}
           title={`Affiliate link: ${device.Brand} - ${device.Device}`}

@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core"
 import SEO from "../components/seo"
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     markdown: {
       margin: `50px`,
@@ -38,7 +38,7 @@ export default function Template({
   )
 }
 export const pageQuery = graphql`
-  query($path: String!) {
+  query ($path: String!) {
     markdownRemark(frontmatter: { path: { eq: $path } }) {
       html
       frontmatter {
