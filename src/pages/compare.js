@@ -14,11 +14,28 @@ import Alert from "@material-ui/lab/Alert"
 import { makeStyles } from "@material-ui/core/styles"
 import SEO from "../components/seo"
 import { Typography } from "@material-ui/core"
+import Box from "@material-ui/core/Box"
+import ErrorIcon from "@material-ui/icons/Error"
+import HelpIcon from "@material-ui/icons/Help"
+import CheckCircleIcon from "@material-ui/icons/CheckCircle"
+import HighlightOffIcon from "@material-ui/icons/HighlightOff"
+import Tooltip from "@material-ui/core/Tooltip"
+import InfoIcon from "@material-ui/icons/Info"
+import Container from "@material-ui/core/Container"
 
 const useStyles = makeStyles((theme) => {
   return {
     alert: {
       margin: theme.spacing(2),
+    },
+    flexbox: {
+      display: `flex`,
+      "flex-wrap": `wrap`,
+      padding: `0px`,
+    },
+    tooltipcolumn: {
+      display: `flex`,
+      alignItems: `center`,
     },
   }
 })
@@ -242,6 +259,96 @@ export default function ComparePage() {
             ))}
           </TableBody>
         )}
+        <TableRow>
+          <TableCell>Buttplug.io Support</TableCell>
+          {compares.map((d, i) => (
+            <TableCell key={i}>
+              <Container className={classes.flexbox}>
+                <Box className={[classes.table, classes.tooltipcolumn]}>
+                  {(d.Buttplug.ButtplugSupport & 4) === 4 &&
+                  d.Buttplug.Buttplug_Rust === `Issues` ? (
+                    <ErrorIcon style={{ color: `orange` }} />
+                  ) : (d.Buttplug.ButtplugSupport & 4) === 4 &&
+                    d.Buttplug.Buttplug_Rust === `Untested` ? (
+                    <HelpIcon style={{ color: `blue` }} />
+                  ) : (d.Buttplug.ButtplugSupport & 4) === 4 ? (
+                    <CheckCircleIcon style={{ color: `green` }} />
+                  ) : d.Buttplug.ButtplugSupport !== 0 ? (
+                    <HighlightOffIcon style={{ color: `grey` }} />
+                  ) : (
+                    <HighlightOffIcon color="error" />
+                  )}
+                  {(d.Buttplug.ButtplugSupport & 4 && (
+                    <span>
+                      {d.Buttplug.Buttplug_Rust === `Untested` &&
+                        ` (Untested)`}
+                      {d.Buttplug.Buttplug_Rust === `Issues` &&
+                        ` (Known Issues)`}
+                    </span>
+                  )) ||
+                    (d.Buttplug.ButtplugSupport & 3 && (
+                      <span>
+                        Deprecated support:
+                        {(d.Buttplug.ButtplugSupport & 1 && ` C#`) || ``}
+                        {(d.Buttplug.ButtplugSupport & 1 &&
+                          d.Buttplug.Buttplug_CSharp === `Untested` &&
+                          ` (Untested)`) ||
+                          ``}
+                        {(d.Buttplug.ButtplugSupport & 1 &&
+                          d.Buttplug.Buttplug_CSharp === `Issues` &&
+                          ` (Known Issues)`) ||
+                          ``}
+                        {(d.Buttplug.ButtplugSupport & 2 && ` JS`) || ``}
+                        {((d.Buttplug.ButtplugSupport & 2 &&
+                          d.Buttplug.Buttplug_JS === `Untested`) ||
+                          ``) &&
+                          ` (Untested)`}
+                        {((d.Buttplug.ButtplugSupport & 2 &&
+                          d.Buttplug.Buttplug_JS === `Issues`) ||
+                          ``) &&
+                          ` (Known Issues)`}
+                      </span>
+                    )) ||
+                    ``}
+                  {d.Buttplug.Buttplug_Support_Notes.length > 0 && (
+                    <Tooltip
+                      interactive
+                      title={d.Buttplug.Buttplug_Support_Notes}
+                      classes={{ tooltip: classes.tooltip }}
+                    >
+                      <InfoIcon />
+                    </Tooltip>
+                  )}
+                </Box>
+              </Container>
+            </TableCell>
+          ))}
+        </TableRow>
+        <TableRow>
+          <TableCell>XToys.app Support</TableCell>
+          {compares.map((d, i) => (
+            <TableCell key={i}>
+              <Container className={classes.flexbox}>
+                <Box className={[classes.table, classes.tooltipcolumn]}>
+                  {d.XToys.XToysSupport === 1 ? (
+                    <CheckCircleIcon style={{ color: `green` }} />
+                  ) : (
+                    <HighlightOffIcon color="error" />
+                  )}
+                  {d.XToys.XToys_Support_Notes.length > 0 && (
+                    <Tooltip
+                      interactive
+                      title={d.XToys.XToys_Support_Notes}
+                      classes={{ tooltip: classes.tooltip }}
+                    >
+                      <InfoIcon />
+                    </Tooltip>
+                  )}
+                </Box>
+              </Container>
+            </TableCell>
+          ))}
+        </TableRow>
       </Table>
     </div>
   )
