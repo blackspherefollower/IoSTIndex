@@ -28,7 +28,7 @@
     "gatsby-plugin-sitemap": "^4.6.0",
     "gatsby-source-filesystem": "^3.10.0",
     "gatsby-source-graphql": "^3.10.0",
-    "gatsby-transformer-csv": "^3.10.0",
+    "gatsby-transformer-csv": "^3.11.0",
     "gatsby-transformer-remark": "^4.7.0",
     "localforage": "^1.9.0",
     "lodash": "^4.17.21",
