@@ -255,7 +255,7 @@ export default function DeviceFilter(props) {
       (data.Buttplug.ButtplugSupport === 0 ||
         isNaN(data.Buttplug.ButtplugSupport))) ||
     (filter.bpSupport !== 0 &&
-      (data.Buttplug.ButtplugSupport & filter.bpSupport) === filter.bpSupport)
+      (data.Buttplug.ButtplugSupport & filter.bpSupport) !== 0)
 
   const validateBpFilter = (filter) => {
     const errors = []
@@ -280,8 +280,7 @@ export default function DeviceFilter(props) {
   }
 
   const handleBpChange = (event, mode, field) => {
-    const bpSupport =
-      (props.filter.bpSupport &= ~mode) | (event.target.checked ? mode : 0)
+    const bpSupport = event.target.checked ? mode : 0
     props.onChange(props.ident, {
       field: field || props.filter.field,
       lock: props.filter.lock,
