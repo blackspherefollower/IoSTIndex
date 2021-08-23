@@ -2,7 +2,7 @@ import React from "react"
 import { graphql, navigate, useStaticQuery } from "gatsby"
 import {
   makeStyles,
-  createMuiTheme,
+  createTheme,
   ThemeProvider,
 } from "@material-ui/core/styles"
 import AppBar from "@material-ui/core/AppBar"
@@ -19,7 +19,7 @@ import loadable from "@loadable/component"
 const Feedback = loadable(() => import(`feeder-react-feedback/dist/Feedback`))
 import "feeder-react-feedback/dist/feeder-react-feedback.css"
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       light: `#718792`,
