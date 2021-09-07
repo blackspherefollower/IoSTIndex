@@ -43,7 +43,7 @@
     "react-images": "^1.1.7",
     "react-lazyload": "^3.2.0",
     "react-url-state": "git+https://github.com/blackspherefollower/react-url-state.git",
-    "sharp": "^0.29.0"
+    "sharp": "^0.29.1"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
