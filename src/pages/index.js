@@ -89,7 +89,7 @@ class IndexComponent extends React.Component {
 
   componentDidMount() {
     const fields = [`Availability`, `Type`, `Class`, `Anatomy`]
-    const csv = [`Anatomy`]
+    const csv = [`Anatomy`, `Type`]
     const filterData = { Features: { Inputs: [], Outputs: [] } }
     fields.forEach((f) => {
       if (filterData[f] === undefined) {

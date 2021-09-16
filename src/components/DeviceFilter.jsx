@@ -406,6 +406,7 @@ export default function DeviceFilter(props) {
       field: field || props.filter.field,
       lock: props.filter.lock,
       Type: types,
+      csvField: `true`,
       filterData: doSelectFilter,
       toUrl: () => encodeURI(types.join(`,`)),
     })
