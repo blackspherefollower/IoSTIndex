@@ -390,6 +390,12 @@ export default function DeviceFilter(props) {
         if (filter[filter.field].includes(data[f][i])) return true
       }
       return false
+    } else if (filter.csvField === true) {
+      const arr = String(data[f]).split(`,`)
+      for (let i = 0; i < arr.length; i++) {
+        if (filter[filter.field].includes(arr[i].trim())) return true
+      }
+      return false
     }
     return filter[filter.field].includes(data[f])
   }
@@ -406,7 +412,7 @@ export default function DeviceFilter(props) {
       field: field || props.filter.field,
       lock: props.filter.lock,
       Type: types,
-      csvField: `true`,
+      csvField: true,
       filterData: doSelectFilter,
       toUrl: () => encodeURI(types.join(`,`)),
     })
@@ -525,7 +531,7 @@ export default function DeviceFilter(props) {
       lock: props.filter.lock,
       TargetAnatomy: data,
       filterOn: `Anatomy`,
-      csvField: `true`,
+      csvField: true,
       filterData: doSelectFilter,
       toUrl: () => encodeURI(data.join(`,`)),
     })
