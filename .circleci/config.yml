@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cimg/node:16.6.2
+      - image: cimg/node:lts-browsers
     working_directory: ~/IoST-Index
     steps:
       - checkout
