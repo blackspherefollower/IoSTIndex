@@ -206,6 +206,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   })
 
   for (const dev of devices) {
+    console.log(`Processing ${dev.Brand} ${dev.Device}`)
     const brand = encode(dev.Brand)
     const device = encode(dev.Device)
     if (!fs.existsSync(`src/data/devices/${brand}`)) {
