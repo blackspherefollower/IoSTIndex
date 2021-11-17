@@ -30,7 +30,7 @@
     "gatsby-plugin-sitemap": "^5.2.0",
     "gatsby-source-filesystem": "^4.2.0",
     "gatsby-source-graphql": "^4.2.0",
-    "gatsby-transformer-csv": "^4.1.0",
+    "gatsby-transformer-csv": "^4.2.0",
     "gatsby-transformer-remark": "^5.2.0",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
