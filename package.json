@@ -56,7 +56,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "prettier": "^2.5.0",
+    "prettier": "^2.5.1",
     "react-dev-utils": ">=11.0.4"
   },
   "repository": {
