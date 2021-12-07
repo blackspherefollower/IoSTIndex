@@ -128,6 +128,22 @@ export default function DeviceFilter(props) {
             )
           }
           break
+
+        case `MarketedAs`:
+          if (props.filter.Class !== undefined) {
+            tmp = [...props.filter.Class]
+          }
+          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
+          handleMarketedAsChange(null, tmp)
+          break
+
+        case `TargetAnatomy`:
+          if (props.filter.Anatomy !== undefined) {
+            tmp = [...props.filter.Anatomy]
+          }
+          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
+          handleTargetAnatomyChange(null, tmp)
+          break
       }
     }
   }, [])
