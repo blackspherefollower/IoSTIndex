@@ -47,106 +47,439 @@ const MenuProps = {
   },
 }
 
+const doTextFilter = (data, filter) =>
+  data[filter.field].match(new RegExp(filter.search, `i`)) !== null
+
+const doBpFilter = (data, filter) =>
+  filter.bpSupport === undefined ||
+  (filter.bpSupport === 0 &&
+    (data.Buttplug.ButtplugSupport === 0 ||
+      isNaN(data.Buttplug.ButtplugSupport))) ||
+  (filter.bpSupport !== 0 &&
+    (data.Buttplug.ButtplugSupport & filter.bpSupport) !== 0)
+
+const validateBpFilter = (filter) => {
+  const errors = []
+  if (
+    filter.field === `ButtplugSupport` &&
+    (filter.bpSupport !== 0 || filter.bpSupport === undefined)
+  ) {
+    if ((filter.bpSupport & 1) !== 0) {
+      errors.push(
+        `Buttplug C# has been deprecated in favour of Buttplug Rust and FFI based wrappers. ` +
+          `Consider resetting the Buttplug Support filter.`
+      )
+    }
+    if ((filter.bpSupport & 2) !== 0) {
+      errors.push(
+        `Buttplug C# has been deprecated in favour of Buttplug Rust and WASM bindings. ` +
+          `Consider resetting the Buttplug Support filter.`
+      )
+    }
+  }
+  return errors
+}
+
+const doXtoysFilter = (data, filter) =>
+  filter.xtoysSupport === undefined ||
+  data.XToys.XToysSupport === filter.xtoysSupport
+
+const doFeatureFilter = (data, filter) => {
+  for (const i of filter.Features.Inputs) {
+    if (
+      data.Features.Inputs[i] === undefined ||
+      data.Features.Inputs[i] === null ||
+      data.Features.Inputs[i] === 0 ||
+      data.Features.Inputs[i] === `0` ||
+      data.Features.Inputs[i].length === 0
+    ) {
+      return false
+    }
+  }
+  for (const i of filter.Features.Outputs) {
+    if (
+      data.Features.Outputs[i] === undefined ||
+      data.Features.Outputs[i] === null ||
+      data.Features.Outputs[i] === 0 ||
+      data.Features.Outputs[i] === `0` ||
+      data.Features.Outputs[i].length === 0
+    ) {
+      return false
+    }
+  }
+  return true
+}
+
+const doImagesFilter = (data, filter) =>
+  filter.hasImages === undefined ||
+  (filter.hasImages === 1 && data.images.length > 0) ||
+  (filter.hasImages === 0 && data.images.length === 0)
+
+const doSelectFilter = (data, filter) => {
+  if (filter[filter.field].length === 0) {
+    return true
+  }
+  const f = filter.filterOn === undefined ? filter.field : filter.filterOn
+  if (Array.isArray(data[f])) {
+    for (let i = 0; i < data[f].length; i++) {
+      if (filter[filter.field].includes(data[f][i])) return true
+    }
+    return false
+  } else if (filter.csvField === true) {
+    const arr = String(data[f]).split(`,`)
+    for (let i = 0; i < arr.length; i++) {
+      if (filter[filter.field].includes(arr[i].trim())) return true
+    }
+    return false
+  }
+  return filter[filter.field].includes(data[f])
+}
+
+const doConnectFilter = (data, filter) => {
+  if (filter[filter.field].length === 0) {
+    return true
+  }
+  if (
+    filter[filter.field].includes(`Digital`) &&
+    Array.from(data[filter.field].toString().split(`,`)).filter(
+      (b) => !b.includes(`Audio`)
+    ).length > 0
+  ) {
+    return true
+  }
+  if (
+    filter[filter.field].includes(`Analogue`) &&
+    data[filter.field].includes(`Audio`)
+  ) {
+    return true
+  }
+  if (
+    filter[filter.field].includes(`Bluetooth 2`) &&
+    data[filter.field].includes(`BT2`)
+  ) {
+    return true
+  }
+  if (
+    filter[filter.field].includes(`Bluetooth 4 LE`) &&
+    data[filter.field].includes(`BT4LE`)
+  ) {
+    return true
+  }
+  if (
+    filter[filter.field].includes(`USB`) &&
+    data[filter.field].includes(`USB`)
+  ) {
+    return true
+  }
+  if (filter[filter.field].includes(`Other`)) {
+    const bits = data[filter.field].split(`,`)
+    return (
+      bits.filter(
+        (v) => !v.includes(`USB`) && !v.includes(`BT2`) && !v.includes(`BT4LE`)
+      ).length > 0
+    )
+  }
+  return false
+}
+
+export function initialiseFilter(filter) {
+  const features = { Inputs: [], Outputs: [] }
+  let tmp = []
+  if (filter.urlData !== undefined) {
+    switch (filter.field) {
+      case `Brand`:
+      case `Device`:
+        filter.search = filter.urlData
+        filter.filterData = doTextFilter
+        filter.toUrl = () => encodeURI(filter.urlData)
+        break
+
+      case `ButtplugSupport`:
+        if (!isNaN(parseInt(filter.urlData, 10))) {
+          const bpSupport = parseInt(filter.urlData, 10)
+          filter.bpSupport = bpSupport
+          filter.filterData = doBpFilter
+          filter.toUrl = () => bpSupport
+          filter.validateFilter = validateBpFilter
+        }
+        break
+
+      case `Features`:
+        if (filter.features !== undefined) {
+          features.Inputs = [...filter.Features.Inputs]
+          features.Outputs = [...filter.Features.Outputs]
+        }
+        decodeURI(filter.urlData)
+          .split(`,`)
+          .forEach((f) => {
+            const match = f.match(new RegExp(`(Inputs|Outputs)(.*)`))
+            if (match !== null) {
+              features[match[1]].push(match[2])
+            }
+          })
+        if (features[`Inputs`] === undefined) {
+          features.Inputs = []
+        }
+        if (features[`Outputs`] === undefined) {
+          features.Outputs = []
+        }
+
+        filter.Features = features
+        filter.filterData = doFeatureFilter
+        filter.toUrl = () => {
+          const data = []
+          data.push(features.Inputs.map((i) => `Inputs${i}`))
+          data.push(features.Outputs.map((o) => `Outputs${o}`))
+          return encodeURI(data.flat().join(`,`))
+        }
+        break
+
+      case `Type`:
+        if (filter.Type !== undefined) {
+          tmp = [...filter.Type]
+        }
+        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`))
+
+        filter.Type = tmp
+        filter.csvField = true
+        filter.filterData = doSelectFilter
+        filter.toUrl = () => encodeURI(tmp.join(`,`))
+        break
+
+      case `Availability`:
+        if (filter.Availability !== undefined) {
+          tmp = [...filter.Availability]
+        }
+        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`))
+
+        filter.Availability = tmp
+        filter.filterData = doSelectFilter
+        filter.toUrl = () => encodeURI(tmp.join(`,`))
+        break
+
+      case `Connection`:
+        if (filter.Connection !== undefined) {
+          tmp = [...filter.Connection]
+        }
+        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`))
+        filter.Connection = tmp
+        filter.filterData = doConnectFilter
+        filter.toUrl = () => encodeURI(tmp.join(`,`))
+        break
+
+      case `Images`:
+        if (!isNaN(parseInt(filter.urlData, 10))) {
+          const hasImages = parseInt(filter.urlData, 10)
+          filter.hasImages = hasImages
+          filter.filterData = doImagesFilter
+          filter.toUrl = () => hasImages
+        }
+        break
+
+      case `XToysSupport`:
+        if (!isNaN(parseInt(filter.urlData, 10))) {
+          const xtoysSupport = parseInt(filter.urlData, 10)
+          filter.xtoysSupport = xtoysSupport
+          filter.filterData = doXtoysFilter
+          filter.toUrl = () => xtoysSupport
+        }
+        break
+
+      case `MarketedAs`:
+        if (filter.Class !== undefined) {
+          tmp = [...filter.Class]
+        }
+        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`))
+        filter.MarketedAs = tmp
+        filter.filterOn = `Class`
+        filter.filterData = doSelectFilter
+        filter.toUrl = () => encodeURI(tmp.join(`,`))
+        break
+
+      case `TargetAnatomy`:
+        if (filter.Anatomy !== undefined) {
+          tmp = [...filter.Anatomy]
+        }
+        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`))
+
+        filter.TargetAnatomy = tmp
+        filter.filterOn = `Anatomy`
+        filter.csvField = true
+        filter.filterData = doSelectFilter
+        filter.toUrl = () => encodeURI(tmp.join(`,`))
+        break
+    }
+  }
+  return filter
+}
+
 export default function DeviceFilter(props) {
   const classes = useStyles()
 
-  React.useEffect(() => {
-    const features = { Inputs: [], Outputs: [] }
-    let tmp = []
-    if (props.filter.urlData !== undefined) {
-      switch (props.filter.field) {
-        case `Brand`:
-        case `Device`:
-          handleSearchChange({
-            target: { value: decodeURI(props.filter.urlData) },
-          })
-          break
+  const handleSearchChange = (event, field) => {
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      search: event.target.value,
+      filterData: doTextFilter,
+      toUrl: () => encodeURI(event.target.value),
+    })
+  }
 
-        case `ButtplugSupport`:
-          if (!isNaN(parseInt(props.filter.urlData, 10))) {
-            handleBpChange(
-              { target: { checked: true } },
-              parseInt(props.filter.urlData, 10)
-            )
-          }
-          break
+  const handleBpChange = (event, mode, field) => {
+    const bpSupport = event.target.checked ? mode : 0
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      bpSupport,
+      filterData: doBpFilter,
+      toUrl: () => bpSupport,
+      validateFilter: validateBpFilter,
+    })
+  }
 
-        case `Features`:
-          if (props.filter.features !== undefined) {
-            features.Inputs = [...props.filter.Features.Inputs]
-            features.Outputs = [...props.filter.Features.Outputs]
-          }
-          decodeURI(props.filter.urlData)
-            .split(`,`)
-            .forEach((f) => {
-              const match = f.match(new RegExp(`(Inputs|Outputs)(.*)`))
-              if (match !== null) {
-                features[match[1]].push(match[2])
-              }
-            })
-          handleFeatureChange(null, `preset`, features)
-          break
+  const handleXtoysChange = (event, mode, field) => {
+    const xtoysSupport = event.target.checked ? mode : 0
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      xtoysSupport,
+      filterData: doXtoysFilter,
+      toUrl: () => xtoysSupport,
+    })
+  }
 
-        case `Type`:
-          if (props.filter.Type !== undefined) {
-            tmp = [...props.filter.Type]
-          }
-          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
-          handleTypeChange(null, tmp)
-          break
+  const handleImagesChange = (event, mode, field) => {
+    const hasImages = event.target.checked ? mode : 0
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      hasImages,
+      filterData: doImagesFilter,
+      toUrl: () => hasImages,
+    })
+  }
 
-        case `Availability`:
-          if (props.filter.Availability !== undefined) {
-            tmp = [...props.filter.Availability]
-          }
-          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
-          handleAvailabilityChange(null, tmp)
-          break
-
-        case `Connection`:
-          if (props.filter.Connection !== undefined) {
-            tmp = [...props.filter.Connection]
-          }
-          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
-          handleConnectionChange(null, tmp)
-          break
-
-        case `Images`:
-          if (!isNaN(parseInt(props.filter.urlData, 10))) {
-            handleImagesChange(
-              { target: { checked: true } },
-              parseInt(props.filter.urlData, 10)
-            )
-          }
-          break
-
-        case `XToysSupport`:
-          if (!isNaN(parseInt(props.filter.urlData, 10))) {
-            handleXtoysChange(
-              { target: { checked: true } },
-              parseInt(props.filter.urlData, 10)
-            )
-          }
-          break
-
-        case `MarketedAs`:
-          if (props.filter.Class !== undefined) {
-            tmp = [...props.filter.Class]
-          }
-          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
-          handleMarketedAsChange(null, tmp)
-          break
-
-        case `TargetAnatomy`:
-          if (props.filter.Anatomy !== undefined) {
-            tmp = [...props.filter.Anatomy]
-          }
-          tmp = tmp.concat(decodeURI(props.filter.urlData).split(`,`))
-          handleTargetAnatomyChange(null, tmp)
-          break
+  const handleFeatureChange = (event, type, feature, field) => {
+    let features = { Inputs: [], Outputs: [] }
+    if (type === `preset`) {
+      features = feature
+      if (features[`Inputs`] === undefined) {
+        features.Inputs = []
       }
+      if (features[`Outputs`] === undefined) {
+        features.Outputs = []
+      }
+    } else {
+      if (props.filter.Features !== undefined) {
+        features.Inputs = [...props.filter.Features.Inputs]
+        features.Outputs = [...props.filter.Features.Outputs]
+      }
+      features[type] = event.target.value
     }
-  }, [])
+
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      Features: features,
+      filterData: doFeatureFilter,
+      toUrl: () => {
+        const data = []
+        data.push(features.Inputs.map((i) => `Inputs${i}`))
+        data.push(features.Outputs.map((o) => `Outputs${o}`))
+        return encodeURI(data.flat().join(`,`))
+      },
+    })
+  }
+
+  const handleTypeChange = (event, type, field) => {
+    let types = []
+    if (Array.isArray(type)) {
+      types = types.concat(type)
+    } else {
+      types = event.target.value
+    }
+
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      Type: types,
+      csvField: true,
+      filterData: doSelectFilter,
+      toUrl: () => encodeURI(types.join(`,`)),
+    })
+  }
+
+  const handleAvailabilityChange = (event, availability, field) => {
+    let data = []
+    if (Array.isArray(availability)) {
+      data = data.concat(availability)
+    } else {
+      data = event.target.value
+    }
+
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      Availability: data,
+      filterData: doSelectFilter,
+      toUrl: () => encodeURI(data.join(`,`)),
+    })
+  }
+
+  const handleConnectionChange = (event, connection, field) => {
+    let data = []
+    if (Array.isArray(connection)) {
+      data = data.concat(connection)
+    } else {
+      data = event.target.value
+    }
+
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      Connection: data,
+      filterData: doConnectFilter,
+      toUrl: () => encodeURI(data.join(`,`)),
+    })
+  }
+
+  const handleMarketedAsChange = (event, market, field) => {
+    let data = []
+    if (Array.isArray(market)) {
+      data = data.concat(market)
+    } else {
+      data = event.target.value
+    }
+
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      MarketedAs: data,
+      filterOn: `Class`,
+      filterData: doSelectFilter,
+      toUrl: () => encodeURI(data.join(`,`)),
+    })
+  }
+
+  const handleTargetAnatomyChange = (event, anatomy, field) => {
+    let data = []
+    if (Array.isArray(anatomy)) {
+      data = data.concat(anatomy)
+    } else {
+      data = event.target.value
+    }
+
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      TargetAnatomy: data,
+      filterOn: `Anatomy`,
+      csvField: true,
+      filterData: doSelectFilter,
+      toUrl: () => encodeURI(data.join(`,`)),
+    })
+  }
 
   const handleFieldChange = (event) => {
     switch (event.target.value) {
@@ -251,309 +584,7 @@ export default function DeviceFilter(props) {
         break
     }
   }
-
-  const doTextFilter = (data, filter) =>
-    data[filter.field].match(new RegExp(filter.search, `i`)) !== null
-
-  const handleSearchChange = (event, field) => {
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      search: event.target.value,
-      filterData: doTextFilter,
-      toUrl: () => encodeURI(event.target.value),
-    })
-  }
-
-  const doBpFilter = (data, filter) =>
-    filter.bpSupport === undefined ||
-    (filter.bpSupport === 0 &&
-      (data.Buttplug.ButtplugSupport === 0 ||
-        isNaN(data.Buttplug.ButtplugSupport))) ||
-    (filter.bpSupport !== 0 &&
-      (data.Buttplug.ButtplugSupport & filter.bpSupport) !== 0)
-
-  const validateBpFilter = (filter) => {
-    const errors = []
-    if (
-      filter.field === `ButtplugSupport` &&
-      (filter.bpSupport !== 0 || filter.bpSupport === undefined)
-    ) {
-      if ((filter.bpSupport & 1) !== 0) {
-        errors.push(
-          `Buttplug C# has been deprecated in favour of Buttplug Rust and FFI based wrappers. ` +
-            `Consider resetting the Buttplug Support filter.`
-        )
-      }
-      if ((filter.bpSupport & 2) !== 0) {
-        errors.push(
-          `Buttplug C# has been deprecated in favour of Buttplug Rust and WASM bindings. ` +
-            `Consider resetting the Buttplug Support filter.`
-        )
-      }
-    }
-    return errors
-  }
-
-  const handleBpChange = (event, mode, field) => {
-    const bpSupport = event.target.checked ? mode : 0
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      bpSupport,
-      filterData: doBpFilter,
-      toUrl: () => bpSupport,
-      validateFilter: validateBpFilter,
-    })
-  }
-
-  const doXtoysFilter = (data, filter) =>
-    filter.xtoysSupport === undefined ||
-    data.XToys.XToysSupport === filter.xtoysSupport
-
-  const handleXtoysChange = (event, mode, field) => {
-    const xtoysSupport = event.target.checked ? mode : 0
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      xtoysSupport,
-      filterData: doXtoysFilter,
-      toUrl: () => xtoysSupport,
-    })
-  }
-
-  const doImagesFilter = (data, filter) =>
-    filter.hasImages === undefined ||
-    (filter.hasImages === 1 && data.images.length > 0) ||
-    (filter.hasImages === 0 && data.images.length === 0)
-
-  const handleImagesChange = (event, mode, field) => {
-    const hasImages = event.target.checked ? mode : 0
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      hasImages,
-      filterData: doImagesFilter,
-      toUrl: () => hasImages,
-    })
-  }
-
-  const doFeatureFilter = (data, filter) => {
-    for (const i of filter.Features.Inputs) {
-      if (
-        data.Features.Inputs[i] === undefined ||
-        data.Features.Inputs[i] === null ||
-        data.Features.Inputs[i] === 0 ||
-        data.Features.Inputs[i] === `0` ||
-        data.Features.Inputs[i].length === 0
-      ) {
-        return false
-      }
-    }
-    for (const i of filter.Features.Outputs) {
-      if (
-        data.Features.Outputs[i] === undefined ||
-        data.Features.Outputs[i] === null ||
-        data.Features.Outputs[i] === 0 ||
-        data.Features.Outputs[i] === `0` ||
-        data.Features.Outputs[i].length === 0
-      ) {
-        return false
-      }
-    }
-    return true
-  }
-
-  const handleFeatureChange = (event, type, feature, field) => {
-    let features = { Inputs: [], Outputs: [] }
-    if (type === `preset`) {
-      features = feature
-      if (features[`Inputs`] === undefined) {
-        features.Inputs = []
-      }
-      if (features[`Outputs`] === undefined) {
-        features.Outputs = []
-      }
-    } else {
-      if (props.filter.Features !== undefined) {
-        features.Inputs = [...props.filter.Features.Inputs]
-        features.Outputs = [...props.filter.Features.Outputs]
-      }
-      features[type] = event.target.value
-    }
-
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      Features: features,
-      filterData: doFeatureFilter,
-      toUrl: () => {
-        const data = []
-        data.push(features.Inputs.map((i) => `Inputs${i}`))
-        data.push(features.Outputs.map((o) => `Outputs${o}`))
-        return encodeURI(data.flat().join(`,`))
-      },
-    })
-  }
-
-  const doSelectFilter = (data, filter) => {
-    if (filter[filter.field].length === 0) {
-      return true
-    }
-    const f = filter.filterOn === undefined ? filter.field : filter.filterOn
-    if (Array.isArray(data[f])) {
-      for (let i = 0; i < data[f].length; i++) {
-        if (filter[filter.field].includes(data[f][i])) return true
-      }
-      return false
-    } else if (filter.csvField === true) {
-      const arr = String(data[f]).split(`,`)
-      for (let i = 0; i < arr.length; i++) {
-        if (filter[filter.field].includes(arr[i].trim())) return true
-      }
-      return false
-    }
-    return filter[filter.field].includes(data[f])
-  }
-
-  const handleTypeChange = (event, type, field) => {
-    let types = []
-    if (Array.isArray(type)) {
-      types = types.concat(type)
-    } else {
-      types = event.target.value
-    }
-
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      Type: types,
-      csvField: true,
-      filterData: doSelectFilter,
-      toUrl: () => encodeURI(types.join(`,`)),
-    })
-  }
-
-  const handleAvailabilityChange = (event, availability, field) => {
-    let data = []
-    if (Array.isArray(availability)) {
-      data = data.concat(availability)
-    } else {
-      data = event.target.value
-    }
-
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      Availability: data,
-      filterData: doSelectFilter,
-      toUrl: () => encodeURI(data.join(`,`)),
-    })
-  }
-
-  const doConnectFilter = (data, filter) => {
-    if (filter[filter.field].length === 0) {
-      return true
-    }
-    if (
-      filter[filter.field].includes(`Digital`) &&
-      Array.from(data[filter.field].toString().split(`,`)).filter(
-        (b) => !b.includes(`Audio`)
-      ).length > 0
-    ) {
-      return true
-    }
-    if (
-      filter[filter.field].includes(`Analogue`) &&
-      data[filter.field].includes(`Audio`)
-    ) {
-      return true
-    }
-    if (
-      filter[filter.field].includes(`Bluetooth 2`) &&
-      data[filter.field].includes(`BT2`)
-    ) {
-      return true
-    }
-    if (
-      filter[filter.field].includes(`Bluetooth 4 LE`) &&
-      data[filter.field].includes(`BT4LE`)
-    ) {
-      return true
-    }
-    if (
-      filter[filter.field].includes(`USB`) &&
-      data[filter.field].includes(`USB`)
-    ) {
-      return true
-    }
-    if (filter[filter.field].includes(`Other`)) {
-      const bits = data[filter.field].split(`,`)
-      return (
-        bits.filter(
-          (v) =>
-            !v.includes(`USB`) && !v.includes(`BT2`) && !v.includes(`BT4LE`)
-        ).length > 0
-      )
-    }
-    return false
-  }
-
-  const handleConnectionChange = (event, connection, field) => {
-    let data = []
-    if (Array.isArray(connection)) {
-      data = data.concat(connection)
-    } else {
-      data = event.target.value
-    }
-
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      Connection: data,
-      filterData: doConnectFilter,
-      toUrl: () => encodeURI(data.join(`,`)),
-    })
-  }
-
-  const handleMarketedAsChange = (event, market, field) => {
-    let data = []
-    if (Array.isArray(market)) {
-      data = data.concat(market)
-    } else {
-      data = event.target.value
-    }
-
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      MarketedAs: data,
-      filterOn: `Class`,
-      filterData: doSelectFilter,
-      toUrl: () => encodeURI(data.join(`,`)),
-    })
-  }
-
-  const handleTargetAnatomyChange = (event, anatomy, field) => {
-    let data = []
-    if (Array.isArray(anatomy)) {
-      data = data.concat(anatomy)
-    } else {
-      data = event.target.value
-    }
-
-    props.onChange(props.ident, {
-      field: field || props.filter.field,
-      lock: props.filter.lock,
-      TargetAnatomy: data,
-      filterOn: `Anatomy`,
-      csvField: true,
-      filterData: doSelectFilter,
-      toUrl: () => encodeURI(data.join(`,`)),
-    })
-  }
-
-  // Sanitise data
+// Sanitise data
   if (props.filter === undefined || props.filter.field === undefined) {
     props.filter.field = `none`
   }
@@ -622,7 +653,7 @@ export default function DeviceFilter(props) {
         </Select>
       </FormControl>
       {(props.filter.field === `Brand` || props.filter.field === `Device`) && (
-        <FormControl className={classes.formControl}>
+          <FormControl className={classes.formControl}>
           <DebouncedTextField
             label={`Search ${props.filter.field}`}
             type="search"

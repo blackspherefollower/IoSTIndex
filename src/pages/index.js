@@ -1,6 +1,6 @@
 import React from "react"
 import axios from "axios"
-import DeviceFilter from "../components/DeviceFilter"
+import DeviceFilter, { initialiseFilter } from "../components/DeviceFilter"
 import DeviceList, { encode } from "../components/DeviceList"
 import { initializeReactUrlState } from "react-url-state"
 import * as localforage from "localforage"
@@ -67,6 +67,7 @@ const reactUrlStateOptions = {
     return undefined
   },
   pathname: `/`,
+  leavestate: true,
 }
 
 class IndexComponent extends React.Component {
@@ -96,106 +97,11 @@ class IndexComponent extends React.Component {
         filterData[f] = []
       }
     })
-
-    let devDate = null
-    let devices = null
-    localforage
-      .getItem(`devices`)
-      .then((value) => {
-        devices = value
-        return localforage.getItem(`devicesDate`)
-      })
-      .then((dateValue) => {
-        if (!isNaN(dateValue)) {
-          devDate = moment(dateValue)
-        }
-      })
-      .then(() => {
-        if (
-          devices === null ||
-          devDate === null ||
-          devDate.add(30, `m`).isBefore(moment())
-        ) {
-          return axios.get(`/devices.json?` + Math.floor(Math.random() * 1000))
-        }
-        return null
-      })
-      .then((res) => {
-        if (res != null) {
-          devices = res.data
-          devices.forEach((d) => {
-            if (d.path === undefined) {
-              d.path = encode(d.Brand) + `/` + encode(d.Device)
-            }
-          })
-          localforage
-            .setItem(`devices`, devices)
-            .then(() => localforage.setItem(`devicesDate`, moment().valueOf()))
-            .catch((err) => console.error(err))
-        } else {
-          devices.forEach((d) => {
-            if (d.path === undefined) {
-              d.path = encode(d.Brand) + `/` + encode(d.Device)
-            }
-          })
-        }
-
-        if (devices.length > 0) {
-          filterData.Features.Inputs = Object.getOwnPropertyNames(
-            devices[0].Features.Inputs
-          )
-          filterData.Features.Outputs = Object.getOwnPropertyNames(
-            devices[0].Features.Outputs
-          )
-        }
-
-        devices.forEach((d) => {
-          fields.forEach((f) => {
-            if (d[f] === undefined) {
-              return
-            }
-            if (csv.includes(f)) {
-              String(d[f])
-                .split(`,`)
-                .forEach((fb) => {
-                  const fs = fb.trim()
-                  if (fs.length !== 0 && !filterData[f].includes(fs)) {
-                    filterData[f].push(fs)
-                  }
-                })
-            } else {
-              const fs = String(d[f]).trim()
-              if (fs.length !== 0 && !filterData[f].includes(fs)) {
-                filterData[f].push(fs)
-              }
-            }
-          })
-
-          // Ensure data is complete or stubbed
-          if (d.XToys === undefined) {
-            d.XToys = {}
-          }
-          if (d.XToys.XToysSupport === undefined) {
-            d.XToys.XToysSupport = 0
-          }
-          if (d.XToys.XToys_Support_Notes === undefined) {
-            d.XToys.XToys_Support_Notes = ``
-          }
-        })
-        fields.forEach((f) => {
-          filterData[f].sort()
-        })
-        this.setState({
-          devices,
-          data: devices,
-          filterData,
-        })
-        this.handleFilterChange()
-      })
+    let filters = []
 
     this.reactUrlState = initializeReactUrlState(this)(
       reactUrlStateOptions,
-      () => {
+      (newState) => {
         if (
           performance !== undefined &&
           typeof performance.getEntriesByType === `function`
@@ -205,7 +111,8 @@ class IndexComponent extends React.Component {
               .getEntriesByType(`navigation`)
               .findIndex(
                 (pnt) => pnt.type === `reload` || pnt.type === `back_forward`
-              ) !== -1
+              ) !== -1 &&
+            (newState?.devices || []).length > 0
           ) {
             return
           }
@@ -221,14 +128,118 @@ class IndexComponent extends React.Component {
           }
         }
 
-        if (this.state.filters.length === 0 && !this.state.filtersChanged) {
-          this.setState({
-            filters: [
-              { field: `Availability`, urlData: `Available,DIY` },
-              { field: `Connection`, urlData: `Digital` },
-            ],
-          })
+        filters = newState?.filters || this.state.filters
+        if (
+          filters.length === 0 &&
+          !this.state.filtersChanged &&
+          !newState?.noFilter
+        ) {
+          filters = [
+            { field: `Availability`, urlData: `Available,DIY` },
+            { field: `Connection`, urlData: `Digital` },
+          ]
         }
+        filters.map((f) => initialiseFilter(f))
+
+        let devDate = null
+        let devices = null
+        localforage
+          .getItem(`devices`)
+          .then((value) => {
+            devices = value
+            return localforage.getItem(`devicesDate`)
+          })
+          .then((dateValue) => {
+            if (!isNaN(dateValue)) {
+              devDate = moment(dateValue)
+            }
+          })
+          .then(() => {
+            if (
+              devices === null ||
+              devDate === null ||
+              devDate.add(30, `m`).isBefore(moment())
+            ) {
+              return axios.get(
+                `/devices.json?` + Math.floor(Math.random() * 1000)
+              )
+            }
+            return null
+          })
+          .then((res) => {
+            if (res != null) {
+              devices = res.data
+              devices.forEach((d) => {
+                if (d.path === undefined) {
+                  d.path = encode(d.Brand) + `/` + encode(d.Device)
+                }
+              })
+              localforage
+                .setItem(`devices`, devices)
+                .then(() =>
+                  localforage.setItem(`devicesDate`, moment().valueOf())
+                )
+                .catch((err) => console.error(err))
+            } else {
+              devices.forEach((d) => {
+                if (d.path === undefined) {
+                  d.path = encode(d.Brand) + `/` + encode(d.Device)
+                }
+              })
+            }
+
+            if (devices.length > 0) {
+              filterData.Features.Inputs = Object.getOwnPropertyNames(
+                devices[0].Features.Inputs
+              )
+              filterData.Features.Outputs = Object.getOwnPropertyNames(
+                devices[0].Features.Outputs
+              )
+            }
+
+            devices.forEach((d) => {
+              fields.forEach((f) => {
+                if (d[f] === undefined) {
+                  return
+                }
+                if (csv.includes(f)) {
+                  String(d[f])
+                    .split(`,`)
+                    .forEach((fb) => {
+                      const fs = fb.trim()
+                      if (fs.length !== 0 && !filterData[f].includes(fs)) {
+                        filterData[f].push(fs)
+                      }
+                    })
+                } else {
+                  const fs = String(d[f]).trim()
+                  if (fs.length !== 0 && !filterData[f].includes(fs)) {
+                    filterData[f].push(fs)
+                  }
+                }
+              })
+
+              // Ensure data is complete or stubbed
+              if (d.XToys === undefined) {
+                d.XToys = {}
+              }
+              if (d.XToys.XToysSupport === undefined) {
+                d.XToys.XToysSupport = 0
+              }
+              if (d.XToys.XToys_Support_Notes === undefined) {
+                d.XToys.XToys_Support_Notes = ``
+              }
+            })
+            fields.forEach((f) => {
+              filterData[f].sort()
+            })
+            this.handleFilterChange(undefined, undefined, {
+              devices,
+              data: devices,
+              filterData,
+              filters,
+            })
+          })
       }
     )
   }
@@ -263,8 +274,8 @@ class IndexComponent extends React.Component {
     this.handleFilterChange()
   }
 
-  handleFilterChange(ident, filter) {
-    const filters = this.state.filters
+  handleFilterChange(ident, filter, state) {
+    const filters = state?.filters || this.state.filters
     if (ident !== undefined) {
       filters[ident] = filter
       if (
@@ -279,7 +290,7 @@ class IndexComponent extends React.Component {
         )
       }
     }
-    const data = this.state.devices.filter((d) => {
+    const data = (state?.devices || this.state.devices).filter((d) => {
       let res = true
       for (let i = 0; res === true && i < filters.length; i++) {
         const f = filters[i]
@@ -289,11 +300,21 @@ class IndexComponent extends React.Component {
       }
       return res
     })
-    this.reactUrlState.setUrlState({
-      data,
-      filters,
-      noFilter: filters.length === 0,
-    })
+    if (state === undefined) {
+      this.reactUrlState.setUrlState({
+        data,
+        filters,
+        noFilter: filters.length === 0,
+      })
+    } else {
+      this.reactUrlState.setUrlState(
+        Object.assign(state, {
+          data,
+          filters,
+          noFilter: filters.length === 0,
+        })
+      )
+    }
     forceCheck()
   }
 
