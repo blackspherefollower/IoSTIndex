@@ -19,7 +19,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@mdx-js/mdx": "^1.6.22",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "feeder-react-feedback": "0.0.6",
     "gatsby": "^4.5.3",
     "gatsby-legacy-polyfills": "^2.5.0",
