@@ -1,14 +1,19 @@
 const { exec } = require(`child_process`)
 const fs = require(`fs`)
 
-exec(`find src/data/devices -name "*.avif"`, (err, stdout, stderr) => {
+exec(`find src/data/devices -name "*.webp"`, (err, stdout, stderr) => {
   if (err) {
     // node couldn't execute the command
     console.error(err)
     return
   }
   const files = stdout.split(`\n`)
-  files.forEach(f => {
+  files.forEach((f) => {
+    if (f.length == 0) {
+      return
+    }
+
+    console.log(`identifying ${f}`)
     exec(`identify "${f}"`, (err, stdout, stderr) => {
       if (err) {
         // node couldn't execute the command
@@ -45,7 +50,12 @@ exec(`find src/data/devices -name "*.jfif"`, (err, stdout, stderr) => {
     return
   }
   const files = stdout.split(`\n`)
-  files.forEach(f => {
+  files.forEach((f) => {
+    if (f.length == 0) {
+      return
+    }
+
+    console.log(`identifying ${f}`)
     exec(`identify "${f}"`, (err, stdout, stderr) => {
       if (err) {
         // node couldn't execute the command
@@ -75,7 +85,6 @@ exec(`find src/data/devices -name "*.jfif"`, (err, stdout, stderr) => {
   })
 })
 
-
 exec(`find src/data/devices -name "*.avif"`, (err, stdout, stderr) => {
   if (err) {
     // node couldn't execute the command
@@ -83,7 +92,12 @@ exec(`find src/data/devices -name "*.avif"`, (err, stdout, stderr) => {
     return
   }
   const files = stdout.split(`\n`)
-  files.forEach(f => {
+  files.forEach((f) => {
+    if (f.length == 0) {
+      return
+    }
+
+    console.log(`identifying ${f}`)
     exec(`identify "${f}"`, (err, stdout, stderr) => {
       if (err) {
         // node couldn't execute the command
