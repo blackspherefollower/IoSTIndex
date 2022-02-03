@@ -48,7 +48,7 @@
     "sharp": "^0.30.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.12",
+    "@babel/core": "^7.17.0",
     "eslint": "^8.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.3.0",
