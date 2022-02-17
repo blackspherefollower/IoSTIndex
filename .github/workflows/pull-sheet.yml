@@ -1,0 +1,39 @@
+# Auto import pipeline from Google Sheets
+name: "Google Sheets Import"
+
+on:
+  schedule:
+    - cron: "10 * * * *"
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
+
+jobs:
+  import-sheet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Fetch, Validate and Push CSV
+        run: |
+          wget https://github.com/Clever/csvlint/releases/download/v0.3.0/csvlint-v0.3.0-linux-amd64.tar.gz
+          tar zxvf csvlint-v0.3.0-linux-amd64.tar.gz --strip-components 1
+          wget -O src/data/devices.csv "${{ secrets.DeviceSheetUrl }}"
+          ./csvlint src/data/devices.csv || exit 1
+          if [ -z "$(git diff src/data)" ]; then
+            echo "No diffs to push!"
+            exit 0
+          fi
+          git config --local user.name "Data importer[bot]"
+          git config --local user.email "data-importer[bot]@users.noreply.github.com"
+          git add src/data
+          git commit -m "Updating datasets"
+          git push
