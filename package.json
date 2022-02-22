@@ -23,7 +23,7 @@
     "feeder-react-feedback": "0.0.6",
     "gatsby": "^4.8.0",
     "gatsby-legacy-polyfills": "^2.7.0",
-    "gatsby-plugin-layout": "^3.7.0",
+    "gatsby-plugin-layout": "^3.8.0",
     "gatsby-plugin-material-ui": "^4.1.0",
     "gatsby-plugin-matomo": "^0.11.0",
     "gatsby-plugin-react-helmet": "^5.7.0",
