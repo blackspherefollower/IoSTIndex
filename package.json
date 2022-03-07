@@ -21,7 +21,7 @@
     "@mdx-js/mdx": "^2.0.0",
     "axios": "^0.26.0",
     "feeder-react-feedback": "0.0.6",
-    "gatsby": "^4.9.1",
+    "gatsby": "^4.9.2",
     "gatsby-legacy-polyfills": "^2.9.0",
     "gatsby-plugin-layout": "^3.9.0",
     "gatsby-plugin-material-ui": "^4.1.0",
