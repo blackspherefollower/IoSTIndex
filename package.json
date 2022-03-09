@@ -29,7 +29,7 @@
     "gatsby-plugin-react-helmet": "^5.9.0",
     "gatsby-plugin-sitemap": "^5.9.0",
     "gatsby-source-filesystem": "^4.9.0",
-    "gatsby-source-graphql": "^4.9.0",
+    "gatsby-source-graphql": "^4.9.1",
     "gatsby-transformer-csv": "^4.9.0",
     "gatsby-transformer-remark": "^5.9.0",
     "localforage": "^1.10.0",
