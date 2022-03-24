@@ -27,7 +27,7 @@
     "gatsby-plugin-material-ui": "^4.1.0",
     "gatsby-plugin-matomo": "^0.11.1",
     "gatsby-plugin-react-helmet": "^5.10.0",
-    "gatsby-plugin-sitemap": "^5.10.0",
+    "gatsby-plugin-sitemap": "^5.10.2",
     "gatsby-source-filesystem": "^4.10.0",
     "gatsby-source-graphql": "^4.10.0",
     "gatsby-transformer-csv": "^4.10.0",
