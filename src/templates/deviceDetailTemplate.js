@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import Carousel, { Modal, ModalGateway } from "react-images"
 import { makeStyles, TableBody, Typography } from "@material-ui/core"
 import TableCell from "@material-ui/core/TableCell"
 import TableRow from "@material-ui/core/TableRow"
@@ -15,6 +14,9 @@ import ErrorIcon from "@material-ui/icons/Error"
 import HelpIcon from "@material-ui/icons/Help"
 import Tooltip from "@material-ui/core/Tooltip"
 import InfoIcon from "@material-ui/icons/Info"
+
+import "react-responsive-carousel/lib/styles/carousel.min.css" // requires a loader
+import { Carousel } from "react-responsive-carousel"
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -145,35 +147,17 @@ export default function Template({ path, pageContext }) {
         <Typography variant="h4" gutterBottom>
           Product Images
         </Typography>
-        <Gallery classes={classes}>
+        <Carousel classes={classes}>
           {device.images.map((img, i) => (
-            <Image onClick={() => setCurrentModal(i)} key={i} classes={classes}>
+            <div>
               <img
                 src={img}
                 alt={`${device.Brand} - ${device.Device} - Image ${i}`}
                 className={classes.galleryimageimg}
               />
-            </Image>
+            </div>
           ))}
-        </Gallery>
-        {Number.isInteger(currentModal) && (
-          <ModalGateway>
-            <Modal
-              styles={galleryStyles}
-              allowFullscreen={false}
-              closeOnBackdropClick={false}
-              onClose={() => setCurrentModal(null)}
-            >
-              <Carousel
-                currentIndex={currentModal}
-                frameProps={{ autoSize: `height` }}
-                views={device.images.map((img) => {
-                  return { src: img }
-                })}
-              />
-            </Modal>
-          </ModalGateway>
-        )}
+        </Carousel>
         <Typography variant="h4" gutterBottom>
           Device Features
         </Typography>
@@ -300,9 +284,3 @@ export default function Template({ path, pageContext }) {
     </Container>
   )
 }
-
-const Gallery = (props) => <div className={props.classes.gallery} {...props} />
-
-const Image = (props) => (
-  <div className={props.classes.galleryimage} {...props} />
-)
