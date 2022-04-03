@@ -1,16 +1,8 @@
 import React from "react"
 import { graphql } from "gatsby"
-import Typography from "@material-ui/core/Typography"
-import { makeStyles } from "@material-ui/core"
+import Typography from "@mui/material/Typography"
 import SEO from "../components/seo"
-
-const useStyles = makeStyles((theme) => {
-  return {
-    markdown: {
-      margin: `50px`,
-    },
-  }
-})
+import Container from "@mui/material/Container"
 
 export default function Template({
   data, // this prop will be injected by the GraphQL query below.
@@ -18,9 +10,8 @@ export default function Template({
 }) {
   const { markdownRemark } = data // data.markdownRemark holds our post data
   const { frontmatter, html } = markdownRemark
-  const classes = useStyles()
   return (
-    <div className={classes.markdown}>
+    <Container sx={{ margin: `50px` }}>
       <SEO
         post={{
           path,
@@ -34,7 +25,7 @@ export default function Template({
         className="blog-post-content"
         dangerouslySetInnerHTML={{ __html: html }}
       />
-    </div>
+    </Container>
   )
 }
 export const pageQuery = graphql`

@@ -2,48 +2,29 @@ import React, { useState, useEffect } from "react"
 import localforage from "localforage"
 import * as moment from "moment"
 import axios from "axios"
-import TableBody from "@material-ui/core/TableBody"
-import Table from "@material-ui/core/Table"
-import TableRow from "@material-ui/core/TableRow"
-import TableHead from "@material-ui/core/TableHead"
-import TableCell from "@material-ui/core/TableCell"
+import TableBody from "@mui/material/TableBody"
+import Table from "@mui/material/Table"
+import TableRow from "@mui/material/TableRow"
+import TableHead from "@mui/material/TableHead"
+import TableCell from "@mui/material/TableCell"
 import AffiliateLink from "../components/AffiliateLink"
 import { Link } from "gatsby"
 import { encode } from "../components/DeviceList"
-import Alert from "@material-ui/lab/Alert"
-import { makeStyles } from "@material-ui/core/styles"
+import Alert from "@mui/lab/Alert"
 import SEO from "../components/seo"
-import { Typography } from "@material-ui/core"
-import Box from "@material-ui/core/Box"
-import ErrorIcon from "@material-ui/icons/Error"
-import HelpIcon from "@material-ui/icons/Help"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
-import HighlightOffIcon from "@material-ui/icons/HighlightOff"
-import Tooltip from "@material-ui/core/Tooltip"
-import InfoIcon from "@material-ui/icons/Info"
-import Container from "@material-ui/core/Container"
+import { Typography } from "@mui/material"
+import Box from "@mui/material/Box"
+import ErrorIcon from "@mui/icons-material/Error"
+import HelpIcon from "@mui/icons-material/Help"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import HighlightOffIcon from "@mui/icons-material/HighlightOff"
+import Tooltip from "@mui/material/Tooltip"
+import InfoIcon from "@mui/icons-material/Info"
+import Container from "@mui/material/Container"
 
-const useStyles = makeStyles((theme) => {
-  return {
-    alert: {
-      margin: theme.spacing(2),
-    },
-    flexbox: {
-      display: `flex`,
-      "flex-wrap": `wrap`,
-      padding: `0px`,
-    },
-    tooltipcolumn: {
-      display: `flex`,
-      alignItems: `center`,
-    },
-  }
-})
-
-export default function ComparePage() {
+export default function ComparePage({ theme }) {
   const [compares, setCompares] = useState([])
   const [errors, setErrors] = useState([])
-  const classes = useStyles()
 
   const search = typeof window !== `undefined` ? window.location.search : ``
 
@@ -156,9 +137,9 @@ export default function ComparePage() {
         IoST Index: Compare devices
       </Typography>
       {errors.length !== 0 && (
-        <div className={errors}>
+        <div className={`errors`}>
           {errors.map((e, i) => (
-            <Alert severity="error" key={i} className={classes.alert}>
+            <Alert severity="error" key={i} sx={{ margin: theme.spacing(2) }}>
               {e.Error}: {e.Device}
             </Alert>
           ))}
@@ -263,8 +244,17 @@ export default function ComparePage() {
           <TableCell>Buttplug.io Support</TableCell>
           {compares.map((d, i) => (
             <TableCell key={i}>
-              <Container className={classes.flexbox}>
-                <Box className={[classes.table, classes.tooltipcolumn]}>
+              <Container
+                sx={{
+                  display: `flex`,
+                  "flex-wrap": `wrap`,
+                  padding: `0px`,
+                  "@media (min-width: 600px)": {
+                    padding: `0px`,
+                  },
+                }}
+              >
+                <Box sx={{ display: `flex`, alignItems: `center` }}>
                   {(d.Buttplug.ButtplugSupport & 4) === 4 &&
                   d.Buttplug.Buttplug_Rust === `Issues` ? (
                     <ErrorIcon style={{ color: `orange` }} />
@@ -280,8 +270,7 @@ export default function ComparePage() {
                   )}
                   {(d.Buttplug.ButtplugSupport & 4 && (
                     <span>
-                      {d.Buttplug.Buttplug_Rust === `Untested` &&
-                        ` (Untested)`}
+                      {d.Buttplug.Buttplug_Rust === `Untested` && ` (Untested)`}
                       {d.Buttplug.Buttplug_Rust === `Issues` &&
                         ` (Known Issues)`}
                     </span>
@@ -314,7 +303,9 @@ export default function ComparePage() {
                     <Tooltip
                       interactive
                       title={d.Buttplug.Buttplug_Support_Notes}
-                      classes={{ tooltip: classes.tooltip }}
+                      classes={{
+                        tooltip: { display: `flex`, alignItems: `center` },
+                      }}
                     >
                       <InfoIcon />
                     </Tooltip>
@@ -328,8 +319,17 @@ export default function ComparePage() {
           <TableCell>XToys.app Support</TableCell>
           {compares.map((d, i) => (
             <TableCell key={i}>
-              <Container className={classes.flexbox}>
-                <Box className={[classes.table, classes.tooltipcolumn]}>
+              <Container
+                sx={{
+                  display: `flex`,
+                  "flex-wrap": `wrap`,
+                  padding: `0px`,
+                  "@media (min-width: 600px)": {
+                    padding: `0px`,
+                  },
+                }}
+              >
+                <Box sx={{ display: `flex`, alignItems: `center` }}>
                   {d.XToys.XToysSupport === 1 ? (
                     <CheckCircleIcon style={{ color: `green` }} />
                   ) : (
@@ -339,7 +339,9 @@ export default function ComparePage() {
                     <Tooltip
                       interactive
                       title={d.XToys.XToys_Support_Notes}
-                      classes={{ tooltip: classes.tooltip }}
+                      classes={{
+                        tooltip: { display: `flex`, alignItems: `center` },
+                      }}
                     >
                       <InfoIcon />
                     </Tooltip>

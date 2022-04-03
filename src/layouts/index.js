@@ -1,69 +1,22 @@
 import React from "react"
 import { graphql, navigate, useStaticQuery } from "gatsby"
-import {
-  makeStyles,
-  createTheme,
-  ThemeProvider,
-} from "@material-ui/core/styles"
-import AppBar from "@material-ui/core/AppBar"
-import Toolbar from "@material-ui/core/Toolbar"
-import Typography from "@material-ui/core/Typography"
-import IconButton from "@material-ui/core/IconButton"
-import MenuIcon from "@material-ui/icons/Menu"
-import BackIcon from "@material-ui/icons/ArrowBack"
-import Button from "@material-ui/core/Button"
-import CssBaseline from "@material-ui/core/CssBaseline"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
+import AppBar from "@mui/material/AppBar"
+import Toolbar from "@mui/material/Toolbar"
+import Typography from "@mui/material/Typography"
+import IconButton from "@mui/material/IconButton"
+import MenuIcon from "@mui/icons-material/Menu"
+import BackIcon from "@mui/icons-material/ArrowBack"
+import Button from "@mui/material/Button"
+import CssBaseline from "@mui/material/CssBaseline"
 import { Helmet } from "react-helmet"
-import SvgIcon from "@material-ui/core/SvgIcon"
+import SvgIcon from "@mui/material/SvgIcon"
 import loadable from "@loadable/component"
 const Feedback = loadable(() => import(`feeder-react-feedback/dist/Feedback`))
 import "feeder-react-feedback/dist/feeder-react-feedback.css"
+import { theme } from "./theme"
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: `#718792`,
-      main: `#455a64`,
-      dark: `#1c313a`,
-      contrastText: `#ffffff`,
-    },
-    secondary: {
-      light: `#ffc947`,
-      main: `#ff9800`,
-      dark: `#c66900`,
-      contrastText: `#000000`,
-    },
-  },
-  typography: {
-    h1: {
-      fontWeight: 400,
-      fontSize: `3rem`,
-      lineHeight: 1.167,
-      letterSpacing: `0em`,
-    },
-  },
-})
-
-const useStyles = makeStyles((theme) => {
-  return {
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-    patreon: {
-      backgroundColor: `#f46758`,
-      borderColor: `#f46758`,
-    },
-  }
-})
-
-export default function Layout({ children }) {
-  const classes = useStyles(theme)
+function LayoutInner({ children }) {
   const isRoot =
     typeof location !== `undefined` && location && location.pathname === `/`
   const data = useStaticQuery(graphql`
@@ -77,7 +30,7 @@ export default function Layout({ children }) {
   `)
 
   return (
-    <ThemeProvider theme={theme}>
+    <div>
       <Helmet>
         <link
           rel="stylesheet"
@@ -90,7 +43,7 @@ export default function Layout({ children }) {
         <Toolbar>
           <IconButton
             edge="start"
-            className={classes.menuButton}
+            sx={{ marginRight: theme.spacing(2) }}
             color="inherit"
             aria-label="menu"
             onClick={() => {
@@ -101,7 +54,7 @@ export default function Layout({ children }) {
           >
             {isRoot ? <MenuIcon /> : <BackIcon />}
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
             IoST Index
           </Typography>
           <Button color="inherit" onClick={() => navigate(`/about`)}>
@@ -111,7 +64,7 @@ export default function Layout({ children }) {
             variant="contained"
             title="Become a Patron!"
             href={`https://www.patreon.com/bePatron?u=6548129`}
-            className={classes.patreon}
+            sx={{ backgroundColor: `#f46758`, borderColor: `#f46758` }}
             startIcon={
               <SvgIcon>
                 <g
@@ -145,6 +98,14 @@ export default function Layout({ children }) {
           projectName={`IoST Index`}
         />
       )}
+    </div>
+  )
+}
+
+export default function Layout({ children }) {
+  return (
+    <ThemeProvider theme={theme}>
+      <LayoutInner theme={theme}>{children}</LayoutInner>
     </ThemeProvider>
   )
 }

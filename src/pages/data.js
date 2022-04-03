@@ -1,13 +1,13 @@
 import React from "react"
-import TableBody from "@material-ui/core/TableBody"
-import Table from "@material-ui/core/Table"
-import TableRow from "@material-ui/core/TableRow"
-import TableHead from "@material-ui/core/TableHead"
-import TableCell from "@material-ui/core/TableCell"
+import TableBody from "@mui/material/TableBody"
+import Table from "@mui/material/Table"
+import TableRow from "@mui/material/TableRow"
+import TableHead from "@mui/material/TableHead"
+import TableCell from "@mui/material/TableCell"
 import { useStaticQuery, graphql } from "gatsby"
-import { makeStyles } from "@material-ui/core/styles"
+import { makeStyles } from "@mui/styles"
 import SEO from "../components/seo"
-import { Typography } from "@material-ui/core"
+import { Typography } from "@mui/material"
 
 const useStyles = makeStyles((theme) => {
   return {

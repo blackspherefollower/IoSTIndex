@@ -1,24 +1,26 @@
-import React, { useState } from "react"
-import { makeStyles, TableBody, Typography } from "@material-ui/core"
-import TableCell from "@material-ui/core/TableCell"
-import TableRow from "@material-ui/core/TableRow"
-import TableHead from "@material-ui/core/TableHead"
-import Table from "@material-ui/core/Table"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
-import HighlightOffIcon from "@material-ui/icons/HighlightOff"
+import React from "react"
+import TableCell from "@mui/material/TableCell"
+import TableRow from "@mui/material/TableRow"
+import TableHead from "@mui/material/TableHead"
+import Table from "@mui/material/Table"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 import SEO from "../components/seo"
-import Container from "@material-ui/core/Container"
-import Box from "@material-ui/core/Box"
+import Container from "@mui/material/Container"
+import Box from "@mui/material/Box"
 import AffiliateLink from "../components/AffiliateLink"
-import ErrorIcon from "@material-ui/icons/Error"
-import HelpIcon from "@material-ui/icons/Help"
-import Tooltip from "@material-ui/core/Tooltip"
-import InfoIcon from "@material-ui/icons/Info"
+import ErrorIcon from "@mui/icons-material/Error"
+import HelpIcon from "@mui/icons-material/Help"
+import Tooltip from "@mui/material/Tooltip"
+import InfoIcon from "@mui/icons-material/Info"
 
 import "react-responsive-carousel/lib/styles/carousel.min.css" // requires a loader
 import { Carousel } from "react-responsive-carousel"
+import { Typography } from "@mui/material"
+import TableBody from "@mui/material/TableBody"
+import { theme } from "../layouts/theme"
 
-const useStyles = makeStyles((theme) => {
+/* const useStyles = makeStyles((theme) => {
   return {
     root: {},
     content: {
@@ -82,22 +84,7 @@ const useStyles = makeStyles((theme) => {
       alignItems: `center`,
     },
   }
-})
-
-const galleryStyles = {
-  blanket: (base) => {
-    return {
-      ...base,
-      zIndex: 2000,
-    }
-  },
-  positioner: (base) => {
-    return {
-      ...base,
-      zIndex: 2000,
-    }
-  },
-}
+})*/
 
 function featureSort(a, b) {
   const valA = parseInt(a[1], 10)
@@ -110,12 +97,10 @@ function featureSort(a, b) {
 }
 
 export default function Template({ path, pageContext }) {
-  const classes = useStyles()
   const device = pageContext.device
-  const [currentModal, setCurrentModal] = useState()
 
   return (
-    <Container className={classes.root}>
+    <Container>
       <SEO
         post={{
           path,
@@ -123,37 +108,90 @@ export default function Template({ path, pageContext }) {
           image: device.images.length > 0 ? device.images[0] : undefined,
         }}
       />
-      <Container className={classes.content}>
+      <Container
+        sx={{
+          paddingTop: theme.spacing(4),
+          flex: `1 1 100%`,
+          position: `relative`,
+          maxWidth: `100%`,
+          margin: `0 auto`,
+        }}
+      >
         <Typography variant="h1" gutterBottom>
           {device.Brand} - {device.Device}
         </Typography>
-        <Container className={classes.flexbox}>
-          <Box className={classes.table}>
+        <Container
+          sx={{
+            display: `flex`,
+            "flex-wrap": `wrap`,
+            "justify-content": `space-evenly`,
+            paddingBottom: theme.spacing(2),
+          }}
+        >
+          <Box
+            sx={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              flex: 1,
+              width: `40%`,
+              paddingBottom: theme.spacing(2),
+            }}
+          >
             <b>Url:</b> <AffiliateLink device={device} />
           </Box>
-          <Box className={classes.table}>
+          <Box
+            sx={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              flex: 1,
+              width: `40%`,
+              paddingBottom: theme.spacing(2),
+            }}
+          >
             <b>Availability:</b> {device.Availability}
           </Box>
-          <Box className={classes.table}>
+          <Box
+            sx={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              flex: 1,
+              width: `40%`,
+              paddingBottom: theme.spacing(2),
+            }}
+          >
             <b>Form factor:</b> {device.Type}
           </Box>
-          <Box className={classes.table}>
+          <Box
+            sx={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              flex: 1,
+              width: `40%`,
+              paddingBottom: theme.spacing(2),
+            }}
+          >
             <b>Connectivity:</b> {device.Connection}
           </Box>
           {device.Notes.length > 0 && (
-            <Box className={classes.notes}>{device.Notes}</Box>
+            <Box
+              sx={{
+                paddingTop: theme.spacing(2),
+                width: `100%`,
+              }}
+            >
+              {device.Notes}
+            </Box>
           )}
         </Container>
         <Typography variant="h4" gutterBottom>
           Product Images
         </Typography>
-        <Carousel classes={classes}>
+        <Carousel>
           {device.images.map((img, i) => (
-            <div>
+            <div key={i}>
               <img
                 src={img}
                 alt={`${device.Brand} - ${device.Device} - Image ${i}`}
-                className={classes.galleryimageimg}
               />
             </div>
           ))}
@@ -161,8 +199,29 @@ export default function Template({ path, pageContext }) {
         <Typography variant="h4" gutterBottom>
           Device Features
         </Typography>
-        <Container className={classes.flexbox}>
-          <Table className={classes.table}>
+        <Container
+          sx={{
+            display: `flex`,
+            "flex-wrap": `wrap`,
+            "justify-content": `space-evenly`,
+            paddingBottom: theme.spacing(2),
+            "@media (max-width: 800px)": {
+              display: `block`,
+            },
+          }}
+        >
+          <Table
+            sx={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              flex: 1,
+              width: `40%`,
+              paddingBottom: theme.spacing(2),
+              "@media (max-width: 800px)": {
+                width: `100%`,
+              },
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell>Input</TableCell>
@@ -180,7 +239,18 @@ export default function Template({ path, pageContext }) {
                 ))}
             </TableBody>
           </Table>
-          <Table className={classes.table}>
+          <Table
+            sx={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              flex: 1,
+              width: `40%`,
+              paddingBottom: theme.spacing(2),
+              "@media (max-width: 800px)": {
+                width: `100%`,
+              },
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell>Output</TableCell>
@@ -202,8 +272,17 @@ export default function Template({ path, pageContext }) {
         <Typography variant="h4" gutterBottom>
           Buttplug.io Support
         </Typography>
-        <Container className={classes.flexbox}>
-          <Box className={[classes.table, classes.tooltipcolumn]}>
+        <Container
+          sx={{
+            display: `flex`,
+            "flex-wrap": `wrap`,
+            padding: `0px`,
+            "@media (min-width: 600px)": {
+              padding: `0px`,
+            },
+          }}
+        >
+          <Box sx={{ display: `flex`, alignItems: `center` }}>
             {(device.Buttplug.ButtplugSupport & 4) === 4 &&
             device.Buttplug.Buttplug_Rust === `Issues` ? (
               <ErrorIcon style={{ color: `orange` }} />
@@ -252,7 +331,9 @@ export default function Template({ path, pageContext }) {
               <Tooltip
                 interactive
                 title={device.Buttplug.Buttplug_Support_Notes}
-                classes={{ tooltip: classes.tooltip }}
+                classes={{
+                  tooltip: { display: `flex`, alignItems: `center` },
+                }}
               >
                 <InfoIcon />
               </Tooltip>
@@ -262,8 +343,17 @@ export default function Template({ path, pageContext }) {
         <Typography variant="h4" gutterBottom>
           XToys.app Support
         </Typography>
-        <Container className={classes.flexbox}>
-          <Box className={[classes.table, classes.tooltipcolumn]}>
+        <Container
+          sx={{
+            display: `flex`,
+            "flex-wrap": `wrap`,
+            padding: `0px`,
+            "@media (min-width: 600px)": {
+              padding: `0px`,
+            },
+          }}
+        >
+          <Box sx={{ display: `flex`, alignItems: `center` }}>
             {device.XToys.XToysSupport === 1 ? (
               <CheckCircleIcon style={{ color: `green` }} />
             ) : (
@@ -273,7 +363,9 @@ export default function Template({ path, pageContext }) {
               <Tooltip
                 interactive
                 title={device.XToys.XToys_Support_Notes}
-                classes={{ tooltip: classes.tooltip }}
+                classes={{
+                  tooltip: { display: `flex`, alignItems: `center` },
+                }}
               >
                 <InfoIcon />
               </Tooltip>

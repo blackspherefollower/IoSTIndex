@@ -1,17 +1,17 @@
 import React from "react"
-import FormControl from "@material-ui/core/FormControl"
-import InputLabel from "@material-ui/core/InputLabel"
-import Select from "@material-ui/core/Select"
-import MenuItem from "@material-ui/core/MenuItem"
-import makeStyles from "@material-ui/core/styles/makeStyles"
-import TextField from "@material-ui/core/TextField"
-import DeleteIcon from "@material-ui/icons/Delete"
-import FormGroup from "@material-ui/core/FormGroup"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Checkbox from "@material-ui/core/Checkbox"
-import Input from "@material-ui/core/Input"
-import ListItemText from "@material-ui/core/ListItemText"
-import IconButton from "@material-ui/core/IconButton"
+import FormControl from "@mui/material/FormControl"
+import InputLabel from "@mui/material/InputLabel"
+import Select from "@mui/material/Select"
+import MenuItem from "@mui/material/MenuItem"
+import { makeStyles } from "@mui/styles"
+import TextField from "@mui/material/TextField"
+import DeleteIcon from "@mui/icons-material/Delete"
+import FormGroup from "@mui/material/FormGroup"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import Checkbox from "@mui/material/Checkbox"
+import Input from "@mui/material/Input"
+import ListItemText from "@mui/material/ListItemText"
+import IconButton from "@mui/material/IconButton"
 import debouncedInput from "./debouncedInput"
 
 const DebouncedTextField = debouncedInput(TextField, 500)
@@ -584,7 +584,7 @@ export default function DeviceFilter(props) {
         break
     }
   }
-// Sanitise data
+  // Sanitise data
   if (props.filter === undefined || props.filter.field === undefined) {
     props.filter.field = `none`
   }
@@ -632,7 +632,7 @@ export default function DeviceFilter(props) {
 
   return (
     <FormGroup row>
-      <FormControl className={classes.formControl}>
+      <FormControl variant="standard" className={classes.formControl}>
         <InputLabel>Choose a field:</InputLabel>
         <Select
           value={props.filter.field}
@@ -653,7 +653,7 @@ export default function DeviceFilter(props) {
         </Select>
       </FormControl>
       {(props.filter.field === `Brand` || props.filter.field === `Device`) && (
-          <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <DebouncedTextField
             label={`Search ${props.filter.field}`}
             type="search"
@@ -661,6 +661,7 @@ export default function DeviceFilter(props) {
             value={props.filter.search ? props.filter.search : ``}
             onChange={(e) => handleSearchChange(e)}
             inputProps={{ readOnly: props.filter.lock }}
+            variant="standard"
           />
         </FormControl>
       )}
@@ -680,7 +681,7 @@ export default function DeviceFilter(props) {
         />
       )}
       {props.filter.field === `Features` && (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <InputLabel>Outputs</InputLabel>
           <Select
             multiple
@@ -704,7 +705,7 @@ export default function DeviceFilter(props) {
         </FormControl>
       )}
       {props.filter.field === `Features` && (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <InputLabel>Inputs</InputLabel>
           <Select
             multiple
@@ -728,7 +729,7 @@ export default function DeviceFilter(props) {
         </FormControl>
       )}
       {props.filter.field === `Type` && (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <InputLabel>Type</InputLabel>
           <Select
             multiple
@@ -750,7 +751,7 @@ export default function DeviceFilter(props) {
         </FormControl>
       )}
       {props.filter.field === `Availability` && (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <InputLabel>Availability</InputLabel>
           <Select
             multiple
@@ -771,7 +772,7 @@ export default function DeviceFilter(props) {
         </FormControl>
       )}
       {props.filter.field === `Connection` && (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <InputLabel>Connectivity</InputLabel>
           <Select
             multiple
@@ -814,7 +815,7 @@ export default function DeviceFilter(props) {
         />
       )}
       {props.filter.field === `MarketedAs` && (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <InputLabel>Marketed As</InputLabel>
           <Select
             multiple
@@ -836,7 +837,7 @@ export default function DeviceFilter(props) {
         </FormControl>
       )}
       {props.filter.field === `TargetAnatomy` && (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
           <InputLabel>Anatomy</InputLabel>
           <Select
             multiple

@@ -1,7 +1,8 @@
 import React from "react"
 import SEO from "../components/seo"
-import Container from "@material-ui/core/Container"
-import { makeStyles, Typography } from "@material-ui/core"
+import Container from "@mui/material/Container"
+import { Typography } from "@mui/material"
+import { makeStyles } from "@mui/styles"
 
 const useStyles = makeStyles((theme) => {
   return {

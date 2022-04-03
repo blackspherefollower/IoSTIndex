@@ -1,7 +1,7 @@
-import Tooltip from "@material-ui/core/Tooltip"
+import Tooltip from "@mui/material/Tooltip"
 import React from "react"
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"
-import { makeStyles } from "@material-ui/core/styles"
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn"
+import { makeStyles } from "@mui/styles"
 
 const useStyles = makeStyles((theme) => {
   return {
