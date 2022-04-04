@@ -11,23 +11,11 @@ import Button from "@mui/material/Button"
 import CssBaseline from "@mui/material/CssBaseline"
 import { Helmet } from "react-helmet"
 import SvgIcon from "@mui/material/SvgIcon"
-import loadable from "@loadable/component"
-const Feedback = loadable(() => import(`feeder-react-feedback/dist/Feedback`))
-import "feeder-react-feedback/dist/feeder-react-feedback.css"
 import { theme } from "./theme"
 
 function LayoutInner({ children }) {
   const isRoot =
     typeof location !== `undefined` && location && location.pathname === `/`
-  const data = useStaticQuery(graphql`
-    {
-      site {
-        siteMetadata {
-          feederId
-        }
-      }
-    }
-  `)
 
   return (
     <div>
@@ -89,15 +77,6 @@ function LayoutInner({ children }) {
         </Toolbar>
       </AppBar>
       {children}
-      {data.site.siteMetadata.feederId.length > 0 && (
-        <Feedback
-          projectId={data.site.siteMetadata.feederId}
-          email={true}
-          primaryColor={theme.palette.primary.main}
-          hoverBorderColor={theme.palette.primary.light}
-          projectName={`IoST Index`}
-        />
-      )}
     </div>
   )
 }
