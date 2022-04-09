@@ -1,6 +1,6 @@
 import React from "react"
 import { graphql, navigate, useStaticQuery } from "gatsby"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
+import { ThemeProvider } from "@mui/material/styles"
 import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
@@ -12,10 +12,20 @@ import CssBaseline from "@mui/material/CssBaseline"
 import { Helmet } from "react-helmet"
 import SvgIcon from "@mui/material/SvgIcon"
 import { theme } from "./theme"
+import Feedback from "../components/feeder-react-feedback/Feedback"
 
 function LayoutInner({ children }) {
   const isRoot =
     typeof location !== `undefined` && location && location.pathname === `/`
+  const data = useStaticQuery(graphql`
+    {
+      site {
+        siteMetadata {
+          feederId
+        }
+      }
+    }
+  `)
 
   return (
     <div>
@@ -77,6 +87,15 @@ function LayoutInner({ children }) {
         </Toolbar>
       </AppBar>
       {children}
+      {data.site.siteMetadata.feederId.length > 0 && (
+        <Feedback
+          projectId={data.site.siteMetadata.feederId}
+          email={true}
+          primaryColor={theme.palette.primary.main}
+          hoverBorderColor={theme.palette.primary.light}
+          projectName={`IoST Index`}
+        />
+      )}
     </div>
   )
 }
