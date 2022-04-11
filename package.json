@@ -30,7 +30,7 @@
     "gatsby-plugin-sitemap": "^5.11.1",
     "gatsby-source-filesystem": "^4.11.1",
     "gatsby-source-graphql": "^4.11.1",
-    "gatsby-theme-material-ui": "^5.1.0",
+    "gatsby-theme-material-ui": "^5.2.0",
     "gatsby-transformer-csv": "^4.11.0",
     "gatsby-transformer-remark": "^5.11.1",
     "localforage": "^1.10.0",
