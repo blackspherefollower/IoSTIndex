@@ -21,7 +21,7 @@
     "@mui/material": "^5.5.3",
     "@mui/styles": "^5.5.3",
     "axios": "^0.19.2",
-    "gatsby": "^4.11.1",
+    "gatsby": "^4.11.3",
     "gatsby-legacy-polyfills": "^2.11.0",
     "gatsby-plugin-layout": "^3.11.0",
     "gatsby-plugin-material-ui": "^4.1.0",
