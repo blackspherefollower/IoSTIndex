@@ -8,9 +8,10 @@ import TableRow from "@mui/material/TableRow"
 import TableHead from "@mui/material/TableHead"
 import TableCell from "@mui/material/TableCell"
 import AffiliateLink from "../components/AffiliateLink"
+import LightTooltip from "../components/LightTooltip"
 import { Link } from "gatsby"
 import { encode } from "../components/DeviceList"
-import Alert from "@mui/lab/Alert"
+import Alert from "@mui/material/Alert"
 import SEO from "../components/seo"
 import { Typography } from "@mui/material"
 import Box from "@mui/material/Box"
@@ -18,7 +19,6 @@ import ErrorIcon from "@mui/icons-material/Error"
 import HelpIcon from "@mui/icons-material/Help"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import HighlightOffIcon from "@mui/icons-material/HighlightOff"
-import Tooltip from "@mui/material/Tooltip"
 import InfoIcon from "@mui/icons-material/Info"
 import Container from "@mui/material/Container"
 
@@ -300,15 +300,12 @@ export default function ComparePage({ theme }) {
                     )) ||
                     ``}
                   {d.Buttplug.Buttplug_Support_Notes.length > 0 && (
-                    <Tooltip
+                    <LightTooltip
                       interactive
                       title={d.Buttplug.Buttplug_Support_Notes}
-                      classes={{
-                        tooltip: { display: `flex`, alignItems: `center` },
-                      }}
                     >
                       <InfoIcon />
-                    </Tooltip>
+                    </LightTooltip>
                   )}
                 </Box>
               </Container>
@@ -336,15 +333,12 @@ export default function ComparePage({ theme }) {
                     <HighlightOffIcon color="error" />
                   )}
                   {d.XToys.XToys_Support_Notes.length > 0 && (
-                    <Tooltip
+                    <LightTooltip
                       interactive
                       title={d.XToys.XToys_Support_Notes}
-                      classes={{
-                        tooltip: { display: `flex`, alignItems: `center` },
-                      }}
                     >
                       <InfoIcon />
-                    </Tooltip>
+                    </LightTooltip>
                   )}
                 </Box>
               </Container>

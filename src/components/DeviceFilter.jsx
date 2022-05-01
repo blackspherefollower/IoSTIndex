@@ -3,7 +3,6 @@ import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import Select from "@mui/material/Select"
 import MenuItem from "@mui/material/MenuItem"
-import { makeStyles } from "@mui/styles"
 import TextField from "@mui/material/TextField"
 import DeleteIcon from "@mui/icons-material/Delete"
 import FormGroup from "@mui/material/FormGroup"
@@ -13,26 +12,22 @@ import Input from "@mui/material/Input"
 import ListItemText from "@mui/material/ListItemText"
 import IconButton from "@mui/material/IconButton"
 import debouncedInput from "./debouncedInput"
+import { theme } from "../layouts/theme"
+import styled from "@emotion/styled"
 
 const DebouncedTextField = debouncedInput(TextField, 500)
 
-const useStyles = makeStyles((theme) => {
+const StyledFormControl = styled(FormControl)(({ theme }) => {
   return {
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
+    margin: theme.spacing(1),
+    minWidth: 120,
+  }
+})
+const StyledDebouncedTextField = styled(DebouncedTextField)(({ theme }) => {
+  return {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200,
   }
 })
 
@@ -314,8 +309,6 @@ export function initialiseFilter(filter) {
 }
 
 export default function DeviceFilter(props) {
-  const classes = useStyles()
-
   const handleSearchChange = (event, field) => {
     props.onChange(props.ident, {
       field: field || props.filter.field,
@@ -631,8 +624,8 @@ export default function DeviceFilter(props) {
   }
 
   return (
-    <FormGroup row>
-      <FormControl variant="standard" className={classes.formControl}>
+    <FormGroup row={true}>
+      <StyledFormControl variant="standard">
         <InputLabel>Choose a field:</InputLabel>
         <Select
           value={props.filter.field}
@@ -651,19 +644,18 @@ export default function DeviceFilter(props) {
           <MenuItem value={`TargetAnatomy`}>Vendor's Target Anatomy</MenuItem>
           <MenuItem value={`MarketedAs`}>Marketed As</MenuItem>
         </Select>
-      </FormControl>
+      </StyledFormControl>
       {(props.filter.field === `Brand` || props.filter.field === `Device`) && (
-        <FormControl variant="standard" className={classes.formControl}>
-          <DebouncedTextField
+        <StyledFormControl variant="standard">
+          <StyledDebouncedTextField
             label={`Search ${props.filter.field}`}
             type="search"
-            className={classes.textField}
             value={props.filter.search ? props.filter.search : ``}
             onChange={(e) => handleSearchChange(e)}
             inputProps={{ readOnly: props.filter.lock }}
             variant="standard"
           />
-        </FormControl>
+        </StyledFormControl>
       )}
       {props.filter.field === `ButtplugSupport` && (
         <FormControlLabel
@@ -681,7 +673,7 @@ export default function DeviceFilter(props) {
         />
       )}
       {props.filter.field === `Features` && (
-        <FormControl variant="standard" className={classes.formControl}>
+        <StyledFormControl variant="standard">
           <InputLabel>Outputs</InputLabel>
           <Select
             multiple
@@ -702,10 +694,10 @@ export default function DeviceFilter(props) {
                 </MenuItem>
               ))}
           </Select>
-        </FormControl>
+        </StyledFormControl>
       )}
       {props.filter.field === `Features` && (
-        <FormControl variant="standard" className={classes.formControl}>
+        <StyledFormControl variant="standard">
           <InputLabel>Inputs</InputLabel>
           <Select
             multiple
@@ -726,10 +718,10 @@ export default function DeviceFilter(props) {
                 </MenuItem>
               ))}
           </Select>
-        </FormControl>
+        </StyledFormControl>
       )}
       {props.filter.field === `Type` && (
-        <FormControl variant="standard" className={classes.formControl}>
+        <StyledFormControl variant="standard">
           <InputLabel>Type</InputLabel>
           <Select
             multiple
@@ -748,10 +740,10 @@ export default function DeviceFilter(props) {
                 </MenuItem>
               ))}
           </Select>
-        </FormControl>
+        </StyledFormControl>
       )}
       {props.filter.field === `Availability` && (
-        <FormControl variant="standard" className={classes.formControl}>
+        <StyledFormControl variant="standard">
           <InputLabel>Availability</InputLabel>
           <Select
             multiple
@@ -769,10 +761,10 @@ export default function DeviceFilter(props) {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </StyledFormControl>
       )}
       {props.filter.field === `Connection` && (
-        <FormControl variant="standard" className={classes.formControl}>
+        <StyledFormControl variant="standard">
           <InputLabel>Connectivity</InputLabel>
           <Select
             multiple
@@ -797,7 +789,7 @@ export default function DeviceFilter(props) {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </StyledFormControl>
       )}
       {props.filter.field === `XToysSupport` && (
         <FormControlLabel
@@ -815,7 +807,7 @@ export default function DeviceFilter(props) {
         />
       )}
       {props.filter.field === `MarketedAs` && (
-        <FormControl variant="standard" className={classes.formControl}>
+        <StyledFormControl variant="standard">
           <InputLabel>Marketed As</InputLabel>
           <Select
             multiple
@@ -834,10 +826,10 @@ export default function DeviceFilter(props) {
                 </MenuItem>
               ))}
           </Select>
-        </FormControl>
+        </StyledFormControl>
       )}
       {props.filter.field === `TargetAnatomy` && (
-        <FormControl variant="standard" className={classes.formControl}>
+        <StyledFormControl variant="standard">
           <InputLabel>Anatomy</InputLabel>
           <Select
             multiple
@@ -856,11 +848,11 @@ export default function DeviceFilter(props) {
                 </MenuItem>
               ))}
           </Select>
-        </FormControl>
+        </StyledFormControl>
       )}
       {!props.filter.lock && (
         <IconButton
-          className={classes.button}
+          sx={{ margin: theme.spacing(1) }}
           aria-label="delete"
           onClick={() => props.onRemove(props.ident)}
         >

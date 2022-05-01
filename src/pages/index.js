@@ -9,10 +9,9 @@ import Fab from "@mui/material/Fab"
 import FilterListIcon from "@mui/icons-material/FilterList"
 import CompareIcon from "@mui/icons-material/Compare"
 import SEO from "../components/seo"
-import { forceCheck } from "react-lazyload"
 import trackCustomEvent from "../components/trackCustomEvent"
 import { Typography } from "@mui/material"
-import { Alert } from "@mui/lab"
+import Alert from "@mui/material/Alert"
 
 const reactUrlStateOptions = {
   fromIdResolvers: async (param, value, oldState) => {
@@ -315,7 +314,6 @@ class IndexComponent extends React.Component {
         })
       )
     }
-    forceCheck()
   }
 
   addFilter() {

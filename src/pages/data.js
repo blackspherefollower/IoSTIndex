@@ -5,20 +5,11 @@ import TableRow from "@mui/material/TableRow"
 import TableHead from "@mui/material/TableHead"
 import TableCell from "@mui/material/TableCell"
 import { useStaticQuery, graphql } from "gatsby"
-import { makeStyles } from "@mui/styles"
 import SEO from "../components/seo"
 import { Typography } from "@mui/material"
-
-const useStyles = makeStyles((theme) => {
-  return {
-    alert: {
-      margin: theme.spacing(2),
-    },
-  }
-})
+import { theme } from "../layouts/theme"
 
 export default function DataPage() {
-  const classes = useStyles()
   const devices = useStaticQuery(graphql`
     query {
       allDevicesCsv(sort: { fields: [Brand, Device] }) {
@@ -47,7 +38,7 @@ export default function DataPage() {
       <Typography variant="h1" hidden={true}>
         IoST Index: Raw links
       </Typography>
-      <Table classes={classes}>
+      <Table sx={{ margin: theme.spacing(2) }}>
         <TableHead>
           <TableRow>
             <TableCell>Brand</TableCell>

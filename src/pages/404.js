@@ -2,26 +2,11 @@ import React from "react"
 import SEO from "../components/seo"
 import Container from "@mui/material/Container"
 import { Typography } from "@mui/material"
-import { makeStyles } from "@mui/styles"
-
-const useStyles = makeStyles((theme) => {
-  return {
-    root: {},
-    content: {
-      paddingTop: theme.spacing(4),
-      flex: `1 1 100%`,
-      position: `relative`,
-      maxWidth: `100%`,
-      margin: `0 auto`,
-    },
-  }
-})
+import { theme } from "../layouts/theme"
 
 export default function Error404() {
-  const classes = useStyles()
-
   return (
-    <Container className={classes.root}>
+    <Container>
       <SEO
         post={{
           page: `404`,
@@ -29,7 +14,15 @@ export default function Error404() {
           image: undefined,
         }}
       />
-      <Container className={classes.content}>
+      <Container
+        sx={{
+          paddingTop: theme.spacing(4),
+          flex: `1 1 100%`,
+          position: `relative`,
+          maxWidth: `100%`,
+          margin: `0 auto`,
+        }}
+      >
         <Typography variant="h1" gutterBottom>
           404 - SexTech Not Found!
         </Typography>

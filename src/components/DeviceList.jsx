@@ -5,16 +5,18 @@ import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableCell from "@mui/material/TableCell"
 import TableHead from "@mui/material/TableHead"
-import { makeStyles } from "@mui/styles"
 import AddIcon from "@mui/icons-material/Add"
 import InfoIcon from "@mui/icons-material/Info"
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
 import CheckBoxIcon from "@mui/icons-material/CheckBox"
 import CompareIcon from "@mui/icons-material/Compare"
-import LazyLoad from "react-lazyload"
+import {
+  LazyLoadImage,
+  trackWindowScroll,
+} from "react-lazy-load-image-component"
 import { Link } from "gatsby"
-import Tooltip from "@mui/material/Tooltip"
 import AffiliateLink from "./AffiliateLink"
+import LightTooltip from "./LightTooltip"
 import Snackbar from "@mui/material/Snackbar"
 import Button from "@mui/material/Button"
 import CloseIcon from "@mui/icons-material/Close"
@@ -24,6 +26,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 import HelpIcon from "@mui/icons-material/Help"
 import ErrorIcon from "@mui/icons-material/Error"
+import { theme } from "../layouts/theme"
+import Container from "@mui/material/Container"
 
 export function encode(string) {
   return encodeURIComponent(string)
@@ -39,18 +43,22 @@ const columns = [
   {
     dataField: `images`,
     text: `Image`,
-    formatter: (cellContent, row, classes) => (
+    formatter: (cellContent, row, scrollPosition) => (
       <div>
         {cellContent && cellContent.length > 0 && (
-          <LazyLoad height={50}>
-            <img
-              src={`devices/${encode(row.Brand)}/${encode(
-                row.Device
-              )}/thumb.jpeg`}
-              className={classes.thumbnail}
-              alt={`${row.Brand} - ${row.Device} - Thumbnail`}
-            />
-          </LazyLoad>
+          <LazyLoadImage
+            height={50}
+            src={`devices/${encode(row.Brand)}/${encode(
+              row.Device
+            )}/thumb.jpeg`}
+            sx={{
+              "object-fit": `cover`,
+              width: `50px`,
+              height: `50px`,
+            }}
+            alt={`${row.Brand} - ${row.Device} - Thumbnail`}
+            scrollPosition={scrollPosition}
+          />
         )}
       </div>
     ),
@@ -84,8 +92,16 @@ const columns = [
     dataField: `Buttplug.ButtplugSupport`,
     text: `Buttplug.io Support`,
     sort: true,
-    formatter: (cellContent, row, classes) => (
-      <div className={classes.bpsupp}>
+    formatter: (cellContent, row) => (
+      <div
+        style={{
+          display: `flex`,
+          alignItems: `center`,
+          "& span": {
+            margin: 5,
+          },
+        }}
+      >
         {(row.Buttplug.ButtplugSupport & 4) === 4 &&
         row.Buttplug.Buttplug_Rust === `Issues` ? (
           <ErrorIcon style={{ color: `orange` }} />
@@ -130,13 +146,9 @@ const columns = [
           )) ||
           ``}
         {row.Buttplug.Buttplug_Support_Notes.length > 0 && (
-          <Tooltip
-            interactive
-            title={row.Buttplug.Buttplug_Support_Notes}
-            classes={{ tooltip: classes.tooltip }}
-          >
+          <LightTooltip interactive title={row.Buttplug.Buttplug_Support_Notes}>
             <InfoIcon />
-          </Tooltip>
+          </LightTooltip>
         )}
       </div>
     ),
@@ -145,23 +157,27 @@ const columns = [
     dataField: `XToys.XToysSupport`,
     text: `XToys.app Support`,
     sort: true,
-    formatter: (cellContent, row, classes) => (
-      <div className={classes.bpsupp}>
+    formatter: (cellContent, row) => (
+      <Container
+        sx={{
+          display: `flex`,
+          alignItems: `center`,
+          "& span": {
+            margin: 5,
+          },
+        }}
+      >
         {row.XToys.XToysSupport === 1 ? (
           <CheckCircleIcon style={{ color: `green` }} />
         ) : (
           <HighlightOffIcon color="error" />
         )}
         {row.XToys.XToys_Support_Notes.length > 0 && (
-          <Tooltip
-            interactive
-            title={row.XToys.XToys_Support_Notes}
-            classes={{ tooltip: classes.tooltip }}
-          >
+          <LightTooltip interactive title={row.XToys.XToys_Support_Notes}>
             <InfoIcon />
-          </Tooltip>
+          </LightTooltip>
         )}
-      </div>
+      </Container>
     ),
   },
   {
@@ -197,60 +213,6 @@ function EnhancedTableHead(props) {
     </TableHead>
   )
 }
-
-const useStyles = makeStyles((theme) => {
-  return {
-    devList: {
-      width: `100%`,
-      marginTop: theme.spacing(3),
-    },
-    table: {
-      minWidth: 750,
-    },
-    tableWrapper: {
-      overflowX: `auto`,
-    },
-    visuallyHidden: {
-      border: 0,
-      clip: `rect(0 0 0 0)`,
-      height: 1,
-      margin: -1,
-      overflow: `hidden`,
-      padding: 0,
-      position: `absolute`,
-      top: 20,
-      width: 1,
-    },
-    thumbnail: {
-      "object-fit": `cover`,
-      width: `50px`,
-      height: `50px`,
-    },
-    tooltip: {
-      maxWidth: 500,
-      fontSize: theme.typography.pxToRem(12),
-      backgroundColor: `#ffffff`,
-      color: `#000000`,
-    },
-    bpsupp: {
-      display: `flex`,
-      alignItems: `center`,
-      "& span": {
-        margin: 5,
-      },
-    },
-    tooltipcolumn: {
-      display: `flex`,
-      alignItems: `center`,
-    },
-    close: {
-      padding: theme.spacing(0.5),
-    },
-    notalink: {
-      color: `black`,
-    },
-  }
-})
 
 function toggleCompare(dev, compares, setCompares) {
   const idx = compares.indexOf(dev)
@@ -291,7 +253,7 @@ function CompareSnackbar(props) {
           <IconButton
             aria-label="close"
             color="inherit"
-            className={props.classes.close}
+            className={{ padding: theme.spacing(0.5) }}
             onClick={handleClose}
           >
             <CloseIcon />
@@ -302,9 +264,9 @@ function CompareSnackbar(props) {
   )
 }
 
-export default function DeviceList(props) {
-  const classes = useStyles()
+function DeviceListInternal(props) {
   const data = props.data
+  const scrollPosition = props.scrollPosition
   const [compares, setCompares] = useState([])
 
   const doCompare = () => {
@@ -336,7 +298,7 @@ export default function DeviceList(props) {
                 setCompares
               )
             }
-            className={classes.notalink}
+            style={{ color: `black` }}
           >
             {(compares.includes(row.path) && <CheckBoxIcon />) || (
               <CheckBoxOutlineBlankIcon />
@@ -348,7 +310,7 @@ export default function DeviceList(props) {
         col.hidden ? null : (
           <TableCell key={id}>
             {col.formatter
-              ? col.formatter(row[col.dataField], row, classes)
+              ? col.formatter(row[col.dataField], row, scrollPosition)
               : row[col.dataField]}
           </TableCell>
         )
@@ -357,22 +319,24 @@ export default function DeviceList(props) {
   ))
 
   return (
-    <div className={classes.devList}>
+    <div
+      style={{
+        width: `100%`,
+      }}
+    >
       <CompareSnackbar
         compareMode={props.compareMode}
         setCompareMode={props.setCompareMode}
         setCompares={setCompares}
         compareCount={compares.length}
         doCompare={doCompare}
-        classes={classes}
       />
-      <div className={classes.tableWrapper}>
-        <Table className={classes.table} aria-label="device table">
+      <div style={{ overflowX: `auto` }}>
+        <Table sx={{ minWidth: `750px` }} aria-label="device table">
           <EnhancedTableHead
             compareMode={props.compareMode}
             setCompareMode={props.setCompareMode}
             setCompares={setCompares}
-            classes={classes}
           />
           <TableBody>{rows}</TableBody>
         </Table>
@@ -380,3 +344,5 @@ export default function DeviceList(props) {
     </div>
   )
 }
+
+export default trackWindowScroll(DeviceListInternal)

@@ -1,25 +1,8 @@
-import Tooltip from "@mui/material/Tooltip"
 import React from "react"
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn"
-import { makeStyles } from "@mui/styles"
-
-const useStyles = makeStyles((theme) => {
-  return {
-    tooltip: {
-      maxWidth: 500,
-      fontSize: theme.typography.pxToRem(12),
-      backgroundColor: `#ffffff`,
-      color: `#000000`,
-    },
-    tooltipColumn: {
-      display: `flex`,
-      alignItems: `center`,
-    },
-  }
-})
+import LightTooltip from "./LightTooltip"
 
 export default function AffiliateLink(props) {
-  const classes = useStyles()
   const device = props.device
 
   if (device.Brand === undefined) {
@@ -40,14 +23,14 @@ export default function AffiliateLink(props) {
 
   if (hasAUrl) {
     return (
-      <div className={classes.tooltipColumn}>
+      <div style={{ display: `flex`, alignItems: `center` }}>
         <a
           href={device.Affiliate_Link}
           title={`Affiliate link: ${device.Brand} - ${device.Device}`}
         >
           {device.Affiliate_Link}
         </a>
-        <Tooltip
+        <LightTooltip
           interactive
           title={
             <React.Fragment>
@@ -68,10 +51,9 @@ export default function AffiliateLink(props) {
               )}
             </React.Fragment>
           }
-          classes={{ tooltip: classes.tooltip }}
         >
           <MonetizationOnIcon />
-        </Tooltip>
+        </LightTooltip>
       </div>
     )
   } else if (hasUrl) {
