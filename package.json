@@ -32,7 +32,7 @@
     "gatsby-source-graphql": "^4.13.0",
     "gatsby-theme-material-ui": "^5.2.0",
     "gatsby-transformer-csv": "^4.13.0",
-    "gatsby-transformer-remark": "^5.13.0",
+    "gatsby-transformer-remark": "^5.14.0",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
