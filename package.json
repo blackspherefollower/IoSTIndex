@@ -20,7 +20,7 @@
     "@mui/material": "^5.7.0",
     "@types/react": "^18.0.9",
     "axios": "^0.27.2",
-    "gatsby": "^4.13.1",
+    "gatsby": "^4.14.0",
     "gatsby-legacy-polyfills": "^2.13.0",
     "gatsby-link": "^4.13.0",
     "gatsby-plugin-layout": "^3.13.0",
