@@ -32,6 +32,7 @@ module.exports = {
     `gatsby-plugin-layout`,
     `gatsby-plugin-material-ui`,
     `gatsby-plugin-react-helmet`,
+    `gatsby-plugin-sass`,
     {
       resolve: `gatsby-plugin-sitemap`,
       options: {
