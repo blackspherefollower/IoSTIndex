@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.18.0",
-    "eslint": "^8.15.0",
+    "eslint": "^8.16.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-filenames": "^1.3.2",
