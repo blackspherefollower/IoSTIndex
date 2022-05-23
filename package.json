@@ -50,7 +50,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-transition-group": "^4.4.2",
     "sass": "^1.52.1",
-    "sharp": "^0.30.4"
+    "sharp": "^0.30.5"
   },
   "devDependencies": {
     "@babel/core": "^7.18.0",
