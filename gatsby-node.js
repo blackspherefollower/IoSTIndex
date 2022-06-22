@@ -17,10 +17,11 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   const deviceDetailTemplate = path.resolve(
     `src/templates/deviceDetailTemplate.js`
   )
+  const deltaTemplate = path.resolve(`src/templates/deltaTemplate.js`)
 
   const result = await graphql(`
     {
-      allMarkdownRemark(limit: 1000) {
+      allMarkdownRemark {
         edges {
           node {
             frontmatter {
@@ -344,4 +345,16 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       context: { device: dev }, // additional data can be passed via context
     })
   }
+
+  // Change history pages
+  const deltas =
+    JSON.parse(fs.readFileSync(__dirname + `/src/data/deltas.json`)) ?? []
+  for (const delta of deltas) {
+    createPage({
+      path: `/changes/` + delta.date,
+      component: deltaTemplate,
+      context: { delta }, // additional data can be passed via context
+    })
+  }
 }
+

@@ -39,6 +39,57 @@ module.exports = {
         excludes: [`/compare`, `/data`],
       },
     },
+    {
+      resolve: `gatsby-plugin-feed`,
+      options: {
+        query: `
+          {
+            site {
+              siteMetadata {
+                title
+                description
+                siteUrl
+              }
+            }
+          }
+        `,
+        feeds: [
+          {
+            serialize: ({ query: { site, allSitePage } }) =>
+              allSitePage.edges.map((edge) =>
+                Object.assign(
+                  {},
+                  {
+                    date: edge.node.pageContext.delta.date * 1000,
+                    url: site.siteMetadata.siteUrl + edge.node.path,
+                    title: `IoST Index: Update at ${new Date(edge.node.pageContext.delta.date * 1000).toUTCString()}`
+                  }
+                )
+              ),
+            query: `
+              {
+                allSitePage(
+                  filter: {path: {regex: "^/changes/"}}
+                  sort: {order: DESC, fields: path}
+                  limit: 100
+                ) {
+                  edges {
+                    node {
+                      path
+                      id
+                      pageContext
+                    }
+                  }
+                }
+              }
+            `,
+            output: `/rss.xml`,
+            title: `IoST Index`,
+            link: `https://iostindex.com`,
+          },
+        ],
+      },
+    },
   ],
 }
 
