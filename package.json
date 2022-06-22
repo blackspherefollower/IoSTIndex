@@ -24,6 +24,7 @@
     "gatsby": "^4.16.0",
     "gatsby-legacy-polyfills": "^2.16.0",
     "gatsby-link": "^4.16.0",
+    "gatsby-plugin-feed": "^4.16.0",
     "gatsby-plugin-layout": "^3.16.0",
     "gatsby-plugin-material-ui": "^4.1.0",
     "gatsby-plugin-matomo": "^0.13.0",
@@ -34,6 +35,7 @@
     "gatsby-source-graphql": "^4.16.0",
     "gatsby-theme-material-ui": "^5.2.0",
     "gatsby-transformer-csv": "^4.16.0",
+    "gatsby-transformer-json": "^4.16.0",
     "gatsby-transformer-remark": "^5.16.0",
     "history": "^5.3.0",
     "localforage": "^1.10.0",
@@ -54,6 +56,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
+    "csv-parse": "^5.2.0",
+    "diff-arrays-of-objects": "^1.1.9",
     "eslint": "^8.17.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.5.0",
@@ -62,6 +66,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
+    "isomorphic-git": "^1.17.3",
     "prettier": "^2.6.2",
     "react-dev-utils": "^12.0.1"
   },
