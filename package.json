@@ -46,7 +46,7 @@
     "open-iconic": "^1.1.1",
     "prop-types": "^15.8.1",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0",
+    "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-lazy-load-image-component": "^1.5.4",
     "react-responsive-carousel": "^3.2.23",
