@@ -3,6 +3,8 @@
  *
  * See: https://www.gatsbyjs.org/docs/gatsby-config/
  */
+const jsdom = require(`jsdom`)
+const { JSDOM } = jsdom
 
 module.exports = {
   siteMetadata: {
@@ -56,16 +58,74 @@ module.exports = {
         feeds: [
           {
             serialize: ({ query: { site, allSitePage } }) =>
-              allSitePage.edges.map((edge) =>
-                Object.assign(
+              allSitePage.edges.map((edge) => {
+                const { document } = new JSDOM(``).window
+                const root = document.createElement(`div`)
+                if (edge.node.pageContext.delta.added.length > 0) {
+                  const c = document.createElement(`div`)
+                  const h1 = document.createElement(`h1`)
+                  h1.innerHTML = `Devices added`
+                  c.appendChild(h1)
+                  for (const d of edge.node.pageContext.delta.added) {
+                    const a = document.createElement(`a`)
+                    a.innerHTML = `${d.Brand} - ${d.Device}`
+                    a.href = `${site.siteMetadata.siteUrl}${d.path}`
+                    const p = document.createElement(`p`)
+                    p.appendChild(a)
+                    c.appendChild(p)
+                  }
+                  root.appendChild(c)
+                }
+                if (edge.node.pageContext.delta.added.removed > 0) {
+                  const c = document.createElement(`div`)
+                  const h1 = document.createElement(`h1`)
+                  h1.innerHTML = `Devices removed`
+                  c.appendChild(h1)
+                  for (const d of edge.node.pageContext.delta.removed) {
+                    const p = document.createElement(`p`)
+                    p.innerHTML = `${d.Brand} - ${d.Device}`
+                    c.appendChild(p)
+                  }
+                  root.appendChild(c)
+                }
+                if (edge.node.pageContext.delta.updated.length > 0) {
+                  const c = document.createElement(`div`)
+                  const h1 = document.createElement(`h1`)
+                  h1.innerHTML = `Devices updated`
+                  c.appendChild(h1)
+                  for (const d of edge.node.pageContext.delta.updated) {
+                    const a = document.createElement(`a`)
+                    a.innerHTML = `${d[0].Brand} - ${d[0].Device}`
+                    a.href = `${site.siteMetadata.siteUrl}${d[0].path}`
+                    const p = document.createElement(`p`)
+                    p.appendChild(a)
+                    if (d[2] != null) {
+                      for (const e of d[2]) {
+                        const s = document.createElement(`span`)
+                        s.innerHTML = ` ${e.path.join(`, `)} changed from "${e.lhs}" to "${e.rhs}"`
+                        p.appendChild(s)
+                      }
+                    }
+                    c.appendChild(p)
+                  }
+                  root.appendChild(c)
+                }
+                return Object.assign(
                   {},
                   {
                     date: edge.node.pageContext.delta.date * 1000,
                     url: site.siteMetadata.siteUrl + edge.node.path,
-                    title: `IoST Index: Update at ${new Date(edge.node.pageContext.delta.date * 1000).toUTCString()}`
+                    title: `IoST Index: Update at ${new Date(
+                      edge.node.pageContext.delta.date * 1000
+                    ).toUTCString()}`,
+                    custom_elements: [
+                      {
+                        "content:encoded": root.innerHTML,
+                      },
+                    ],
                   }
                 )
-              ),
+              }),
             query: `
               {
                 allSitePage(
