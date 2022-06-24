@@ -37,7 +37,7 @@ jobs:
           git add src/data
           git commit -m "Updating datasets"
           npm i
-          node buildDeviceLog.js
+          npx -c buildDeviceLog.js
           git add src/data
           git commit -m "Updating device log"
           git push
