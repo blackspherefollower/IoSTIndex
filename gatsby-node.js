@@ -85,7 +85,8 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             Heaters
             Inputs
             Lights
-            Linear_Actuators
+            Linear_Actuators__Positional_
+            Linear_Actuators__Oscillating_
             Estim
             Camera
             Buttons
@@ -171,18 +172,19 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     inputFeatures.sort()
 
     const outputFeatures = [
-      `Camera`,
-      `Estim`,
-      `Grips_Expanders`,
-      `Heaters`,
-      `Lights`,
-      `Linear_Actuators`,
-      `Speaker`,
-      `Suction`,
-      `Rotators`,
-      `Oscillators`,
-      `Vibrators`,
-      `Pump`,
+      [`Camera`, `Camera`],
+      [`Estim`, `Estim`],
+      [`Grips_Expanders`, `Grips/Expanders`],
+      [`Heaters`, `Heaters`],
+      [`Lights`, `Lights`],
+      [`Linear_Actuators__Positional_`, `Linear Actuators (Positional)`],
+      [`Linear_Actuators__Oscillating_`, `Linear Actuators (Oscillating)`],
+      [`Speaker`, `Speaker`],
+      [`Suction`, `Suction`],
+      [`Rotators`, `Rotators`],
+      [`Oscillators`, `Oscillators`],
+      [`Vibrators`, `Vibrators`],
+      [`Pump`, `Pump`],
     ]
     outputFeatures.sort()
 
@@ -199,8 +201,8 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       delete dev[prop]
     })
     outputFeatures.forEach((prop) => {
-      dev.Features.Outputs[prop] = dev[prop]
-      delete dev[prop]
+      dev.Features.Outputs[prop[1]] = dev[prop[0]]
+      delete dev[prop[0]]
     })
 
     devices.push(dev)
@@ -357,4 +359,3 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     })
   }
 }
-
