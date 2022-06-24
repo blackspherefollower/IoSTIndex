@@ -21,7 +21,7 @@
     "@types/react": "^18.0.14",
     "axios": "^0.27.2",
     "decode-uri-component": "^0.2.0",
-    "gatsby": "^4.17.0",
+    "gatsby": "^4.17.1",
     "gatsby-legacy-polyfills": "^2.17.0",
     "gatsby-link": "^4.17.0",
     "gatsby-plugin-feed": "^4.17.0",
