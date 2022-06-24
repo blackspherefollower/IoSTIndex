@@ -63,6 +63,8 @@ const discards = [
   `Heaters`,
   `Lights`,
   `Linear Actuators`,
+  `Linear Actuators (Oscillating)`,
+  `Linear Actuators (Positional)`,
   `Speaker`,
   `Suction`,
   `Rotators`,
