@@ -18,7 +18,7 @@
     "@emotion/styled": "^11.9.3",
     "@mdx-js/mdx": "^2.1.2",
     "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.8.5",
+    "@mui/material": "^5.8.6",
     "@types/react": "^18.0.14",
     "axios": "^0.27.2",
     "decode-uri-component": "^0.2.0",
