@@ -36,8 +36,7 @@ jobs:
             git add src/data
             git commit -m "Updating datasets"
           fi
-          git log -- src/data/devices.csv
-          npm r buildDeviceLog
+          npm run buildDeviceLog
           if [ ! -z "$(git diff src/data)" ]; then
             git add src/data
             git commit -m "Updating device log"
