@@ -26,18 +26,16 @@ jobs:
           fetch-depth: 0
       - name: Fetch, Validate and Push CSV
         run: |
+          git config --local user.name "Data importer[bot]"
+          git config --local user.email "data-importer[bot]@users.noreply.github.com"
           wget https://github.com/Clever/csvlint/releases/download/v0.3.0/csvlint-v0.3.0-linux-amd64.tar.gz
           tar zxvf csvlint-v0.3.0-linux-amd64.tar.gz --strip-components 1
           wget -O src/data/devices.csv "${{ secrets.DeviceSheetUrl }}"
           ./csvlint src/data/devices.csv || exit 1
-          if [ -z "$(git diff src/data)" ]; then
-            echo "No diffs to push!"
-            exit 0
+          if [ ! -z "$(git diff src/data)" ]; then
+            git add src/data
+            git commit -m "Updating datasets"
           fi
-          git config --local user.name "Data importer[bot]"
-          git config --local user.email "data-importer[bot]@users.noreply.github.com"
-          git add src/data
-          git commit -m "Updating datasets"
           git log -- src/data/devices.csv
           npm r buildDeviceLog
           if [ ! -z "$(git diff src/data)" ]; then
