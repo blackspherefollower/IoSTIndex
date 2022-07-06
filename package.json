@@ -25,7 +25,7 @@
     "gatsby": "^4.17.2",
     "gatsby-legacy-polyfills": "^2.17.0",
     "gatsby-link": "^4.17.0",
-    "gatsby-plugin-feed": "^4.17.0",
+    "gatsby-plugin-feed": "^4.18.0",
     "gatsby-plugin-layout": "^3.17.0",
     "gatsby-plugin-material-ui": "^4.1.0",
     "gatsby-plugin-matomo": "^0.13.0",
