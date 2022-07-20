@@ -67,7 +67,7 @@ const validateBpFilter = (filter) => {
     }
     if ((filter.bpSupport & 2) !== 0) {
       errors.push(
-        `Buttplug C# has been deprecated in favour of Buttplug Rust and WASM bindings. ` +
+        `Buttplug JS has been deprecated in favour of Buttplug Rust and WASM bindings. ` +
           `Consider resetting the Buttplug Support filter.`
       )
     }
