@@ -92,6 +92,13 @@ const columns = [
     dataField: `Buttplug.ButtplugSupport`,
     text: `Buttplug.io Support`,
     sort: true,
+    notes: (
+      <React.Fragment>
+        Devices are marked as supported when supported by the latest release of
+        {` `}
+        <a href="https://intiface.com/central/">Intiface Central</a>
+      </React.Fragment>
+    ),
     formatter: (cellContent, row) => (
       <div
         style={{
@@ -202,9 +209,29 @@ function EnhancedTableHead(props) {
               padding={col.disablePadding ? `none` : `default`}
             >
               {col.sort ? (
-                <TableSortLabel>{col.text}</TableSortLabel>
+                <TableSortLabel>
+                  {col.text}
+                  {col.notes && (
+                    <React.Fragment>
+                      {` `}
+                      <LightTooltip interactive title={col.notes}>
+                        <InfoIcon />
+                      </LightTooltip>
+                    </React.Fragment>
+                  )}
+                </TableSortLabel>
               ) : (
-                col.text
+                <span>
+                  {col.text} +
+                  {col.notes && (
+                    <React.Fragment>
+                      {` `}
+                      <LightTooltip interactive title={col.notes}>
+                        <InfoIcon />
+                      </LightTooltip>
+                    </React.Fragment>
+                  )}
+                </span>
               )}
             </TableCell>
           )
