@@ -21,7 +21,7 @@
     "@mui/material": "^5.10.15",
     "@types/react": "^18.0.25",
     "axios": "^1.2.0",
-    "decode-uri-component": "^0.2.0",
+    "decode-uri-component": "^0.2.2",
     "gatsby": "^4.24.8",
     "gatsby-link": "^4.24.1",
     "gatsby-plugin-feed": "^4.24.0",
