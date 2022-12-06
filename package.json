@@ -20,7 +20,7 @@
     "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.16",
     "@types/react": "^18.0.26",
-    "axios": "^1.2.0",
+    "axios": "^1.2.1",
     "decode-uri-component": "^0.2.2",
     "gatsby": "^4.24.8",
     "gatsby-link": "^4.24.1",
