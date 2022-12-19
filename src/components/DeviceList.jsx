@@ -222,7 +222,7 @@ function EnhancedTableHead(props) {
                 </TableSortLabel>
               ) : (
                 <span>
-                  {col.text} +
+                  {col.text}
                   {col.notes && (
                     <React.Fragment>
                       {` `}
