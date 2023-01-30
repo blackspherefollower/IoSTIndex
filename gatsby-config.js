@@ -32,7 +32,7 @@ module.exports = {
     `gatsby-transformer-csv`,
     `gatsby-transformer-remark`,
     `gatsby-plugin-layout`,
-    `gatsby-plugin-material-ui`,
+    `@iostindex/gatsby-plugin-material-ui`,
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-sass`,
     {

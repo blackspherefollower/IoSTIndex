@@ -12,7 +12,7 @@ import { theme } from "../layouts/theme"
 export default function DataPage() {
   const devices = useStaticQuery(graphql`
     query {
-      allDevicesCsv(sort: { fields: [Brand, Device] }) {
+      allDevicesCsv(sort: [{ Brand: ASC }, { Device: ASC }]) {
         edges {
           node {
             Brand
