@@ -49,7 +49,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
 
   const result2 = await graphql(`
     query {
-      allDevicesCsv(sort: { fields: [Brand, Device] }) {
+      allDevicesCsv(sort: [{ Brand: ASC }, { Device: ASC }]) {
         edges {
           node {
             Brand
