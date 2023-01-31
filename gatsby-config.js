@@ -130,7 +130,7 @@ module.exports = {
               {
                 allSitePage(
                   filter: {path: {regex: "^/changes/"}}
-                  sort: {order: DESC, fields: path}
+                  sort: {path: DESC}
                   limit: 100
                 ) {
                   edges {
