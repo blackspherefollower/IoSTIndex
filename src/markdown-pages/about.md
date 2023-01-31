@@ -1,5 +1,5 @@
 ---
-path: "/about"
+path: "/about/"
 title: "About the Internet of Sex Tech Index"
 ---
 
