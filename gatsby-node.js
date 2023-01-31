@@ -11,9 +11,7 @@ function encode(string) {
 exports.createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions
 
-  const modalMarkdownTemplate = path.resolve(
-    `src/templates/modalMarkdownTemplate.js`
-  )
+  const markdownTemplate = path.resolve(`src/templates/markdownTemplate.js`)
   const deviceDetailTemplate = path.resolve(
     `src/templates/deviceDetailTemplate.js`
   )
@@ -22,11 +20,9 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   const result = await graphql(`
     {
       allMarkdownRemark {
-        edges {
-          node {
-            frontmatter {
-              path
-            }
+        nodes {
+          frontmatter {
+            path
           }
         }
       }
@@ -39,10 +35,10 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     return
   }
 
-  result.data.allMarkdownRemark.edges.forEach(({ node }) => {
+  result.data.allMarkdownRemark.nodes.forEach((node) => {
     createPage({
       path: node.frontmatter.path,
-      component: modalMarkdownTemplate,
+      component: markdownTemplate,
       context: {}, // additional data can be passed via context
     })
   })
