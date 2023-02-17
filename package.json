@@ -14,7 +14,7 @@
     "buildDeviceLog": "node ./buildDeviceLog.js"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.5",
+    "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.5",
     "@mdx-js/mdx": "^2.3.0",
     "@mui/icons-material": "^5.11.9",
