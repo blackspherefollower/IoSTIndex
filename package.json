@@ -55,7 +55,7 @@
     "sharp": "^0.31.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.12",
+    "@babel/core": "^7.21.0",
     "csv-parse": "^5.3.5",
     "diff-arrays-of-objects": "^1.1.9",
     "eslint": "^8.34.0",
