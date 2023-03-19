@@ -94,7 +94,6 @@ export function Head({ data, ...props }) {
 
   return (
     <PageHead
-      {...props}
       meta={{
         path: `compare?${search}`,
         title: `IoST Index: Compare devices`,

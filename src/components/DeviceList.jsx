@@ -48,6 +48,7 @@ const columns = [
         {cellContent && cellContent.length > 0 && (
           <LazyLoadImage
             height={50}
+            width={50}
             src={`devices/${encode(row.Brand)}/${encode(
               row.Device
             )}/thumb.jpeg`}
