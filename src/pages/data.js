@@ -5,9 +5,21 @@ import TableRow from "@mui/material/TableRow"
 import TableHead from "@mui/material/TableHead"
 import TableCell from "@mui/material/TableCell"
 import { useStaticQuery, graphql } from "gatsby"
-import SEO from "../components/seo"
+import PageHead from "../components/PageHead"
 import { Typography } from "@mui/material"
 import { theme } from "../layouts/theme"
+
+export function Head({ data, ...props }) {
+  return (
+    <PageHead
+      meta={{
+        path: `data`,
+        title: `IoST Index: Raw links`,
+        description: `Page used for link checking`,
+      }}
+    />
+  )
+}
 
 export default function DataPage() {
   const devices = useStaticQuery(graphql`
@@ -28,13 +40,6 @@ export default function DataPage() {
 
   return (
     <div>
-      <SEO
-        post={{
-          path: `data`,
-          title: `IoST Index: Raw links`,
-          description: `Page used for link checking`,
-        }}
-      />
       <Typography variant="h1" hidden={true}>
         IoST Index: Raw links
       </Typography>

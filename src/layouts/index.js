@@ -1,6 +1,6 @@
 import React from "react"
 import { graphql, navigate, useStaticQuery } from "gatsby"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
+import { ThemeProvider } from "@mui/material/styles"
 import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
@@ -9,7 +9,6 @@ import MenuIcon from "@mui/icons-material/Menu"
 import BackIcon from "@mui/icons-material/ArrowBack"
 import Button from "@mui/material/Button"
 import CssBaseline from "@mui/material/CssBaseline"
-import { Helmet } from "react-helmet"
 import SvgIcon from "@mui/material/SvgIcon"
 import { theme } from "./theme"
 import Feedback from "../components/feeder-react-feedback/Feedback"
@@ -29,13 +28,6 @@ function LayoutInner({ children }) {
 
   return (
     <div>
-      <Helmet>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
-        <meta httpEquiv="content-language" content="en-gb" />
-      </Helmet>
       <CssBaseline />
       <AppBar position="static">
         <Toolbar>

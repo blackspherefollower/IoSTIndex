@@ -12,7 +12,6 @@ import LightTooltip from "../components/LightTooltip"
 import { Link } from "gatsby"
 import { encode } from "../components/DeviceList"
 import Alert from "@mui/material/Alert"
-import SEO from "../components/seo"
 import { Typography } from "@mui/material"
 import Box from "@mui/material/Box"
 import ErrorIcon from "@mui/icons-material/Error"
@@ -21,6 +20,91 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 import InfoIcon from "@mui/icons-material/Info"
 import Container from "@mui/material/Container"
+import PageHead from "../components/PageHead"
+
+export function Head({ data, ...props }) {
+  const [compares, setCompares] = useState([])
+  const search = typeof window !== `undefined` ? window.location.search : ``
+
+  useEffect(() => {
+    let devDate = null
+    let devices = null
+    localforage
+      .getItem(`devices`)
+      .then((value) => {
+        devices = value
+        return localforage.getItem(`devicesDate`)
+      })
+      .then((dateValue) => (devDate = moment(dateValue)))
+      .then(() => {
+        if (
+          devices === null ||
+          devDate === null ||
+          moment().subtract(30, `m`).isAfter(devDate)
+        ) {
+          return axios.get(`/devices.json`)
+        }
+        return null
+      })
+      .then((res) => {
+        if (res != null) {
+          devices = res.data
+          localforage
+            .setItem(`devices`, devices)
+            .then(() => localforage.setItem(`devicesDate`, moment().valueOf()))
+            .catch((err) => console.error(err))
+        }
+
+        devices.forEach((d) => {
+          if (d.path === undefined) {
+            d.path = encode(d.Brand) + `/` + encode(d.Device)
+          }
+        })
+
+        const params = new URLSearchParams(search)
+        const rawComps = []
+        params.forEach((v, k) => {
+          if (v.length === 0) {
+            rawComps.push(k)
+          } else if (k === `v`) {
+            rawComps.push(v)
+          }
+        })
+
+        const comps = []
+        const errs = []
+        rawComps.forEach((c) => {
+          const bits = c.split(`/`)
+          if (bits.length !== 2) {
+            errs.push({ Device: c, Error: `Invalid identifier` })
+            return
+          }
+          const idx = devices.findIndex(
+            (d) => d.Brand === bits[0] && d.Device === bits[1]
+          )
+          if (idx === -1) {
+            errs.push({ Device: c, Error: `Unknown device` })
+            return
+          }
+          comps.push(devices[idx])
+        })
+        setCompares(comps)
+      })
+  }, [false])
+
+  return (
+    <PageHead
+      {...props}
+      meta={{
+        path: `compare?${search}`,
+        title: `IoST Index: Compare devices`,
+        description: `Comparing:\n${compares
+          .map((d) => d.Brand + ` - ` + d.Device)
+          .join(`\n`)}`,
+      }}
+    />
+  )
+}
 
 export default function ComparePage({ theme }) {
   const [compares, setCompares] = useState([])
@@ -49,11 +133,6 @@ export default function ComparePage({ theme }) {
         return null
       })
       .then((res) => {
-        devices.forEach((d) => {
-          if (d.path === undefined) {
-            d.path = encode(d.Brand) + `/` + encode(d.Device)
-          }
-        })
 
         if (res != null) {
           devices = res.data
@@ -62,6 +141,11 @@ export default function ComparePage({ theme }) {
             .then(() => localforage.setItem(`devicesDate`, moment().valueOf()))
             .catch((err) => console.error(err))
         }
+        devices.forEach((d) => {
+          if (d.path === undefined) {
+            d.path = encode(d.Brand) + `/` + encode(d.Device)
+          }
+        })
 
         const params = new URLSearchParams(search)
         const rawComps = []
@@ -124,15 +208,6 @@ export default function ComparePage({ theme }) {
 
   return (
     <div>
-      <SEO
-        post={{
-          path: `compare?${search}`,
-          title: `IoST Index: Compare devices`,
-          description: `Comparing:\n${compares
-            .map((d) => d.Brand + ` - ` + d.Device)
-            .join(`\n`)}`,
-        }}
-      />
       <Typography variant="h1" hidden={true}>
         IoST Index: Compare devices
       </Typography>

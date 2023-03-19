@@ -1,9 +1,20 @@
 import React from "react"
 import { graphql } from "gatsby"
 import Typography from "@mui/material/Typography"
-import SEO from "../components/seo"
+import PageHead from "../components/PageHead"
 import Container from "@mui/material/Container"
 import NotFound from "../pages/404"
+
+export function Head({ data }) {
+  return (
+    <PageHead
+      meta={{
+        path: data?.markdownRemark?.frontmatter?.path || null,
+        title: data?.markdownRemark?.frontmatter?.title || null,
+      }}
+    />
+  )
+}
 
 export default function Template({
   data, // this prop will be injected by the GraphQL query below.
@@ -16,12 +27,6 @@ export default function Template({
   const { frontmatter, html } = data.markdownRemark
   return (
     <Container sx={{ margin: `50px` }}>
-      <SEO
-        post={{
-          path,
-          title: `About IoST Index`,
-        }}
-      />
       <Typography variant="h1" gutterBottom>
         {frontmatter.title}
       </Typography>

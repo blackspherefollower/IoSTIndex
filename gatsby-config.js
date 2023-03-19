@@ -33,7 +33,6 @@ module.exports = {
     `gatsby-transformer-remark`,
     `gatsby-plugin-layout`,
     `@iostindex/gatsby-plugin-material-ui`,
-    `gatsby-plugin-react-helmet`,
     `gatsby-plugin-sass`,
     {
       resolve: `gatsby-plugin-sitemap`,
@@ -145,7 +144,7 @@ module.exports = {
             `,
             output: `/rss.xml`,
             title: `IoST Index`,
-            link: `https://iostindex.com`,
+            link: `/rss.xml`,
           },
         ],
       },

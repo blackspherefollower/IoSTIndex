@@ -8,10 +8,14 @@ import * as moment from "moment"
 import Fab from "@mui/material/Fab"
 import FilterListIcon from "@mui/icons-material/FilterList"
 import CompareIcon from "@mui/icons-material/Compare"
-import SEO from "../components/seo"
 import trackCustomEvent from "../components/trackCustomEvent"
 import { Typography } from "@mui/material"
 import Alert from "@mui/material/Alert"
+import PageHead from "../components/PageHead"
+
+export function Head() {
+  return <PageHead />
+}
 
 const reactUrlStateOptions = {
   fromIdResolvers: async (param, value, oldState) => {
@@ -353,7 +357,6 @@ class IndexComponent extends React.Component {
 
     return (
       <div>
-        <SEO />
         <Typography variant="h1" hidden={true}>
           IoST Index: Device List
         </Typography>

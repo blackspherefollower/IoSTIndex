@@ -1,23 +1,31 @@
 import React from "react"
-import SEO from "../components/seo"
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import { Link } from "gatsby"
+import PageHead from "../components/PageHead"
+
+export function Head({ location, pageContext }) {
+  const delta = pageContext.delta
+  const date = new Date(delta.date * 1000).toUTCString()
+
+  return (
+    <PageHead
+      meta={{
+        path: location.pathname,
+        title: `IoST Index: Update at ${date}`,
+      }}
+    />
+  )
+}
 
 export default function Template({ path, pageContext }) {
   const delta = pageContext.delta
   const date = new Date(delta.date * 1000).toUTCString()
 
-  const updates = delta.updated.filter(d => d[2] !== null)
+  const updates = delta.updated.filter((d) => d[2] !== null)
 
   return (
     <Container>
-      <SEO
-        post={{
-          path,
-          title: `IoST Index: Update at ${date}`,
-        }}
-      />
       <div>
         <Typography variant="h1" gutterBottom>
           Update at {date}
