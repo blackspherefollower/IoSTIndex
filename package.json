@@ -25,7 +25,7 @@
     "gatsby": "^5.7.0",
     "gatsby-link": "^5.7.0",
     "gatsby-plugin-feed": "^5.7.0",
-    "gatsby-plugin-layout": "^4.7.0",
+    "gatsby-plugin-layout": "^4.8.0",
     "@iostindex/gatsby-plugin-material-ui": "^5.0.0",
     "gatsby-plugin-matomo": "^0.14.0",
     "gatsby-plugin-sass": "^6.7.0",
