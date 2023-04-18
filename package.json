@@ -28,7 +28,7 @@
     "gatsby-plugin-layout": "^4.8.0",
     "@iostindex/gatsby-plugin-material-ui": "^5.0.0",
     "gatsby-plugin-matomo": "^0.15.1",
-    "gatsby-plugin-sass": "^6.8.0",
+    "gatsby-plugin-sass": "^6.9.0",
     "gatsby-plugin-sitemap": "^6.8.0",
     "gatsby-source-filesystem": "^5.8.0",
     "gatsby-source-graphql": "^5.8.0",
