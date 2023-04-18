@@ -31,7 +31,7 @@
     "gatsby-plugin-sass": "^6.8.0",
     "gatsby-plugin-sitemap": "^6.8.0",
     "gatsby-source-filesystem": "^5.9.0",
-    "gatsby-source-graphql": "^5.8.0",
+    "gatsby-source-graphql": "^5.9.0",
     "gatsby-transformer-csv": "^5.8.0",
     "gatsby-transformer-json": "^5.8.0",
     "gatsby-transformer-remark": "^6.8.0",
