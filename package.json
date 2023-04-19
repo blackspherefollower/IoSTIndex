@@ -24,7 +24,7 @@
     "decode-uri-component": "^0.4.1",
     "gatsby": "^5.9.0",
     "gatsby-link": "^5.8.0",
-    "gatsby-plugin-feed": "^5.8.0",
+    "gatsby-plugin-feed": "^5.9.0",
     "gatsby-plugin-layout": "^4.9.0",
     "@iostindex/gatsby-plugin-material-ui": "^5.0.0",
     "gatsby-plugin-matomo": "^0.15.1",
