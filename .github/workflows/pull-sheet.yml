@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
       - name: Fetch, Validate and Push CSV
         run: |
-          git repack --max-pack-size=1g -a
+          git repack --max-pack-size=512m -a
           wget https://github.com/Clever/csvlint/releases/download/v0.3.0/csvlint-v0.3.0-linux-amd64.tar.gz
           tar zxvf csvlint-v0.3.0-linux-amd64.tar.gz --strip-components 1
           wget -O src/data/devices.csv "${{ secrets.DeviceSheetUrl }}"
