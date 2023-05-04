@@ -2,9 +2,11 @@ const git = require(`isomorphic-git`)
 const fs = require(`fs`)
 const diff = require(`diff-arrays-of-objects`)
 const csv = require(`csv-parse/sync`)
+const { exec } = require(`child_process`)
+const ManualPromise = require(`manual-promise`).default
 
 const gitdir = __dirname + `/.git`
-const dir = `/src/data/devices.csv`
+const dir = `src/data/devices.csv`
 
 function encode(string) {
   return encodeURIComponent(string)
@@ -81,13 +83,13 @@ async function getFileContent(commit, parent) {
   let blob1 = ``
   let blob2 = ``
 
-  const blobsha1 = await getFile(commit, dir.substring(1))
+  const blobsha1 = await getFile(commit, dir)
   if (blobsha1 === null) {
     return null
   }
 
   if (parent !== undefined) {
-    const blobsha2 = await getFile(parent, dir.substring(1))
+    const blobsha2 = await getFile(parent, dir)
 
     if (blobsha1 == blobsha2) {
       return null
@@ -116,6 +118,7 @@ async function getFileContent(commit, parent) {
     }
     return e
   })
+  console.log(entries1.length, entries2.length)
   return diff(entries2, entries1, `path`, { updatedValues: 4 })
 }
 
@@ -123,20 +126,44 @@ async function buildDeltaFile() {
   const deltas =
     JSON.parse(fs.readFileSync(__dirname + `/src/data/deltas.json`)) ?? []
 
-  let since = undefined
-  if (deltas.length > 0) {
-    since = new Date(deltas[deltas.length - 1].date * 1000)
+  let since = ``
+  if (deltas.length >= 1) {
+    since = `--since=${deltas[deltas.length - 1].date}`
   }
-  const commits = await git.log({
-    fs,
-    dir,
-    gitdir,
-    since,
-  })
+  let commits = []
+
+  const execDone = new ManualPromise()
+
+  exec(
+    `git log ${since} --format="%H %ct %P" -- ${dir}`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`)
+        return
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`)
+        return
+      }
+      commits = stdout
+        .split(`\n`)
+        .filter((value) => value.match(/([a-f0-9]{40})/))
+        .map((value) => {
+          const matches = value.match(/([a-f0-9]{40}) (\d+) ([a-f0-9]{40})?/)
+          return {
+            commit: matches[1],
+            timestamp: matches[2],
+            parent: matches[3],
+          }
+        })
+      execDone.resolve()
+    }
+  )
+  await execDone
 
   console.log(`Found ${commits.length} commits`)
   for (const c of commits.reverse()) {
-    const res = await getFileContent(c.oid, c.commit.parent[0])
+    const res = await getFileContent(c.commit, c.parent)
     if (
       res === null ||
       res.added.length + res.removed.length + res.updated.length === 0
@@ -147,7 +174,7 @@ async function buildDeltaFile() {
         `Found diff: ${res.added.length} added, ${res.removed.length} removed, ${res.updated.length} updated`
       )
       deltas.push({
-        date: c.commit.committer.timestamp,
+        date: c.timestamp,
         added: res.added,
         removed: res.removed,
         updated: res.updated,

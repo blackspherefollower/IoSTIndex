@@ -16,6 +16,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
+    "@iostindex/gatsby-plugin-material-ui": "^5.0.0",
     "@mdx-js/mdx": "^2.3.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.3",
@@ -26,7 +27,6 @@
     "gatsby-link": "^5.8.0",
     "gatsby-plugin-feed": "^5.9.0",
     "gatsby-plugin-layout": "^4.9.0",
-    "@iostindex/gatsby-plugin-material-ui": "^5.0.0",
     "gatsby-plugin-matomo": "^0.15.2",
     "gatsby-plugin-sass": "^6.9.0",
     "gatsby-plugin-sitemap": "^6.9.0",
@@ -65,6 +65,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "isomorphic-git": "^1.23.0",
+    "manual-promise": "^2.0.2",
     "prettier": "^2.8.8"
   },
   "repository": {
