@@ -1,38 +1,15 @@
-const git = require(`isomorphic-git`)
 const fs = require(`fs`)
 const diff = require(`diff-arrays-of-objects`)
 const csv = require(`csv-parse/sync`)
 const { exec } = require(`child_process`)
 const ManualPromise = require(`manual-promise`).default
 
-const gitdir = __dirname + `/.git`
 const dir = `src/data/devices.csv`
 
 function encode(string) {
   return encodeURIComponent(string)
     .replace(/%20/g, ` `)
     .replace(/%[0-9A-Fa-f]{2}/g, `_`)
-}
-
-async function getFile(oid, path) {
-  const trees = await git.readTree({ fs, gitdir, oid })
-  const offset = path.indexOf(`/`)
-  if (offset != -1) {
-    const subdir = path.substring(0, offset)
-    const remainder = path.substring(offset + 1)
-    const match = trees.tree.find((t) => t.path == subdir)
-    if (match) {
-      return await getFile(match.oid, remainder)
-    } else {
-      return null
-    }
-  }
-  const match = trees.tree.find((t) => t.path == path)
-  if (match) {
-    return match.oid
-  } else {
-    return null
-  }
 }
 
 const discards = [
@@ -79,30 +56,64 @@ const discards = [
   `Affiliate Link`,
 ]
 
+async function getBlob(blobSha) {
+  const execDone = new ManualPromise()
+  let data = ``
+  exec(`git cat-file blob ${blobSha}`, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`)
+      return
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`)
+      return
+    }
+    data = stdout
+    execDone.resolve()
+  })
+  await execDone
+  return data
+}
+
+async function getBlobSha(commit, path) {
+  const execDone = new ManualPromise()
+  let data = ``
+  exec(`git ls-tree --object-only ${commit} ${path}`, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`)
+      return
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`)
+      return
+    }
+    data = stdout.split(/$/)[0]
+    execDone.resolve()
+  })
+  await execDone
+  return data
+}
+
 async function getFileContent(commit, parent) {
   let blob1 = ``
   let blob2 = ``
 
-  const blobsha1 = await getFile(commit, dir)
+  const blobsha1 = await getBlobSha(commit, dir)
   if (blobsha1 === null) {
     return null
   }
 
   if (parent !== undefined) {
-    const blobsha2 = await getFile(parent, dir)
+    const blobsha2 = await getBlobSha(parent, dir)
 
     if (blobsha1 == blobsha2) {
       return null
     }
     if (blobsha2 !== null) {
-      blob2 = new TextDecoder().decode(
-        (await git.readBlob({ fs, gitdir, oid: blobsha2 })).blob
-      )
+      blob2 = await getBlob(blobsha2)
     }
   }
-  blob1 = new TextDecoder().decode(
-    (await git.readBlob({ fs, gitdir, oid: blobsha1 })).blob
-  )
+  blob1 = await getBlob(blobsha1)
 
   const entries1 = csv.parse(blob1, { columns: true }).map((e) => {
     e.path = `/devices/` + encode(e.Brand) + `/` + encode(e.Device)
