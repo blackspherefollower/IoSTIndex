@@ -123,16 +123,16 @@ export default function AffiliateLink(props) {
       <div style={{ display: `flex`, alignItems: `center` }}>
         {isAli && (
           <AliDialog
-            href={device.Detail}
+            href={device.Affiliate_Link}
             title={`Product link: ${device.Brand} - ${device.Device}`}
           />
         )}
         {!isAli && (
           <a
-            href={device.Detail}
+            href={device.Affiliate_Link}
             title={`Product link: ${device.Brand} - ${device.Device}`}
           >
-            {device.Detail}
+            {device.Affiliate_Link}
           </a>
         )}
         <LightTooltip
