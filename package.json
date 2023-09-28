@@ -27,7 +27,7 @@
     "gatsby-link": "^5.12.0",
     "gatsby-plugin-feed": "^5.12.0",
     "gatsby-plugin-layout": "^4.12.0",
-    "gatsby-plugin-matomo": "^0.16.1",
+    "gatsby-plugin-matomo": "^0.16.2",
     "gatsby-plugin-sass": "^6.12.0",
     "gatsby-plugin-sitemap": "^6.12.0",
     "gatsby-source-filesystem": "^5.12.0",
