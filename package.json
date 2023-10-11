@@ -19,7 +19,7 @@
     "@iostindex/gatsby-plugin-material-ui": "^5.0.0",
     "@mdx-js/mdx": "^2.3.0",
     "@mui/icons-material": "^5.14.9",
-    "@mui/material": "^5.14.10",
+    "@mui/material": "^5.14.13",
     "@types/react": "^18.2.22",
     "axios": "^1.5.0",
     "decode-uri-component": "^0.4.1",
