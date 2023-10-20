@@ -29,7 +29,7 @@
     "gatsby-plugin-layout": "^4.12.0",
     "gatsby-plugin-matomo": "^0.16.2",
     "gatsby-plugin-sass": "^6.12.1",
-    "gatsby-plugin-sitemap": "^6.12.1",
+    "gatsby-plugin-sitemap": "^6.12.2",
     "gatsby-source-filesystem": "^5.12.0",
     "gatsby-source-graphql": "^5.12.0",
     "gatsby-transformer-csv": "^5.12.0",
