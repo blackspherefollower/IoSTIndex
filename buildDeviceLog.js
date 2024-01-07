@@ -78,18 +78,21 @@ async function getBlob(blobSha) {
 async function getBlobSha(commit, path) {
   const execDone = new ManualPromise()
   let data = ``
-  exec(`git ls-tree --object-only ${commit} ${path}`, (error, stdout, stderr) => {
-    if (error) {
-      console.log(`error: ${error.message}`)
-      return
+  exec(
+    `git ls-tree --object-only ${commit} ${path}`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`)
+        return
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`)
+        return
+      }
+      data = stdout.split(/$/)[0]
+      execDone.resolve()
     }
-    if (stderr) {
-      console.log(`stderr: ${stderr}`)
-      return
-    }
-    data = stdout.split(/$/)[0]
-    execDone.resolve()
-  })
+  )
   await execDone
   return data
 }

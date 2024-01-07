@@ -93,6 +93,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             Affiliate_Link
             XToys
             XToys_Support_Notes
+            In_Possession
           }
         }
       }

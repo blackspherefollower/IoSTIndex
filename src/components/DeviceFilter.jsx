@@ -110,6 +110,18 @@ const doImagesFilter = (data, filter) =>
   (filter.hasImages === 1 && data.images.length > 0) ||
   (filter.hasImages === 0 && data.images.length === 0)
 
+const doInPossessionFilter = (data, filter) => {
+  const inPossession =
+    data.In_Possession !== undefined &&
+    data.In_Possession != `0` &&
+    data.In_Possession != ``
+  return (
+    filter.inPossession === undefined ||
+    (filter.inPossession === 1 && inPossession) ||
+    (filter.inPossession === 0 && !inPossession)
+  )
+}
+
 const doSelectFilter = (data, filter) => {
   if (filter[filter.field].length === 0) {
     return true
@@ -271,6 +283,15 @@ export function initialiseFilter(filter) {
         }
         break
 
+      case `InPossession`:
+        if (!isNaN(parseInt(filter.urlData, 10))) {
+          const inPossession = parseInt(filter.urlData, 10)
+          filter.inPossession = inPossession
+          filter.filterData = doInPossessionFilter
+          filter.toUrl = () => inPossession
+        }
+        break
+
       case `XToysSupport`:
         if (!isNaN(parseInt(filter.urlData, 10))) {
           const xtoysSupport = parseInt(filter.urlData, 10)
@@ -350,6 +371,17 @@ export default function DeviceFilter(props) {
       hasImages,
       filterData: doImagesFilter,
       toUrl: () => hasImages,
+    })
+  }
+
+  const handleInPossessionChange = (event, mode, field) => {
+    const inPossession = event.target.checked ? mode : 0
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      inPossession,
+      filterData: doInPossessionFilter,
+      toUrl: () => inPossession,
     })
   }
 
@@ -535,8 +567,18 @@ export default function DeviceFilter(props) {
       }
 
       case `Images`: {
-        const value = parseInt(props.filter.xtoysSupport, 10)
+        const value = parseInt(props.filter.hasImages, 10)
         handleImagesChange(
+          { target: { checked: true } },
+          isNaN(value) ? 1 : value,
+          event.target.value
+        )
+        break
+      }
+
+      case `InPossession`: {
+        const value = parseInt(props.filter.inPossession, 10)
+        handleInPossessionChange(
           { target: { checked: true } },
           isNaN(value) ? 1 : value,
           event.target.value

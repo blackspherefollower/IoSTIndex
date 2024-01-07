@@ -8,11 +8,8 @@ import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
 import DialogContentText from "@mui/material/DialogContentText"
 import DialogTitle from "@mui/material/DialogTitle"
-import { navigate } from "gatsby-link"
-import {
-  LazyLoadImage,
-} from "react-lazy-load-image-component"
-import aliExample from'./ali-example.png';
+import { LazyLoadImage } from "react-lazy-load-image-component"
+import aliExample from "./ali-example.png"
 
 function AliDialog(props) {
   const [open, setOpen] = React.useState(false)

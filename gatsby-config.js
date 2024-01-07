@@ -101,7 +101,9 @@ module.exports = {
                     if (d[2] != null) {
                       for (const e of d[2]) {
                         const s = document.createElement(`span`)
-                        s.innerHTML = ` ${e.path.join(`, `)} changed from "${e.lhs}" to "${e.rhs}"`
+                        s.innerHTML = ` ${e.path.join(`, `)} changed from "${
+                          e.lhs
+                        }" to "${e.rhs}"`
                         p.appendChild(s)
                       }
                     }

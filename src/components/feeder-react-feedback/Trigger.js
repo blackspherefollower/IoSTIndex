@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
-import "./Trigger-Styles.scss";
+import React, { Component } from "react"
+import { TransitionGroup, CSSTransition } from "react-transition-group"
+import "./Trigger-Styles.scss"
 
-import Modal from "./Modal";
-import FeedbackIcon from "@mui/icons-material/Feedback";
-import CloseIcon from "@mui/icons-material/Close";
+import Modal from "./Modal"
+import FeedbackIcon from "@mui/icons-material/Feedback"
+import CloseIcon from "@mui/icons-material/Close"
 
 class Trigger extends Component {
   state = {
     modal: false,
-  };
+  }
 
   triggerModal = () => {
-    this.setState({ modal: !this.state.modal });
-  };
+    this.setState({ modal: !this.state.modal })
+  }
 
   render() {
-    let { modal } = this.state;
-    let { props } = this;
+    let { modal } = this.state
+    let { props } = this
 
     return (
       <React.Fragment>
@@ -36,7 +36,11 @@ class Trigger extends Component {
               fill: props.textColor,
             }}
           >
-            {modal ? <CloseIcon sx={{"font-size": "24px"}}/> : <FeedbackIcon  sx={{"font-size": "24px"}}/>}
+            {modal ? (
+              <CloseIcon sx={{ "font-size": "24px" }} />
+            ) : (
+              <FeedbackIcon sx={{ "font-size": "24px" }} />
+            )}
           </div>
         </div>
         <TransitionGroup component={null}>
@@ -70,8 +74,8 @@ class Trigger extends Component {
           )}
         </TransitionGroup>
       </React.Fragment>
-    );
+    )
   }
 }
 
-export default Trigger;
+export default Trigger

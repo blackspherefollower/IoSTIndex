@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 
-import "./Feedback-Styles.scss";
+import "./Feedback-Styles.scss"
 import Trigger from "./Trigger"
 
 class Feedback extends Component {

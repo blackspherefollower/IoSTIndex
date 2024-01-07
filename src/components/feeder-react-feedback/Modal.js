@@ -1,7 +1,6 @@
-import React, { Component } from "react";
-import axios from "axios";
-import "./Modal-Styles.scss";
-
+import React, { Component } from "react"
+import axios from "axios"
+import "./Modal-Styles.scss"
 
 class Modal extends Component {
   state = {
@@ -12,71 +11,71 @@ class Modal extends Component {
     loading: false,
     submitted: false,
     feedbackTypes: ["general", "bug", "idea"],
-  };
+  }
 
   componentDidMount() {
-    this.mounted = true;
+    this.mounted = true
 
-    let tempArr = [];
+    let tempArr = []
 
     this.props.feedbackTypes.forEach((f, i) => {
       if (i < 3) {
-        tempArr[i] = f.trim();
+        tempArr[i] = f.trim()
       }
-    });
+    })
 
-    this.setState({ feedbackTypes: tempArr });
+    this.setState({ feedbackTypes: tempArr })
   }
 
   componentWillUnmount() {
-    this.mounted = false;
+    this.mounted = false
   }
 
   // Only relevant to demo/playground
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.emailDefaultValue !== this.props.emailDefaultValue) {
-      this.setState({ feedbackEmail: this.props.emailDefaultValue });
+      this.setState({ feedbackEmail: this.props.emailDefaultValue })
     }
 
     if (prevProps.subProject !== this.props.subProject) {
-      this.setState({ subProject: this.props.subProject });
+      this.setState({ subProject: this.props.subProject })
     }
 
     if (prevProps.feedbackTypes !== this.props.feedbackTypes) {
-      this.setState({ feedbackType: this.props.feedbackTypes[0] });
-      let tempArr = [];
-      let { feedbackTypes } = this.props;
+      this.setState({ feedbackType: this.props.feedbackTypes[0] })
+      let tempArr = []
+      let { feedbackTypes } = this.props
 
       feedbackTypes.forEach((f, i) => {
         if (i < 3) {
-          tempArr[i] = f.trim();
+          tempArr[i] = f.trim()
         }
-      });
+      })
 
-      this.setState({ feedbackTypes: tempArr });
+      this.setState({ feedbackTypes: tempArr })
     }
   }
 
   capitalize = (str) => {
-    return str.replace(/(?:^|\s|["'([{])+\S/g, (match) => match.toUpperCase());
-  };
+    return str.replace(/(?:^|\s|["'([{])+\S/g, (match) => match.toUpperCase())
+  }
 
   handleChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value });
-  };
+    this.setState({ [e.target.id]: e.target.value })
+  }
 
   handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     // Prevent double+ submit
     if (this.state.loading) {
-      return;
+      return
     }
 
-    this.setState({ loading: true });
+    this.setState({ loading: true })
 
-    let { feedbackEmail, feedbackType, feedbackMsg, subProject } = this.state;
-    let { projectId } = this.props;
+    let { feedbackEmail, feedbackType, feedbackMsg, subProject } = this.state
+    let { projectId } = this.props
 
     let payload = {
       projectId,
@@ -86,31 +85,31 @@ class Modal extends Component {
       subProject,
       feedbackSrc:
         typeof window !== "undefined" ? window.location.pathname : null,
-    };
+    }
 
     axios
       .post("https://feeder-node-1337.herokuapp.com/feedback/create", payload)
       .then(() => {
-        return;
+        return
       })
-      .catch((e) => console.log(e.toString()));
+      .catch((e) => console.log(e.toString()))
 
     setTimeout(() => {
       if (this.mounted) {
-        this.setState({ loading: false });
-        this.setState({ submitted: true });
+        this.setState({ loading: false })
+        this.setState({ submitted: true })
         setTimeout(() => {
           if (this.mounted) {
-            this.props.triggerModal();
+            this.props.triggerModal()
           }
-        }, 1000);
+        }, 1000)
       }
-    }, 1000);
-  };
+    }, 1000)
+  }
 
   render() {
-    let { feedbackType, loading, submitted, feedbackTypes } = this.state;
-    let { props } = this;
+    let { feedbackType, loading, submitted, feedbackTypes } = this.state
+    let { props } = this
 
     return (
       <div>
@@ -167,22 +166,22 @@ class Modal extends Component {
                     style={
                       feedbackType === feedbackTypes[i]
                         ? {
-                          background: props.primaryColor,
-                          color: props.textColor,
-                          border: `1px solid ${props.hoverBorderColor}`,
-                          boxShadow: `${props.hoverBorderColor} 0px 0px 0px 1px`,
-                          ":hover": {
+                            background: props.primaryColor,
+                            color: props.textColor,
                             border: `1px solid ${props.hoverBorderColor}`,
                             boxShadow: `${props.hoverBorderColor} 0px 0px 0px 1px`,
-                          },
-                        }
+                            ":hover": {
+                              border: `1px solid ${props.hoverBorderColor}`,
+                              boxShadow: `${props.hoverBorderColor} 0px 0px 0px 1px`,
+                            },
+                          }
                         : {
-                          color: "#000",
-                          ":hover": {
-                            border: `1px solid ${props.hoverBorderColor}`,
-                            boxShadow: `${props.hoverBorderColor} 0px 0px 0px 1px`,
-                          },
-                        }
+                            color: "#000",
+                            ":hover": {
+                              border: `1px solid ${props.hoverBorderColor}`,
+                              boxShadow: `${props.hoverBorderColor} 0px 0px 0px 1px`,
+                            },
+                          }
                     }
                     onClick={() =>
                       this.setState({ feedbackType: feedbackTypes[i] })
@@ -267,8 +266,8 @@ class Modal extends Component {
           </div>
         </form>
       </div>
-    );
+    )
   }
 }
 
-export default Modal;
+export default Modal

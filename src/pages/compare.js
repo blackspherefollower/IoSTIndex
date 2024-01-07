@@ -132,7 +132,6 @@ export default function ComparePage({ theme }) {
         return null
       })
       .then((res) => {
-
         if (res != null) {
           devices = res.data
           localforage

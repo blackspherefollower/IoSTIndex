@@ -32,18 +32,18 @@ const getIdResolverPromise = function (
   } else {
     const key = Object.keys(currentUrlState)[index]
     if (typeof resolvers === `function`) {
-      resolvers(key, currentUrlState[key], currentState).then(function (
-        newState
-      ) {
-        currentState = newState
-        getIdResolverPromise(
-          currentUrlState,
-          resolvers,
-          currentState,
-          resolve,
-          index + 1
-        )
-      })
+      resolvers(key, currentUrlState[key], currentState).then(
+        function (newState) {
+          currentState = newState
+          getIdResolverPromise(
+            currentUrlState,
+            resolvers,
+            currentState,
+            resolve,
+            index + 1
+          )
+        }
+      )
     } else if (resolvers[key] == null) {
       getIdResolverPromise(
         currentUrlState,

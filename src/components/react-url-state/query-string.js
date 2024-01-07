@@ -18,7 +18,7 @@ const _slicedToArray = (function () {
       try {
         if (!_n && _i[`return`]) _i[`return`]()
       } finally {
-        if (_d) throw(_e)
+        if (_d) throw _e
       }
     }
     return _arr
