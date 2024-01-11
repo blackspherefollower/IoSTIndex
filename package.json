@@ -18,7 +18,7 @@
     "@emotion/styled": "^11.11.0",
     "@iostindex/gatsby-plugin-material-ui": "^5.0.0",
     "@mdx-js/mdx": "^3.0.0",
-    "@mui/icons-material": "^5.15.3",
+    "@mui/icons-material": "^5.15.4",
     "@mui/material": "^5.15.3",
     "@types/react": "^18.2.47",
     "axios": "^1.6.5",
