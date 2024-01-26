@@ -23,7 +23,7 @@
     "@types/react": "^18.2.48",
     "axios": "^1.6.5",
     "decode-uri-component": "^0.4.1",
-    "gatsby": "^5.13.2",
+    "gatsby": "^5.13.3",
     "gatsby-link": "^5.13.1",
     "gatsby-plugin-feed": "^5.13.1",
     "gatsby-plugin-layout": "^4.13.1",
