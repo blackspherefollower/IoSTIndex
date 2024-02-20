@@ -324,6 +324,19 @@ export function initialiseFilter(filter) {
         filter.filterData = doSelectFilter
         filter.toUrl = () => encodeURI(tmp.join(`,`))
         break
+
+      case `Apps`:
+        if (filter.Apps !== undefined) {
+          tmp = [...filter.Apps]
+        }
+        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`))
+
+        filter.Apps = tmp
+        filter.filterOn = `Apps`
+        filter.csvField = true
+        filter.filterData = doSelectFilter
+        filter.toUrl = () => encodeURI(tmp.join(`,`))
+        break
     }
   }
   return filter

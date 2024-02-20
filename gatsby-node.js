@@ -94,6 +94,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             XToys
             XToys_Support_Notes
             In_Possession
+            Apps
           }
         }
       }
@@ -121,6 +122,11 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     if (rs) dev.ButtplugSupport |= 4
 
     dev.Anatomy = (dev.Anatomy === undefined ? `` : dev.Anatomy)
+      .split(`,`)
+      .map((a) => a.trim())
+      .filter((a) => a.length > 0)
+
+    dev.Apps = (dev.Apps === undefined ? `` : dev.Apps)
       .split(`,`)
       .map((a) => a.trim())
       .filter((a) => a.length > 0)
