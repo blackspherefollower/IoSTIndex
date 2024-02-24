@@ -519,6 +519,25 @@ export default function DeviceFilter(props) {
     })
   }
 
+  const handleAppsChange = (event, apps, field) => {
+    let data = []
+    if (Array.isArray(apps)) {
+      data = data.concat(apps)
+    } else {
+      data = event.target.value
+    }
+
+    props.onChange(props.ident, {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      Apps: data,
+      filterOn: `Apps`,
+      csvField: true,
+      filterData: doSelectFilter,
+      toUrl: () => encodeURI(data.join(`,`)),
+    })
+  }
+
   const handleFieldChange = (event) => {
     switch (event.target.value) {
       case `Brand`:
@@ -698,6 +717,9 @@ export default function DeviceFilter(props) {
           <MenuItem value={`Features`}>Features</MenuItem>
           <MenuItem value={`TargetAnatomy`}>Vendor's Target Anatomy</MenuItem>
           <MenuItem value={`MarketedAs`}>Marketed As</MenuItem>
+          {props.filter.field === `Apps` && (
+            <MenuItem value={`Apps`}>Applications</MenuItem>
+          )}
         </Select>
       </StyledFormControl>
       {(props.filter.field === `Brand` || props.filter.field === `Device`) && (
@@ -899,6 +921,28 @@ export default function DeviceFilter(props) {
               props.filterData.Anatomy.map((a, i) => (
                 <MenuItem key={i} value={a}>
                   <Checkbox checked={props.filter.TargetAnatomy.includes(a)} />
+                  <ListItemText primary={a} />
+                </MenuItem>
+              ))}
+          </Select>
+        </StyledFormControl>
+      )}
+      {props.filter.field === `Apps` && (
+        <StyledFormControl variant="standard">
+          <InputLabel>Applications</InputLabel>
+          <Select
+            multiple
+            value={props.filter.Apps}
+            input={<Input />}
+            renderValue={(selected) => selected.join(`, `)}
+            onChange={handleAppsChange}
+            MenuProps={MenuProps}
+            inputProps={{ readOnly: props.filter.lock }}
+          >
+            {props.filterData.Apps !== undefined &&
+              props.filterData.Apps.map((a, i) => (
+                <MenuItem key={i} value={a}>
+                  <Checkbox checked={props.filter.Apps.includes(a)} />
                   <ListItemText primary={a} />
                 </MenuItem>
               ))}
