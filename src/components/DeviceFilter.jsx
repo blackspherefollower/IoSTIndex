@@ -80,7 +80,21 @@ const doXtoysFilter = (data, filter) =>
   data.XToys.XToysSupport === filter.xtoysSupport
 
 const doFeatureFilter = (data, filter) => {
-  for (const i of filter.Features.Inputs) {
+  if (
+    filter.Features.Inputs.length === 0 &&
+    filter.Features.Outputs.length === 0
+  ) {
+    return true
+  }
+
+  let potential = false
+  for (const j of filter.Features.Inputs) {
+    let i = j
+    let mustHave = false
+    if (i.endsWith(`!`)) {
+      mustHave = true
+      i = i.substr(0, i.length - 1)
+    }
     if (
       data.Features.Inputs[i] === undefined ||
       data.Features.Inputs[i] === null ||
@@ -88,10 +102,22 @@ const doFeatureFilter = (data, filter) => {
       data.Features.Inputs[i] === `0` ||
       data.Features.Inputs[i].length === 0
     ) {
-      return false
+      if (mustHave) {
+        return false
+      }
+    } else if (!mustHave) {
+      return true
+    } else {
+      potential = true
     }
   }
-  for (const i of filter.Features.Outputs) {
+  for (const j of filter.Features.Outputs) {
+    let i = j
+    let mustHave = false
+    if (i.endsWith(`!`)) {
+      mustHave = true
+      i = i.substr(0, i.length - 1)
+    }
     if (
       data.Features.Outputs[i] === undefined ||
       data.Features.Outputs[i] === null ||
@@ -99,10 +125,16 @@ const doFeatureFilter = (data, filter) => {
       data.Features.Outputs[i] === `0` ||
       data.Features.Outputs[i].length === 0
     ) {
-      return false
+      if (mustHave) {
+        return false
+      }
+    } else if (!mustHave) {
+      return true
+    } else {
+      potential = true
     }
   }
-  return true
+  return potential
 }
 
 const doImagesFilter = (data, filter) =>
@@ -413,7 +445,30 @@ export default function DeviceFilter(props) {
         features.Inputs = [...props.filter.Features.Inputs]
         features.Outputs = [...props.filter.Features.Outputs]
       }
-      features[type] = event.target.value
+      const mustHaves = []
+      for (const f of features[type]) {
+        if (f.endsWith(`!`)) {
+          mustHaves.push(f.substring(0, f.length - 1))
+        }
+      }
+      const removed = features[type].filter(
+        (x) => !event.target.value.includes(x)
+      )
+      const added = event.target.value.filter(
+        (x) => !features[type].includes(x)
+      )
+      if (removed.length + added.length === 1) {
+        features[type] = event.target.value
+        if (added.length === 1 && mustHaves.includes(added[0])) {
+          features[type] = features[type].filter(
+            (x) => x !== added[0] + `!` && x !== added[0]
+          )
+        } else if (removed.length === 1) {
+          features[type].push(removed[0] + `!`)
+        }
+      } else {
+        features[type] = event.target.value
+      }
     }
 
     props.onChange(props.ident, {
@@ -765,7 +820,11 @@ export default function DeviceFilter(props) {
               props.filterData.Features.Outputs.map((a, i) => (
                 <MenuItem key={i} value={a}>
                   <Checkbox
-                    checked={props.filter.Features.Outputs.includes(a)}
+                    checked={
+                      props.filter.Features.Outputs.includes(a) ||
+                      props.filter.Features.Outputs.includes(a + `!`)
+                    }
+                    indeterminate={props.filter.Features.Outputs.includes(a)}
                   />
                   <ListItemText primary={a} />
                 </MenuItem>
@@ -789,7 +848,11 @@ export default function DeviceFilter(props) {
               props.filterData.Features.Inputs.map((a, i) => (
                 <MenuItem key={i} value={a}>
                   <Checkbox
-                    checked={props.filter.Features.Inputs.includes(a)}
+                    checked={
+                      props.filter.Features.Inputs.includes(a) ||
+                      props.filter.Features.Inputs.includes(a + `!`)
+                    }
+                    indeterminate={!props.filter.Features.Inputs.includes(a)}
                   />
                   <ListItemText primary={a} />
                 </MenuItem>
