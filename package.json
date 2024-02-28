@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
-    "csv-parse": "^5.5.3",
+    "csv-parse": "^5.5.5",
     "diff-arrays-of-objects": "^1.1.9",
     "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
