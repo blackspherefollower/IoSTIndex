@@ -26,7 +26,6 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 import HelpIcon from "@mui/icons-material/Help"
 import ErrorIcon from "@mui/icons-material/Error"
-import { theme } from "../layouts/theme"
 import Container from "@mui/material/Container"
 
 export function encode(string) {
@@ -154,7 +153,7 @@ const columns = [
           )) ||
           ``}
         {row.Buttplug.Buttplug_Support_Notes.length > 0 && (
-          <LightTooltip interactive title={row.Buttplug.Buttplug_Support_Notes}>
+          <LightTooltip title={row.Buttplug.Buttplug_Support_Notes}>
             <InfoIcon />
           </LightTooltip>
         )}
@@ -181,7 +180,7 @@ const columns = [
           <HighlightOffIcon color="error" />
         )}
         {row.XToys.XToys_Support_Notes.length > 0 && (
-          <LightTooltip interactive title={row.XToys.XToys_Support_Notes}>
+          <LightTooltip title={row.XToys.XToys_Support_Notes}>
             <InfoIcon />
           </LightTooltip>
         )}
@@ -207,7 +206,7 @@ function EnhancedTableHead(props) {
             <TableCell
               key={id}
               align={col.numeric ? `right` : `left`}
-              padding={col.disablePadding ? `none` : `default`}
+              padding={col.disablePadding ? `none` : `normal`}
             >
               {col.sort ? (
                 <TableSortLabel>
@@ -215,7 +214,7 @@ function EnhancedTableHead(props) {
                   {col.notes && (
                     <React.Fragment>
                       {` `}
-                      <LightTooltip interactive title={col.notes}>
+                      <LightTooltip title={col.notes}>
                         <InfoIcon />
                       </LightTooltip>
                     </React.Fragment>
@@ -227,7 +226,7 @@ function EnhancedTableHead(props) {
                   {col.notes && (
                     <React.Fragment>
                       {` `}
-                      <LightTooltip interactive title={col.notes}>
+                      <LightTooltip title={col.notes}>
                         <InfoIcon />
                       </LightTooltip>
                     </React.Fragment>
@@ -278,12 +277,7 @@ function CompareSnackbar(props) {
               Compare
             </Button>
           )}
-          <IconButton
-            aria-label="close"
-            color="inherit"
-            className={{ padding: theme.spacing(0.5) }}
-            onClick={handleClose}
-          >
+          <IconButton aria-label="close" color="inherit" onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </React.Fragment>

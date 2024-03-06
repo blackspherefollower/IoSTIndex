@@ -133,7 +133,6 @@ export default function AffiliateLink(props) {
           </a>
         )}
         <LightTooltip
-          interactive
           title={
             <React.Fragment>
               This URL is an affiliate link: purchases made via this link
