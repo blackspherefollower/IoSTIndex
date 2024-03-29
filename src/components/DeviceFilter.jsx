@@ -14,6 +14,8 @@ import IconButton from "@mui/material/IconButton"
 import debouncedInput from "./debouncedInput"
 import { theme } from "../layouts/theme"
 import styled from "@emotion/styled"
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 
 const DebouncedTextField = debouncedInput(TextField, 500)
 
@@ -145,8 +147,8 @@ const doImagesFilter = (data, filter) =>
 const doInPossessionFilter = (data, filter) => {
   const inPossession =
     data.In_Possession !== undefined &&
-    data.In_Possession != `0` &&
-    data.In_Possession != ``
+    data.In_Possession !== `0` &&
+    data.In_Possession !== ``
   return (
     filter.inPossession === undefined ||
     (filter.inPossession === 1 && inPossession) ||
@@ -368,6 +370,22 @@ export function initialiseFilter(filter) {
         filter.csvField = true
         filter.filterData = doSelectFilter
         filter.toUrl = () => encodeURI(tmp.join(`,`))
+        filter.extraColumns = tmp.map((a) => {
+          return {
+            dataField: `Apps`,
+            text: `${a} Support`,
+            sort: false,
+            formatter: (cellContent, row) => (
+              <div>
+                {row[`Apps`].includes(a) === true ? (
+                  <CheckCircleIcon style={{ color: `green` }} />
+                ) : (
+                  <HighlightOffIcon color="error" />
+                )}
+              </div>
+            ),
+          }
+        })
         break
     }
   }
@@ -590,6 +608,22 @@ export default function DeviceFilter(props) {
       csvField: true,
       filterData: doSelectFilter,
       toUrl: () => encodeURI(data.join(`,`)),
+      extraColumns: data.map((a) => {
+        return {
+          dataField: `Apps`,
+          text: `${a} Support`,
+          sort: false,
+          formatter: (cellContent, row) => (
+            <div>
+              {row[`Apps`].includes(a) === true ? (
+                <CheckCircleIcon style={{ color: `green` }} />
+              ) : (
+                <HighlightOffIcon color="error" />
+              )}
+            </div>
+          ),
+        }
+      }),
     })
   }
 
@@ -707,7 +741,7 @@ export default function DeviceFilter(props) {
     }
   }
   // Sanitise data
-  if (props.filter === undefined || props.filter.field === undefined) {
+  if (!props.filter || !props.filter.field) {
     props.filter.field = `none`
   }
 

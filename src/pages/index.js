@@ -83,6 +83,7 @@ class IndexComponent extends React.Component {
       filterData: {},
       compareMode: false,
       filtersChanged: false,
+      extraColumns: {},
     }
     this.handleFilterRemove = this.handleFilterRemove.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
@@ -273,12 +274,17 @@ class IndexComponent extends React.Component {
     const filters = this.state.filters
     trackCustomEvent(`Filters`, `Removed`, `${filters[ident].field}`, ident)
     filters.splice(ident, 1)
-    this.setState({ filters })
+    const extraColumns = this.state.extraColumns
+    delete extraColumns[ident]
+
+    this.setState({ filters, extraColumns })
     this.handleFilterChange()
   }
 
   handleFilterChange(ident, filter, state) {
     const filters = state?.filters || this.state.filters
+    const extraColumns = state?.extraColumns || this.state.extraColumns
+
     if (ident !== undefined) {
       filters[ident] = filter
       if (
@@ -293,6 +299,19 @@ class IndexComponent extends React.Component {
         )
       }
     }
+
+    if (ident !== undefined && filter?.extraColumns) {
+      extraColumns[ident] = filter.extraColumns
+    } else {
+      filters.forEach((f, i) => {
+        if (f?.extraColumns) {
+          extraColumns[i] = f.extraColumns
+        }
+      })
+    }
+
+    this.setState({ extraColumns })
+
     const data = (state?.devices || this.state.devices).filter((d) => {
       let res = true
       for (let i = 0; res === true && i < filters.length; i++) {
@@ -389,6 +408,7 @@ class IndexComponent extends React.Component {
           data={this.state.data}
           compareMode={this.state.compareMode}
           setCompareMode={this.setCompareMode}
+          extraColumns={this.state.extraColumns}
         />
       </div>
     )

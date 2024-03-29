@@ -291,6 +291,12 @@ function DeviceListInternal(props) {
   const scrollPosition = props.scrollPosition
   const [compares, setCompares] = useState([])
 
+  if (props?.extraColumns) {
+    Object.entries(props.extraColumns).forEach((exSet) =>
+      exSet[1].forEach((col) => columns.push(col))
+    )
+  }
+
   const doCompare = () => {
     navigate(`/compare?` + compares.join(`&`))
   }
