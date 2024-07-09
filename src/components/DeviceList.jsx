@@ -32,6 +32,7 @@ export function encode(string) {
   return encodeURIComponent(string)
     .replace(/%20/g, ` `)
     .replace(/%[0-9A-Fa-f]{2}/g, `_`)
+    .toLowerCase()
 }
 
 const columns = [

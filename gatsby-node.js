@@ -242,14 +242,14 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     if (!fs.existsSync(`public/devices`)) {
       fs.mkdirSync(`public/devices`)
     }
-    if (!fs.existsSync(`public/devices/${brand}`)) {
-      fs.mkdirSync(`public/devices/${brand}`)
+    if (!fs.existsSync(`public/devices/${brand}`.toLowerCase())) {
+      fs.mkdirSync(`public/devices/${brand}`.toLowerCase())
     }
-    if (!fs.existsSync(`public/devices/${brand}/${device}`)) {
-      fs.mkdirSync(`public/devices/${brand}/${device}`)
+    if (!fs.existsSync(`public/devices/${brand}/${device}`.toLowerCase())) {
+      fs.mkdirSync(`public/devices/${brand}/${device}`.toLowerCase())
     }
     dev.images.forEach((img) =>
-      fs.copyFileSync(`src/data/${img}`, `public/${img}`)
+      fs.copyFileSync(`src/data/${img}`, `public/${img}`.toLowerCase())
     )
 
     if (dev.images.length > 0) {
@@ -279,10 +279,14 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
         .then((img) =>
           img
             .jpeg({ quality: 90 })
-            .toFile(`public/devices/${brand}/${device}/thumb.jpeg`)
+            .toFile(
+              `public/devices/${brand}/${device}/thumb.jpeg`.toLowerCase()
+            )
         )
         .catch((err) => console.error(err))
     }
+
+    dev.images = dev.images.map((e) => e.toLowerCase())
   }
 
   devices.sort((a, b) => {
@@ -339,7 +343,11 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   // Per-device detail pages
   for (const dev of devices) {
     createPage({
-      path: `/devices/` + encode(dev.Brand) + `/` + encode(dev.Device),
+      path:
+        `/devices/` +
+        encode(dev.Brand).toLowerCase() +
+        `/` +
+        encode(dev.Device).toLowerCase(),
       component: deviceDetailTemplate,
       context: { device: dev }, // additional data can be passed via context
     })
