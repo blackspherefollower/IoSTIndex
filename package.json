@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.12.0",
-    "@emotion/styled": "^11.11.5",
+    "@emotion/styled": "^11.12.0",
     "@iostindex/gatsby-plugin-material-ui": "^5.0.0",
     "@mdx-js/mdx": "^3.0.1",
     "@mui/icons-material": "^5.16.4",
