@@ -14,7 +14,7 @@
     "buildDeviceLog": "node ./buildDeviceLog.js"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
+    "@emotion/react": "^11.12.0",
     "@emotion/styled": "^11.11.5",
     "@iostindex/gatsby-plugin-material-ui": "^5.0.0",
     "@mdx-js/mdx": "^3.0.1",
