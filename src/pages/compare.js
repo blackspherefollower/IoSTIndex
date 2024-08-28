@@ -80,7 +80,7 @@ export function Head({ data, ...props }) {
             return
           }
           const idx = devices.findIndex(
-            (d) => d.Brand === bits[0] && d.Device === bits[1]
+            (d) => d.Brand.localeCompare(bits[0], undefined, {sensitivity: "base"}) === 0 && d.Device.localeCompare(bits[1], undefined, {sensitivity: "base"}) === 0
           )
           if (idx === -1) {
             errs.push({ Device: c, Error: `Unknown device` })
@@ -164,7 +164,7 @@ export default function ComparePage({ theme }) {
             return
           }
           const idx = devices.findIndex(
-            (d) => d.Brand === bits[0] && d.Device === bits[1]
+            (d) => d.Brand.localeCompare(bits[0], undefined, {sensitivity: "base"}) === 0 && d.Device.localeCompare(bits[1], undefined, {sensitivity: "base"}) === 0
           )
           if (idx === -1) {
             errs.push({ Device: c, Error: `Unknown device` })
@@ -212,7 +212,7 @@ export default function ComparePage({ theme }) {
       {errors.length !== 0 && (
         <div className={`errors`}>
           {errors.map((e, i) => (
-            <Alert severity="error" key={i} sx={{ margin: theme.spacing(2) }}>
+            <Alert severity="error" key={i}>
               {e.Error}: {e.Device}
             </Alert>
           ))}
@@ -313,6 +313,7 @@ export default function ComparePage({ theme }) {
             ))}
           </TableBody>
         )}
+        <TableBody>
         <TableRow>
           <TableCell>Buttplug.io Support</TableCell>
           {compares.map((d, i) => (
@@ -417,7 +418,7 @@ export default function ComparePage({ theme }) {
               </Container>
             </TableCell>
           ))}
-        </TableRow>
+        </TableRow></TableBody>
       </Table>
     </div>
   )
