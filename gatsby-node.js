@@ -94,6 +94,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             XToys
             XToys_Support_Notes
             In_Possession
+            Has_Clones
           }
         }
       }
