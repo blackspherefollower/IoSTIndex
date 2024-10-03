@@ -20,7 +20,7 @@
     "@mdx-js/mdx": "^3.0.1",
     "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.2",
-    "@types/react": "^18.3.10",
+    "@types/react": "^18.3.11",
     "axios": "^1.7.7",
     "decode-uri-component": "^0.4.1",
     "gatsby": "^5.13.7",
