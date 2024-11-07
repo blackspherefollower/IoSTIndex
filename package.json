@@ -24,7 +24,7 @@
     "axios": "^1.7.7",
     "decode-uri-component": "^0.4.1",
     "gatsby": "^5.13.7",
-    "gatsby-link": "^5.13.1",
+    "gatsby-link": "^5.14.0",
     "gatsby-plugin-feed": "^5.13.1",
     "gatsby-plugin-layout": "^4.13.1",
     "gatsby-plugin-matomo": "^0.16.3",
