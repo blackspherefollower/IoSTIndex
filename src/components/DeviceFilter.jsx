@@ -668,11 +668,12 @@ export default function DeviceFilter(props) {
   return (
     <FormGroup row={true}>
       <StyledFormControl variant="standard">
-        <InputLabel>Choose a field:</InputLabel>
+        <InputLabel id={`filterFieldLabel`}>Choose a field:</InputLabel>
         <Select
           value={props.filter.field}
           onChange={handleFieldChange}
           inputProps={{ readOnly: props.filter.lock }}
+          labelId={`filterFieldLabel`}
         >
           <MenuItem value={`none`}>None</MenuItem>
           <MenuItem value={`Brand`}>Brand</MenuItem>
@@ -786,7 +787,7 @@ export default function DeviceFilter(props) {
       )}
       {props.filter.field === `Availability` && (
         <StyledFormControl variant="standard">
-          <InputLabel>Availability</InputLabel>
+          <InputLabel id={`filterAvailabilityLabel`}>Availability</InputLabel>
           <Select
             multiple
             value={props.filter.Availability}
@@ -795,6 +796,7 @@ export default function DeviceFilter(props) {
             onChange={handleAvailabilityChange}
             MenuProps={MenuProps}
             inputProps={{ readOnly: props.filter.lock }}
+            labelId={`filterAvailabilityLabel`}
           >
             {props.filterData.Availability.map((a, i) => (
               <MenuItem key={i} value={a}>
@@ -807,7 +809,7 @@ export default function DeviceFilter(props) {
       )}
       {props.filter.field === `Connection` && (
         <StyledFormControl variant="standard">
-          <InputLabel>Connectivity</InputLabel>
+          <InputLabel id={`filterConnectivityLabel`}>Connectivity</InputLabel>
           <Select
             multiple
             value={props.filter.Connection}
@@ -816,6 +818,7 @@ export default function DeviceFilter(props) {
             renderValue={(selected) => selected.join(`, `)}
             MenuProps={MenuProps}
             inputProps={{ readOnly: props.filter.lock }}
+            labelId={`filterConnectivityLabel`}
           >
             {[
               `Digital`,
@@ -850,7 +853,7 @@ export default function DeviceFilter(props) {
       )}
       {props.filter.field === `MarketedAs` && (
         <StyledFormControl variant="standard">
-          <InputLabel>Marketed As</InputLabel>
+          <InputLabel id={`filterMarketedAsLabel`}>Marketed As</InputLabel>
           <Select
             multiple
             value={props.filter.MarketedAs}
@@ -859,6 +862,7 @@ export default function DeviceFilter(props) {
             onChange={handleMarketedAsChange}
             MenuProps={MenuProps}
             inputProps={{ readOnly: props.filter.lock }}
+            labelId={`filterMarketedAsLabel`}
           >
             {props.filterData.Class !== undefined &&
               props.filterData.Class.map((a, i) => (
@@ -872,7 +876,7 @@ export default function DeviceFilter(props) {
       )}
       {props.filter.field === `TargetAnatomy` && (
         <StyledFormControl variant="standard">
-          <InputLabel>Anatomy</InputLabel>
+          <InputLabel id={`filterAnatomyLabel`}>Anatomy</InputLabel>
           <Select
             multiple
             value={props.filter.TargetAnatomy}
@@ -881,6 +885,7 @@ export default function DeviceFilter(props) {
             onChange={handleTargetAnatomyChange}
             MenuProps={MenuProps}
             inputProps={{ readOnly: props.filter.lock }}
+            labelId={`filterAnatomyLabel`}
           >
             {props.filterData.Anatomy !== undefined &&
               props.filterData.Anatomy.map((a, i) => (
