@@ -14,14 +14,13 @@ import {
   LazyLoadImage,
   trackWindowScroll,
 } from "react-lazy-load-image-component"
-import { Link } from "gatsby"
+import { Link, navigate } from "gatsby"
 import AffiliateLink from "./AffiliateLink"
 import LightTooltip from "./LightTooltip"
 import Snackbar from "@mui/material/Snackbar"
 import Button from "@mui/material/Button"
 import CloseIcon from "@mui/icons-material/Close"
 import IconButton from "@mui/material/IconButton"
-import { navigate } from "gatsby-link"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import HighlightOffIcon from "@mui/icons-material/HighlightOff"
 import HelpIcon from "@mui/icons-material/Help"
