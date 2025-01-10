@@ -113,8 +113,8 @@ const doImagesFilter = (data, filter) =>
 const doInPossessionFilter = (data, filter) => {
   const inPossession =
     data.In_Possession !== undefined &&
-    data.In_Possession != `0` &&
-    data.In_Possession != ``
+    data.In_Possession !== `0` &&
+    data.In_Possession !== ``
   return (
     filter.inPossession === undefined ||
     (filter.inPossession === 1 && inPossession) ||
@@ -620,7 +620,10 @@ export default function DeviceFilter(props) {
     }
   }
   // Sanitise data
-  if (props.filter === undefined || props.filter.field === undefined) {
+  if (props.filter === undefined) {
+    props.filter = {}
+  }
+  if (props.filter.field === undefined) {
     props.filter.field = `none`
   }
 
@@ -674,7 +677,7 @@ export default function DeviceFilter(props) {
           onChange={handleFieldChange}
           inputProps={{ readOnly: props.filter.lock }}
           labelId={`filterFieldLabel`}
-        >
+          variant="standard">
           <MenuItem value={`none`}>None</MenuItem>
           <MenuItem value={`Brand`}>Brand</MenuItem>
           <MenuItem value={`Device`}>Device Name</MenuItem>
@@ -726,6 +729,7 @@ export default function DeviceFilter(props) {
             MenuProps={MenuProps}
             onChange={(e) => handleFeatureChange(e, `Outputs`)}
             inputProps={{ readOnly: props.filter.lock }}
+            variant="standard"
           >
             {props.filterData.Features !== undefined &&
               props.filterData.Features.Outputs.map((a, i) => (
@@ -750,6 +754,7 @@ export default function DeviceFilter(props) {
             MenuProps={MenuProps}
             onChange={(e) => handleFeatureChange(e, `Inputs`)}
             inputProps={{ readOnly: props.filter.lock }}
+            variant="standard"
           >
             {props.filterData.Features !== undefined &&
               props.filterData.Features.Inputs.map((a, i) => (
@@ -774,6 +779,7 @@ export default function DeviceFilter(props) {
             MenuProps={MenuProps}
             onChange={handleTypeChange}
             inputProps={{ readOnly: props.filter.lock }}
+            variant="standard"
           >
             {props.filterData.Type !== undefined &&
               props.filterData.Type.map((a, i) => (
@@ -797,6 +803,7 @@ export default function DeviceFilter(props) {
             MenuProps={MenuProps}
             inputProps={{ readOnly: props.filter.lock }}
             labelId={`filterAvailabilityLabel`}
+            variant="standard"
           >
             {props.filterData.Availability.map((a, i) => (
               <MenuItem key={i} value={a}>
@@ -819,6 +826,7 @@ export default function DeviceFilter(props) {
             MenuProps={MenuProps}
             inputProps={{ readOnly: props.filter.lock }}
             labelId={`filterConnectivityLabel`}
+            variant="standard"
           >
             {[
               `Digital`,
@@ -863,6 +871,7 @@ export default function DeviceFilter(props) {
             MenuProps={MenuProps}
             inputProps={{ readOnly: props.filter.lock }}
             labelId={`filterMarketedAsLabel`}
+            variant="standard"
           >
             {props.filterData.Class !== undefined &&
               props.filterData.Class.map((a, i) => (
@@ -886,6 +895,7 @@ export default function DeviceFilter(props) {
             MenuProps={MenuProps}
             inputProps={{ readOnly: props.filter.lock }}
             labelId={`filterAnatomyLabel`}
+            variant="standard"
           >
             {props.filterData.Anatomy !== undefined &&
               props.filterData.Anatomy.map((a, i) => (
