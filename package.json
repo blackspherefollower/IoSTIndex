@@ -60,7 +60,7 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
     "manual-promise": "^2.0.2",
-    "prettier": "^3.5.0"
+    "prettier": "^3.5.3"
   },
   "repository": {
     "type": "git",
