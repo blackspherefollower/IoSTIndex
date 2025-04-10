@@ -50,7 +50,7 @@ const columns = [
             width={50}
             src={`devices/${encode(row.Brand)}/${encode(
               row.Device
-            )}/thumb.jpeg`}
+            )}/thumb.webp`}
             sx={{
               "object-fit": `cover`,
               width: `50px`,

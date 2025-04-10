@@ -249,9 +249,25 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     if (!fs.existsSync(`public/devices/${brand}/${device}`.toLowerCase())) {
       fs.mkdirSync(`public/devices/${brand}/${device}`.toLowerCase())
     }
-    dev.images.forEach((img) =>
-      fs.copyFileSync(`src/data/${img}`, `public/${img}`.toLowerCase())
-    )
+    dev.images.forEach((img, i) => {
+      const oimg = img.toLowerCase()
+
+      if (!img.toLowerCase().endsWith(`.wepb`)) {
+        const nimg = oimg.substring(0, img.lastIndexOf(`.`)) + `.wepb`
+        const fImg = sharp(`src/data/${img}`)
+        fImg
+          .toFile(`public/${nimg}`)
+          .then((_) => {
+            dev.images[i] = nimg
+          })
+          .catch((err) => {
+            console.error(err)
+            fs.copyFileSync(`src/data/${img}`, `public/${oimg}`)
+          })
+      } else {
+        fs.copyFileSync(`src/data/${img}`, `public/${oimg}`)
+      }
+    })
 
     if (dev.images.length > 0) {
       const fImg = sharp(`src/data/${dev.images[0]}`).resize({
@@ -278,11 +294,9 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
           return fImg
         })
         .then((img) =>
-          img
-            .jpeg({ quality: 90 })
-            .toFile(
-              `public/devices/${brand}/${device}/thumb.jpeg`.toLowerCase()
-            )
+          img.toFile(
+            `public/devices/${brand}/${device}/thumb.webp`.toLowerCase()
+          )
         )
         .catch((err) => console.error(err))
     }
