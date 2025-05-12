@@ -45,7 +45,7 @@
     "react-lazy-load-image-component": "^1.6.3",
     "react-responsive-carousel": "^3.2.23",
     "react-transition-group": "^4.4.5",
-    "sass": "^1.87.0",
+    "sass": "^1.88.0",
     "sharp": "^0.34.1"
   },
   "devDependencies": {
