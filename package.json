@@ -54,7 +54,7 @@
     "diff-arrays-of-objects": "^1.1.9",
     "eslint": "^9.31.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^10.1.5",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-react": "^7.37.5",
