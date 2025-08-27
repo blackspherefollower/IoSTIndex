@@ -59,8 +59,8 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "gatsby-plugin-netlify": "^5.1.1",
     "manual-promise": "^2.0.2",
+    "msgpackr": "^1.11.5",
     "prettier": "^3.6.2"
   },
   "repository": {

@@ -33,7 +33,6 @@ module.exports = {
     `gatsby-transformer-remark`,
     `gatsby-plugin-layout`,
     `@iostindex/gatsby-plugin-material-ui`,
-    `gatsby-plugin-netlify`,
     `gatsby-plugin-sass`,
     {
       resolve: `gatsby-plugin-sitemap`,
