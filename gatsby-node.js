@@ -110,6 +110,9 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   const devices = []
   result2.data.allDevicesCsv.edges.forEach((dev, i) => {
     dev = dev.node
+    if (dev.Brand === `` || dev.Device === ``) {
+      return
+    }
     dev.id = i
     const cs = dev.Buttplug_C_.length > 0 && dev.Buttplug_C_ !== `0`
     const js = dev.Buttplug_JS.length > 0 && dev.Buttplug_JS !== `0`
