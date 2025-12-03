@@ -42,8 +42,16 @@ const MenuProps = {
   },
 }
 
-const doTextFilter = (data, filter) =>
-  data[filter.field].match(new RegExp(filter.search, `i`)) !== null
+const doTextFilter = (data, filter) => {
+  let field = filter.field
+  if (field === `Site`) {
+    field = `Detail,Affiliate_Link`
+  }
+  for (const f of field.split(`,`)) {
+    if (data[f].match(new RegExp(filter.search, `i`)) !== null) return true
+  }
+  return false
+}
 
 const doBpFilter = (data, filter) =>
   filter.bpSupport === undefined ||
@@ -228,6 +236,7 @@ export function initialiseFilter(filter) {
     switch (filter.field) {
       case `Brand`:
       case `Device`:
+      case `Site`:
         filter.search = filter.urlData
         filter.filterData = doTextFilter
         filter.toUrl = () => encodeURI(filter.urlData)
@@ -564,7 +573,8 @@ export default function DeviceFilter(props) {
   const handleFieldChange = (event) => {
     switch (event.target.value) {
       case `Brand`:
-      case `Device`: {
+      case `Device`:
+      case `Site`: {
         handleSearchChange(
           {
             target: { value: props.filter.search || `` },
@@ -689,6 +699,7 @@ export default function DeviceFilter(props) {
   switch (props.filter.field) {
     case `Brand`:
     case `Device`:
+    case `Site`:
       if (props.filter.search === undefined) {
         props.filter.search = ``
       }
@@ -732,7 +743,8 @@ export default function DeviceFilter(props) {
           onChange={handleFieldChange}
           inputProps={{ readOnly: props.filter.lock }}
           labelId={`filterFieldLabel`}
-          variant="standard">
+          variant="standard"
+        >
           <MenuItem value={`none`}>None</MenuItem>
           <MenuItem value={`Brand`}>Brand</MenuItem>
           <MenuItem value={`Device`}>Device Name</MenuItem>
@@ -744,9 +756,12 @@ export default function DeviceFilter(props) {
           <MenuItem value={`Features`}>Features</MenuItem>
           <MenuItem value={`TargetAnatomy`}>Vendor's Target Anatomy</MenuItem>
           <MenuItem value={`MarketedAs`}>Marketed As</MenuItem>
+          <MenuItem value={`Site`}>Website</MenuItem>
         </Select>
       </StyledFormControl>
-      {(props.filter.field === `Brand` || props.filter.field === `Device`) && (
+      {(props.filter.field === `Brand` ||
+        props.filter.field === `Device` ||
+        props.filter.field === `Site`) && (
         <StyledFormControl variant="standard">
           <StyledDebouncedTextField
             label={`Search ${props.filter.field}`}
