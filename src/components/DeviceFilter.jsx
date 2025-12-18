@@ -838,7 +838,7 @@ export default function DeviceFilter(props) {
                       props.filter.Features.Inputs.includes(a) ||
                       props.filter.Features.Inputs.includes(a + `!`)
                     }
-                    indeterminate={!props.filter.Features.Inputs.includes(a)}
+                    indeterminate={props.filter.Features.Inputs.includes(a)}
                   />
                   <ListItemText primary={a} />
                 </MenuItem>
