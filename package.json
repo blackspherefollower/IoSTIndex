@@ -61,7 +61,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "manual-promise": "^2.0.2",
     "msgpackr": "^1.11.8",
-    "prettier": "^3.7.4"
+    "prettier": "^3.8.1"
   },
   "repository": {
     "type": "git",
