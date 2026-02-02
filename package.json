@@ -22,7 +22,7 @@
     "@mui/material": "^7.3.6",
     "axios": "^1.13.2",
     "decode-uri-component": "^0.4.1",
-    "gatsby": "^5.15.0",
+    "gatsby": "^5.16.0",
     "gatsby-plugin-feed": "^5.15.0",
     "gatsby-plugin-layout": "^4.15.0",
     "gatsby-plugin-matomo": "^0.17.0",
