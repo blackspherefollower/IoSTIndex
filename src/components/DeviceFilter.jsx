@@ -286,7 +286,11 @@ export function initialiseFilter(filter) {
         if (filter.Type !== undefined) {
           tmp = [...filter.Type]
         }
-        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`).filter(s => s.length > 0))
+        tmp = tmp.concat(
+          decodeURI(filter.urlData)
+            .split(`,`)
+            .filter((s) => s.length > 0)
+        )
 
         filter.Type = tmp
         filter.csvField = true
@@ -298,7 +302,11 @@ export function initialiseFilter(filter) {
         if (filter.Availability !== undefined) {
           tmp = [...filter.Availability]
         }
-        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`).filter(s => s.length > 0))
+        tmp = tmp.concat(
+          decodeURI(filter.urlData)
+            .split(`,`)
+            .filter((s) => s.length > 0)
+        )
 
         filter.Availability = tmp
         filter.filterData = doSelectFilter
@@ -309,7 +317,11 @@ export function initialiseFilter(filter) {
         if (filter.Connection !== undefined) {
           tmp = [...filter.Connection]
         }
-        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`).filter(s => s.length > 0))
+        tmp = tmp.concat(
+          decodeURI(filter.urlData)
+            .split(`,`)
+            .filter((s) => s.length > 0)
+        )
         filter.Connection = tmp
         filter.filterData = doConnectFilter
         filter.toUrl = () => encodeURI(tmp.join(`,`))
@@ -346,7 +358,11 @@ export function initialiseFilter(filter) {
         if (filter.Class !== undefined) {
           tmp = [...filter.Class]
         }
-        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`).filter(s => s.length > 0))
+        tmp = tmp.concat(
+          decodeURI(filter.urlData)
+            .split(`,`)
+            .filter((s) => s.length > 0)
+        )
         filter.MarketedAs = tmp
         filter.filterOn = `Class`
         filter.filterData = doSelectFilter
@@ -357,7 +373,11 @@ export function initialiseFilter(filter) {
         if (filter.Anatomy !== undefined) {
           tmp = [...filter.Anatomy]
         }
-        tmp = tmp.concat(decodeURI(filter.urlData).split(`,`).filter(s => s.length > 0))
+        tmp = tmp.concat(
+          decodeURI(filter.urlData)
+            .split(`,`)
+            .filter((s) => s.length > 0)
+        )
 
         filter.TargetAnatomy = tmp
         filter.filterOn = `Anatomy`
