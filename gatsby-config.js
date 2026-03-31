@@ -66,6 +66,12 @@ module.exports = {
                   h1.innerHTML = `Devices added`
                   c.appendChild(h1)
                   for (const d of edge.node.pageContext.delta.added) {
+                    if ((d.Brand || ``) === `` || (d.Device || ``) === ``) {
+                      continue
+                    }
+                    console.log(
+                      `Adding device ${d.Brand} - ${d.Device} to RSS feed`
+                    )
                     const a = document.createElement(`a`)
                     a.innerHTML = `${d.Brand} - ${d.Device}`
                     a.href = `${site.siteMetadata.siteUrl}${d.path}`
@@ -81,6 +87,9 @@ module.exports = {
                   h1.innerHTML = `Devices removed`
                   c.appendChild(h1)
                   for (const d of edge.node.pageContext.delta.removed) {
+                    if ((d.Brand || ``) === `` || (d.Device || ``) === ``) {
+                      continue
+                    }
                     const p = document.createElement(`p`)
                     p.innerHTML = `${d.Brand} - ${d.Device}`
                     c.appendChild(p)
@@ -93,6 +102,9 @@ module.exports = {
                   h1.innerHTML = `Devices updated`
                   c.appendChild(h1)
                   for (const d of edge.node.pageContext.delta.updated) {
+                    if (d.Brand || `` === `` || d.Device || `` === ``) {
+                      continue
+                    }
                     const a = document.createElement(`a`)
                     a.innerHTML = `${d[0].Brand} - ${d[0].Device}`
                     a.href = `${site.siteMetadata.siteUrl}${d[0].path}`
