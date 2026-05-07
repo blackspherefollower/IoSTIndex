@@ -12,6 +12,7 @@ import trackCustomEvent from "../components/trackCustomEvent"
 import { Typography } from "@mui/material"
 import Alert from "@mui/material/Alert"
 import PageHead from "../components/PageHead"
+import { graphql, useStaticQuery } from "gatsby"
 
 export function Head() {
   return <PageHead />
@@ -94,7 +95,11 @@ class IndexComponent extends React.Component {
   componentDidMount() {
     const fields = [`Availability`, `Type`, `Class`, `Anatomy`]
     const csv = [`Anatomy`, `Type`]
-    const filterData = { Features: { Inputs: [], Outputs: [] } }
+    const filterData = {
+      Features: { Inputs: [], Outputs: [] },
+      ExchangeRates: this.props.currencyConversion?.exchangeRates || {},
+      UsedCurrencies: this.props.currencyConversion?.usedCurrencies || [],
+    }
     fields.forEach((f) => {
       if (filterData[f] === undefined) {
         filterData[f] = []
@@ -297,7 +302,7 @@ class IndexComponent extends React.Component {
       let res = true
       for (let i = 0; res === true && i < filters.length; i++) {
         const f = filters[i]
-        if (f.filterData !== undefined) {
+        if (f !== undefined && f !== null && f.filterData !== undefined) {
           res = f.filterData(d, f)
         }
       }
@@ -395,4 +400,19 @@ class IndexComponent extends React.Component {
   }
 }
 
-export default IndexComponent
+const IndexComponentWrapper = (props) => {
+  const data = useStaticQuery(graphql`
+    query {
+      currencyConversion {
+        usedCurrencies
+        exchangeRates
+      }
+    }
+  `)
+
+  return (
+    <IndexComponent {...props} currencyConversion={data.currencyConversion} />
+  )
+}
+
+export default IndexComponentWrapper

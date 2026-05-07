@@ -150,6 +150,46 @@ const doImagesFilter = (data, filter) =>
   (filter.hasImages === 1 && data.images.length > 0) ||
   (filter.hasImages === 0 && data.images.length === 0)
 
+const doPriceFilter = (data, filter) => {
+  if (isNaN(data.Price)) {
+    return false
+  }
+
+  let price = data.Price
+  const deviceCurrency = data.Currency || `USD`
+  const targetCurrency = filter.priceCurrency || `USD`
+
+  if (deviceCurrency !== targetCurrency) {
+    const rates = filter.exchangeRates && filter.exchangeRates[deviceCurrency]
+    if (rates && rates[targetCurrency]) {
+      price = price * rates[targetCurrency]
+    } else {
+      // If we don't have the rate, we can't reliably filter, so we exclude it
+      return false
+    }
+  }
+
+  const filterValue = parseFloat(filter.priceValue)
+  if (isNaN(filterValue)) {
+    return true
+  }
+
+  switch (filter.priceOperator) {
+    case `<`:
+      return price < filterValue
+    case `<=`:
+      return price <= filterValue
+    case `>`:
+      return price > filterValue
+    case `>=`:
+      return price >= filterValue
+    case `==`:
+      return Math.abs(price - filterValue) < 0.01
+    default:
+      return true
+  }
+}
+
 const doInPossessionFilter = (data, filter) => {
   const inPossession =
     data.In_Possession !== undefined &&
@@ -353,6 +393,19 @@ export function initialiseFilter(filter) {
           filter.toUrl = () => xtoysSupport
         }
         break
+
+      case `Price`: {
+        const parts = decodeURI(filter.urlData).split(`:`)
+        filter.priceOperator = parts[0] || `>=`
+        filter.priceValue = parts[1] || `0`
+        filter.priceCurrency = parts[2] || `USD`
+        filter.filterData = doPriceFilter
+        filter.toUrl = () =>
+          encodeURI(
+            `${filter.priceOperator}:${filter.priceValue}:${filter.priceCurrency}`
+          )
+        break
+      }
 
       case `MarketedAs`:
         if (filter.Class !== undefined) {
@@ -590,6 +643,33 @@ export default function DeviceFilter(props) {
     })
   }
 
+  const handlePriceChange = (event, type, field) => {
+    const newFilter = {
+      field: field || props.filter.field,
+      lock: props.filter.lock,
+      priceOperator: props.filter.priceOperator || `>=`,
+      priceValue: props.filter.priceValue || `0`,
+      priceCurrency: props.filter.priceCurrency || `USD`,
+      exchangeRates: props.filterData.ExchangeRates,
+      filterData: doPriceFilter,
+      toUrl: function () {
+        return encodeURI(
+          `${this.priceOperator}:${this.priceValue}:${this.priceCurrency}`
+        )
+      },
+    }
+
+    if (type === `operator`) {
+      newFilter.priceOperator = event.target.value
+    } else if (type === `value`) {
+      newFilter.priceValue = event.target.value
+    } else if (type === `currency`) {
+      newFilter.priceCurrency = event.target.value
+    }
+
+    props.onChange(props.ident, newFilter)
+  }
+
   const handleFieldChange = (event) => {
     switch (event.target.value) {
       case `Brand`:
@@ -699,6 +779,19 @@ export default function DeviceFilter(props) {
         break
       }
 
+      case `Price`: {
+        handlePriceChange(
+          {
+            target: {
+              value: props.filter.priceValue || `0`,
+            },
+          },
+          `value`,
+          event.target.value
+        )
+        break
+      }
+
       default:
         props.onChange(props.ident, { field: event.target.value })
         break
@@ -752,6 +845,18 @@ export default function DeviceFilter(props) {
         props.filterData[props.filter.field] = []
       }
       break
+
+    case `Price`:
+      if (props.filter.priceOperator === undefined) {
+        props.filter.priceOperator = `>=`
+      }
+      if (props.filter.priceValue === undefined) {
+        props.filter.priceValue = `0`
+      }
+      if (props.filter.priceCurrency === undefined) {
+        props.filter.priceCurrency = `USD`
+      }
+      break
   }
 
   return (
@@ -776,6 +881,12 @@ export default function DeviceFilter(props) {
           <MenuItem value={`Features`}>Features</MenuItem>
           <MenuItem value={`TargetAnatomy`}>Vendor's Target Anatomy</MenuItem>
           <MenuItem value={`MarketedAs`}>Marketed As</MenuItem>
+          {((props.filterData &&
+            props.filterData.UsedCurrencies &&
+            props.filterData.UsedCurrencies.length > 0) ||
+            props.filter.field === `Price`) && (
+            <MenuItem value={`Price`}>Price</MenuItem>
+          )}
           <MenuItem value={`Site`}>Website</MenuItem>
         </Select>
       </StyledFormControl>
@@ -807,6 +918,55 @@ export default function DeviceFilter(props) {
           }
           label="Supported"
         />
+      )}
+      {props.filter.field === `Price` && (
+        <React.Fragment>
+          <StyledFormControl variant="standard">
+            <InputLabel>Operator</InputLabel>
+            <Select
+              value={props.filter.priceOperator}
+              onChange={(e) => handlePriceChange(e, `operator`)}
+              inputProps={{ readOnly: props.filter.lock }}
+              variant="standard"
+            >
+              <MenuItem value={`<`}>Less than</MenuItem>
+              <MenuItem value={`<=`}>Less than or equal</MenuItem>
+              <MenuItem value={`>`}>Greater than</MenuItem>
+              <MenuItem value={`>=`}>Greater than or equal</MenuItem>
+              <MenuItem value={`==`}>Equal</MenuItem>
+            </Select>
+          </StyledFormControl>
+          <StyledFormControl variant="standard">
+            <TextField
+              label="Value"
+              type="number"
+              value={props.filter.priceValue}
+              onChange={(e) => handlePriceChange(e, `value`)}
+              inputProps={{ readOnly: props.filter.lock }}
+              variant="standard"
+            />
+          </StyledFormControl>
+          <StyledFormControl variant="standard">
+            <InputLabel>Currency</InputLabel>
+            <Select
+              value={props.filter.priceCurrency}
+              onChange={(e) => handlePriceChange(e, `currency`)}
+              inputProps={{ readOnly: props.filter.lock }}
+              variant="standard"
+            >
+              {(props.filterData &&
+              props.filterData.UsedCurrencies &&
+              props.filterData.UsedCurrencies.length > 0
+                ? props.filterData.UsedCurrencies
+                : [`USD`]
+              ).map((c) => (
+                <MenuItem key={c} value={c}>
+                  {c}
+                </MenuItem>
+              ))}
+            </Select>
+          </StyledFormControl>
+        </React.Fragment>
       )}
       {props.filter.field === `Features` && (
         <StyledFormControl variant="standard">

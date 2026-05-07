@@ -1,11 +1,115 @@
+require(`dotenv`).config()
+const axios = require(`axios`)
 const path = require(`path`)
 const fs = require(`fs`)
 const sharp = require(`sharp`)
 
+const FX_API_URL = `https://openexchangerates.org/api/latest.json`
+
+async function fetchExchangeRates(reporter) {
+  const appId = process.env.OPEN_EXCHANGE_RATES_APP_ID
+  if (!appId) {
+    reporter.warn(
+      `OPEN_EXCHANGE_RATES_APP_ID not found in environment. Price filter will be disabled.`
+    )
+    return null
+  }
+
+  try {
+    const res = await axios.get(`${FX_API_URL}?app_id=${appId}`)
+    const data = res.data
+    if (typeof data.rates !== `object`) {
+      reporter.warn(`Invalid exchange rate response from Open Exchange Rates`)
+      return null
+    }
+    return data
+  } catch (err) {
+    reporter.warn(`Error fetching exchange rates: ${err.message || err}`)
+    return null
+  }
+}
 function encode(string) {
   return encodeURIComponent(string)
     .replace(/%20/g, ` `)
     .replace(/%[0-9A-Fa-f]{2}/g, `_`)
+}
+
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions
+  const typeDefs = `
+    type CurrencyConversion implements Node {
+      usedCurrencies: [String]
+      exchangeRates: JSON
+    }
+  `
+  createTypes(typeDefs)
+}
+
+exports.sourceNodes = async ({
+  actions,
+  createNodeId,
+  createContentDigest,
+  reporter,
+  graphql,
+}) => {
+  const { createNode } = actions
+
+  const fxData = await fetchExchangeRates(reporter)
+  if (!fxData) {
+    // Create an empty node if no data, so the query doesn't fail if we didn't use createSchemaCustomization properly
+    // But with createSchemaCustomization it should be fine.
+    // However, if we want to ensure it's queryable and returns something:
+    const data = {
+      usedCurrencies: [],
+      exchangeRates: `{}`,
+    }
+    createNode({
+      ...data,
+      id: createNodeId(`currency-conversion-data`),
+      parent: null,
+      children: [],
+      internal: {
+        type: `CurrencyConversion`,
+        contentDigest: createContentDigest(data),
+      },
+    })
+    return
+  }
+
+  const usedCurrencies = [`USD`, `EUR`, `JPY`, `GBP`, `INR`].sort()
+
+  const exchangeRates = {}
+  const { base: apiBase, rates } = fxData
+
+  for (const base of usedCurrencies) {
+    if (base === apiBase || rates[base]) {
+      exchangeRates[base] = {}
+      const rateToBase = base === apiBase ? 1 : rates[base]
+      for (const target of usedCurrencies) {
+        if (target === apiBase) {
+          exchangeRates[base][target] = 1 / rateToBase
+        } else if (rates[target]) {
+          exchangeRates[base][target] = rates[target] / rateToBase
+        }
+      }
+    }
+  }
+
+  const data = {
+    usedCurrencies,
+    exchangeRates: exchangeRates, // Store as structured JSON
+  }
+
+  createNode({
+    ...data,
+    id: createNodeId(`currency-conversion-data`),
+    parent: null,
+    children: [],
+    internal: {
+      type: `CurrencyConversion`,
+      contentDigest: createContentDigest(data),
+    },
+  })
 }
 
 exports.createPages = async ({ actions, graphql, reporter }) => {
@@ -95,6 +199,9 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             XToys_Support_Notes
             In_Possession
             Has_Clones
+            Price
+            Currency
+            Price_Checked
           }
         }
       }
