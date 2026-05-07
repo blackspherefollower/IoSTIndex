@@ -209,17 +209,29 @@ const doSelectFilter = (data, filter) => {
   const f = filter.filterOn === undefined ? filter.field : filter.filterOn
   if (Array.isArray(data[f])) {
     for (let i = 0; i < data[f].length; i++) {
-      if (filter[filter.field].includes(data[f][i])) return true
+      if (
+        filter[filter.field].some(
+          (v) => v.toLowerCase() === String(data[f][i]).toLowerCase()
+        )
+      )
+        return true
     }
     return false
   } else if (filter.csvField === true) {
     const arr = String(data[f]).split(`,`)
     for (let i = 0; i < arr.length; i++) {
-      if (filter[filter.field].includes(arr[i].trim())) return true
+      if (
+        filter[filter.field].some(
+          (v) => v.toLowerCase() === arr[i].trim().toLowerCase()
+        )
+      )
+        return true
     }
     return false
   }
-  return filter[filter.field].includes(data[f])
+  return filter[filter.field].some(
+    (v) => v.toLowerCase() === String(data[f]).toLowerCase()
+  )
 }
 
 const doConnectFilter = (data, filter) => {
@@ -1042,7 +1054,11 @@ export default function DeviceFilter(props) {
             {props.filterData.Type !== undefined &&
               props.filterData.Type.map((a, i) => (
                 <MenuItem key={i} value={a}>
-                  <Checkbox checked={props.filter.Type.includes(a)} />
+                  <Checkbox
+                    checked={props.filter.Type.some(
+                      (v) => v.toLowerCase() === a.toLowerCase()
+                    )}
+                  />
                   <ListItemText primary={a} />
                 </MenuItem>
               ))}
@@ -1065,7 +1081,11 @@ export default function DeviceFilter(props) {
           >
             {props.filterData.Availability.map((a, i) => (
               <MenuItem key={i} value={a}>
-                <Checkbox checked={props.filter.Availability.includes(a)} />
+                <Checkbox
+                  checked={props.filter.Availability.some(
+                    (v) => v.toLowerCase() === a.toLowerCase()
+                  )}
+                />
                 <ListItemText primary={a} />
               </MenuItem>
             ))}
@@ -1134,7 +1154,11 @@ export default function DeviceFilter(props) {
             {props.filterData.Class !== undefined &&
               props.filterData.Class.map((a, i) => (
                 <MenuItem key={i} value={a}>
-                  <Checkbox checked={props.filter.MarketedAs.includes(a)} />
+                  <Checkbox
+                    checked={props.filter.MarketedAs.some(
+                      (v) => v.toLowerCase() === a.toLowerCase()
+                    )}
+                  />
                   <ListItemText primary={a} />
                 </MenuItem>
               ))}
@@ -1158,7 +1182,11 @@ export default function DeviceFilter(props) {
             {props.filterData.Anatomy !== undefined &&
               props.filterData.Anatomy.map((a, i) => (
                 <MenuItem key={i} value={a}>
-                  <Checkbox checked={props.filter.TargetAnatomy.includes(a)} />
+                  <Checkbox
+                    checked={props.filter.TargetAnatomy.some(
+                      (v) => v.toLowerCase() === a.toLowerCase()
+                    )}
+                  />
                   <ListItemText primary={a} />
                 </MenuItem>
               ))}

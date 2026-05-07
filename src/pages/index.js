@@ -215,13 +215,23 @@ class IndexComponent extends React.Component {
                     .split(`,`)
                     .forEach((fb) => {
                       const fs = fb.trim()
-                      if (fs.length !== 0 && !filterData[f].includes(fs)) {
+                      if (
+                        fs.length !== 0 &&
+                        !filterData[f].some(
+                          (v) => v.toLowerCase() === fs.toLowerCase()
+                        )
+                      ) {
                         filterData[f].push(fs)
                       }
                     })
                 } else {
                   const fs = String(d[f]).trim()
-                  if (fs.length !== 0 && !filterData[f].includes(fs)) {
+                  if (
+                    fs.length !== 0 &&
+                    !filterData[f].some(
+                      (v) => v.toLowerCase() === fs.toLowerCase()
+                    )
+                  ) {
                     filterData[f].push(fs)
                   }
                 }
