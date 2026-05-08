@@ -24,14 +24,14 @@ import {
 } from "../context/CurrencyContext"
 import Button from "@mui/material/Button"
 
-function CurrencySelector() {
+function CurrencySelector({ isDark = false }) {
   const { currency, setCurrency, usedCurrencies } = useCurrency()
 
   return (
     <Box component="div" sx={{ display: `flex`, alignItems: `center` }}>
       <InputLabel
         sx={{
-          color: `white`,
+          color: isDark ? `inherit` : `white`,
         }}
       >
         Currency
@@ -41,11 +41,11 @@ function CurrencySelector() {
         onChange={(e) => setCurrency(e.target.value)}
         variant="standard"
         sx={{
-          color: `white`,
+          color: isDark ? `inherit` : `white`,
           marginLeft: theme.spacing(2),
-          "&:before": { borderColor: `white` },
-          "&:after": { borderColor: `white` },
-          "& .MuiSvgIcon-root": { color: `white` },
+          "&:before": { borderColor: isDark ? `rgba(0, 0, 0, 0.42)` : `white` },
+          "&:after": { borderColor: isDark ? `primary.main` : `white` },
+          "& .MuiSvgIcon-root": { color: isDark ? `inherit` : `white` },
         }}
       >
         <MenuItem value="Original">Original</MenuItem>
@@ -62,8 +62,7 @@ function CurrencySelector() {
 const LayoutInner = ({ children }) => {
   const isRoot =
     typeof location !== `undefined` && location && location.pathname === `/`
-  // Check if the screen size is small enough to trigger the dropdown (e.g., < 600px)
-  useMediaQuery(theme.breakpoints.down(`sm`))
+  const isMobile = useMediaQuery(theme.breakpoints.down(`sm`))
   const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null)
   const isDropdownOpen = Boolean(dropdownAnchorEl)
 
@@ -82,53 +81,68 @@ const LayoutInner = ({ children }) => {
       <CssBaseline />
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            sx={{ marginRight: theme.spacing(2) }}
-            color="inherit"
-            aria-label="menu"
-            onClick={() => {
-              if (!isRoot) {
+          {!isRoot && (
+            <IconButton
+              edge="start"
+              sx={{ marginRight: theme.spacing(2) }}
+              color="inherit"
+              aria-label="menu"
+              onClick={() => {
                 navigate(`/`)
-              }
-            }}
-          >
-            {isRoot ? <MenuIcon /> : <BackIcon />}
-          </IconButton>
+              }}
+            >
+              <BackIcon />
+            </IconButton>
+          )}
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             IoST Index
           </Typography>
           <Box component="div" sx={{ display: `flex`, alignItems: `center` }}>
-            <CurrencySelector />
-            <Button color="inherit" onClick={() => navigate(`/about`)}>
-              About
-            </Button>
-            <Button
-              variant="contained"
-              title="Become a Patron!"
-              href={`https://www.patreon.com/bePatron?u=6548129`}
-              sx={{ backgroundColor: `#f46758`, borderColor: `#f46758` }}
-              startIcon={
-                <SvgIcon>
-                  <g
-                    transform="matrix(0.2400288,0,0,0.2400288,-0.00288035,-0.02400288)"
-                    fill="#000000"
-                    fillRule="evenodd"
-                  >
-                    <path
-                      d="m 64.1102,0.1004 c -19.8512,0 -36.0016,16.1482 -36.0016,35.9982 0,19.7898 16.1504,35.8904 36.0016,35.8904 C 83.9,71.989 100,55.8884 100,36.0986 100,16.2486 83.9,0.1004 64.1102,0.1004"
-                      fill="#fff"
-                    />
-                    <polygon
-                      points="0.012,95.988 17.59,95.988 17.59,0.1 0.012,0.1 "
-                      fill="#0a2f49"
-                    />
-                  </g>
-                </SvgIcon>
-              }
-            >
-              Become a Patron!
-            </Button>
+            {!isMobile && (
+              <>
+                <CurrencySelector />
+                <Button color="inherit" onClick={() => navigate(`/about`)}>
+                  About
+                </Button>
+                <Button
+                  variant="contained"
+                  title="Become a Patron!"
+                  href={`https://www.patreon.com/bePatron?u=6548129`}
+                  sx={{ backgroundColor: `#f46758`, borderColor: `#f46758` }}
+                  startIcon={
+                    <SvgIcon>
+                      <g
+                        transform="matrix(0.2400288,0,0,0.2400288,-0.00288035,-0.02400288)"
+                        fill="#000000"
+                        fillRule="evenodd"
+                      >
+                        <path
+                          d="m 64.1102,0.1004 c -19.8512,0 -36.0016,16.1482 -36.0016,35.9982 0,19.7898 16.1504,35.8904 36.0016,35.8904 C 83.9,71.989 100,55.8884 100,36.0986 100,16.2486 83.9,0.1004 64.1102,0.1004"
+                          fill="#fff"
+                        />
+                        <polygon
+                          points="0.012,95.988 17.59,95.988 17.59,0.1 0.012,0.1 "
+                          fill="#0a2f49"
+                        />
+                      </g>
+                    </SvgIcon>
+                  }
+                >
+                  Become a Patron!
+                </Button>
+              </>
+            )}
+
+            {isMobile && (
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="end"
+                onClick={(e) => setDropdownAnchorEl(e.currentTarget)}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
 
             {/* The actual dropdown menu component (using MUI's Menu) */}
             <Menu
@@ -137,15 +151,14 @@ const LayoutInner = ({ children }) => {
               anchorOrigin={{ vertical: `bottom`, horizontal: `right` }}
               keepMounted
               transformOrigin={{ vertical: `top`, horizontal: `right` }}
-              sx={{
-                display: `block`,
-              }}
               open={isDropdownOpen}
               onClose={() => {
                 setDropdownAnchorEl(null)
               }}
             >
-              <CurrencySelector />
+              <MenuItem disableRipple sx={{ cursor: `default`, "&:hover": { backgroundColor: `transparent` } }}>
+                <CurrencySelector isDark={true} />
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   navigate(`/about`)
