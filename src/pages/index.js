@@ -12,7 +12,7 @@ import trackCustomEvent from "../components/trackCustomEvent"
 import { Typography } from "@mui/material"
 import Alert from "@mui/material/Alert"
 import PageHead from "../components/PageHead"
-import { graphql, useStaticQuery } from "gatsby"
+import { useCurrency } from "../context/CurrencyContext"
 
 export function Head() {
   return <PageHead />
@@ -97,8 +97,8 @@ class IndexComponent extends React.Component {
     const csv = [`Anatomy`, `Type`]
     const filterData = {
       Features: { Inputs: [], Outputs: [] },
-      ExchangeRates: this.props.currencyConversion?.exchangeRates || {},
-      UsedCurrencies: this.props.currencyConversion?.usedCurrencies || [],
+      ExchangeRates: this.props.exchangeRates,
+      UsedCurrencies: this.props.usedCurrencies,
     }
     fields.forEach((f) => {
       if (filterData[f] === undefined) {
@@ -294,6 +294,15 @@ class IndexComponent extends React.Component {
 
   handleFilterChange(ident, filter, state) {
     const filters = state?.filters || this.state.filters
+
+    // Sync global currency with price filter if it exists
+    if (this.props.currency !== `Original`) {
+      const pf = filters.find((f) => f.field === `Price`)
+      if (pf) {
+        pf.priceCurrency = this.props.currency
+      }
+    }
+
     if (ident !== undefined) {
       filters[ident] = filter
       if (
@@ -343,6 +352,12 @@ class IndexComponent extends React.Component {
 
   setCompareMode(mode) {
     this.setState({ compareMode: mode })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.currency !== this.props.currency) {
+      this.handleFilterChange()
+    }
   }
 
   render() {
@@ -404,6 +419,7 @@ class IndexComponent extends React.Component {
           data={this.state.data}
           compareMode={this.state.compareMode}
           setCompareMode={this.setCompareMode}
+          filters={this.state.filters}
         />
       </div>
     )
@@ -411,17 +427,15 @@ class IndexComponent extends React.Component {
 }
 
 const IndexComponentWrapper = (props) => {
-  const data = useStaticQuery(graphql`
-    query {
-      currencyConversion {
-        usedCurrencies
-        exchangeRates
-      }
-    }
-  `)
+  const { currency, exchangeRates, usedCurrencies } = useCurrency()
 
   return (
-    <IndexComponent {...props} currencyConversion={data.currencyConversion} />
+    <IndexComponent
+      {...props}
+      currency={currency}
+      exchangeRates={exchangeRates}
+      usedCurrencies={usedCurrencies}
+    />
   )
 }
 

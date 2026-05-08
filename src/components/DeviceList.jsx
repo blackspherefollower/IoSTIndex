@@ -34,174 +34,220 @@ export function encode(string) {
     .toLowerCase()
 }
 
-const columns = [
-  {
-    dataField: `id`,
-    hidden: true,
-  },
-  {
-    dataField: `images`,
-    text: `Image`,
-    formatter: (cellContent, row, scrollPosition) => (
-      <div>
-        {cellContent && cellContent.length > 0 && (
-          <LazyLoadImage
-            height={50}
-            width={50}
-            src={`devices/${encode(row.Brand)}/${encode(
-              row.Device
-            )}/thumb.webp`}
-            sx={{
-              "object-fit": `cover`,
-              width: `50px`,
-              height: `50px`,
-            }}
-            alt={`${row.Brand} - ${row.Device} - Thumbnail`}
-            scrollPosition={scrollPosition}
-          />
-        )}
-      </div>
-    ),
-  },
-  {
-    dataField: `Brand`,
-    text: `Brand Name`,
-    sort: true,
-  },
-  {
-    dataField: `Device`,
-    text: `Device`,
-    sort: true,
-  },
-  {
-    dataField: `Availability`,
-    text: `Availability`,
-    sort: true,
-  },
-  {
-    dataField: `Connection`,
-    text: `Connectivity`,
-    sort: true,
-  },
-  {
-    dataField: `Type`,
-    text: `Form Factor`,
-    sort: true,
-  },
-  {
-    dataField: `Buttplug.ButtplugSupport`,
-    text: `Buttplug.io Support`,
-    sort: true,
-    notes: (
-      <React.Fragment>
-        Devices are marked as supported when supported by the latest release of
-        {` `}
-        <a href="https://intiface.com/central/">Intiface Central</a>
-      </React.Fragment>
-    ),
-    formatter: (cellContent, row) => (
-      <div
-        style={{
-          display: `flex`,
-          alignItems: `center`,
-          "& span": {
-            margin: 5,
-          },
-        }}
-      >
-        {(row.Buttplug.ButtplugSupport & 4) === 4 &&
-        row.Buttplug.Buttplug_Rust === `Issues` ? (
-          <ErrorIcon style={{ color: `orange` }} />
-        ) : (row.Buttplug.ButtplugSupport & 4) === 4 &&
-          row.Buttplug.Buttplug_Rust === `Untested` ? (
-          <HelpIcon style={{ color: `blue` }} />
-        ) : (row.Buttplug.ButtplugSupport & 4) === 4 ? (
-          <CheckCircleIcon style={{ color: `green` }} />
-        ) : row.Buttplug.ButtplugSupport !== 0 ? (
-          <HighlightOffIcon style={{ color: `grey` }} />
-        ) : (
-          <HighlightOffIcon color="error" />
-        )}
-        {(row.Buttplug.ButtplugSupport & 4 && (
-          <span>
-            {row.Buttplug.Buttplug_Rust === `Untested` && ` (Untested)`}
-            {row.Buttplug.Buttplug_Rust === `Issues` && ` (Known Issues)`}
-          </span>
-        )) ||
-          (row.Buttplug.ButtplugSupport & 3 && (
+import { useCurrency } from "../context/CurrencyContext"
+
+const columns = (filters, globalCurrency, globalExchangeRates) => {
+  const priceFilter = filters?.find((f) => f.field === `Price`)
+  const targetCurrency =
+    globalCurrency !== `Original`
+      ? globalCurrency
+      : priceFilter?.priceCurrency || `USD`
+  const exchangeRates = globalExchangeRates || priceFilter?.exchangeRates
+
+  return [
+    {
+      dataField: `id`,
+      hidden: true,
+    },
+    {
+      dataField: `images`,
+      text: `Image`,
+      formatter: (cellContent, row, scrollPosition) => (
+        <div>
+          {cellContent && cellContent.length > 0 && (
+            <LazyLoadImage
+              height={50}
+              width={50}
+              src={`devices/${encode(row.Brand)}/${encode(
+                row.Device
+              )}/thumb.webp`}
+              sx={{
+                "object-fit": `cover`,
+                width: `50px`,
+                height: `50px`,
+              }}
+              alt={`${row.Brand} - ${row.Device} - Thumbnail`}
+              scrollPosition={scrollPosition}
+            />
+          )}
+        </div>
+      ),
+    },
+    {
+      dataField: `Brand`,
+      text: `Brand Name`,
+      sort: true,
+    },
+    {
+      dataField: `Device`,
+      text: `Device`,
+      sort: true,
+    },
+    {
+      dataField: `Availability`,
+      text: `Availability`,
+      sort: true,
+    },
+    {
+      dataField: `Connection`,
+      text: `Connectivity`,
+      sort: true,
+    },
+    {
+      dataField: `Type`,
+      text: `Form Factor`,
+      sort: true,
+    },
+    {
+      dataField: `Price`,
+      text: `Price`,
+      sort: true,
+      formatter: (cellContent, row) => {
+        if (isNaN(row.Price) || row.Price === ``) {
+          return `-`
+        }
+
+        let price = row.Price
+        const deviceCurrency = row.Currency || `USD`
+
+        if (deviceCurrency !== targetCurrency) {
+          const rates = exchangeRates && exchangeRates[deviceCurrency]
+          if (rates && rates[targetCurrency]) {
+            price = price * rates[targetCurrency]
+          } else if (globalCurrency === `Original`) {
+            // If we don't have the rate, show original price
+            return `${row.Price} ${deviceCurrency}`
+          } else {
+            // Global currency selected but no rate available
+            return `${row.Price} ${deviceCurrency} (No Rate)`
+          }
+        }
+
+        return `${new Intl.NumberFormat(`en-US`, {
+          style: `currency`,
+          currency: targetCurrency,
+          currencySign: `accounting`,
+        }).format(price)}`
+      },
+    },
+    {
+      dataField: `Buttplug.ButtplugSupport`,
+      text: `Buttplug.io Support`,
+      sort: true,
+      notes: (
+        <React.Fragment>
+          Devices are marked as supported when supported by the latest release
+          of
+          {` `}
+          <a href="https://intiface.com/central/">Intiface Central</a>
+        </React.Fragment>
+      ),
+      formatter: (cellContent, row) => (
+        <div
+          style={{
+            display: `flex`,
+            alignItems: `center`,
+            "& span": {
+              margin: 5,
+            },
+          }}
+        >
+          {(row.Buttplug.ButtplugSupport & 4) === 4 &&
+          row.Buttplug.Buttplug_Rust === `Issues` ? (
+            <ErrorIcon style={{ color: `orange` }} />
+          ) : (row.Buttplug.ButtplugSupport & 4) === 4 &&
+            row.Buttplug.Buttplug_Rust === `Untested` ? (
+            <HelpIcon style={{ color: `blue` }} />
+          ) : (row.Buttplug.ButtplugSupport & 4) === 4 ? (
+            <CheckCircleIcon style={{ color: `green` }} />
+          ) : row.Buttplug.ButtplugSupport !== 0 ? (
+            <HighlightOffIcon style={{ color: `grey` }} />
+          ) : (
+            <HighlightOffIcon color="error" />
+          )}
+          {(row.Buttplug.ButtplugSupport & 4 && (
             <span>
-              Deprecated support:
-              {(row.Buttplug.ButtplugSupport & 1 && ` C#`) || ``}
-              {(row.Buttplug.ButtplugSupport & 1 &&
-                row.Buttplug.Buttplug_CSharp === `Untested` &&
-                ` (Untested)`) ||
-                ``}
-              {(row.Buttplug.ButtplugSupport & 1 &&
-                row.Buttplug.Buttplug_CSharp === `Issues` &&
-                ` (Known Issues)`) ||
-                ``}
-              {(row.Buttplug.ButtplugSupport & 2 && ` JS`) || ``}
-              {((row.Buttplug.ButtplugSupport & 2 &&
-                row.Buttplug.Buttplug_JS === `Untested`) ||
-                ``) &&
-                ` (Untested)`}
-              {((row.Buttplug.ButtplugSupport & 2 &&
-                row.Buttplug.Buttplug_JS === `Issues`) ||
-                ``) &&
-                ` (Known Issues)`}
+              {row.Buttplug.Buttplug_Rust === `Untested` && ` (Untested)`}
+              {row.Buttplug.Buttplug_Rust === `Issues` && ` (Known Issues)`}
             </span>
           )) ||
-          ``}
-        {row.Buttplug.Buttplug_Support_Notes.length > 0 && (
-          <LightTooltip title={row.Buttplug.Buttplug_Support_Notes}>
-            <InfoIcon />
-          </LightTooltip>
-        )}
-      </div>
-    ),
-  },
-  {
-    dataField: `XToys.XToysSupport`,
-    text: `XToys.app Support`,
-    sort: true,
-    formatter: (cellContent, row) => (
-      <Container
-        sx={{
-          display: `flex`,
-          alignItems: `center`,
-          "& span": {
-            margin: 5,
-          },
-        }}
-      >
-        {row.XToys.XToysSupport === 1 ? (
-          <CheckCircleIcon style={{ color: `green` }} />
-        ) : (
-          <HighlightOffIcon color="error" />
-        )}
-        {row.XToys.XToys_Support_Notes.length > 0 && (
-          <LightTooltip title={row.XToys.XToys_Support_Notes}>
-            <InfoIcon />
-          </LightTooltip>
-        )}
-      </Container>
-    ),
-  },
-  {
-    dataField: `Detail`,
-    text: `Url`,
-    formatter: (cellContent, row) => <AffiliateLink device={row} />,
-  },
-]
+            (row.Buttplug.ButtplugSupport & 3 && (
+              <span>
+                Deprecated support:
+                {(row.Buttplug.ButtplugSupport & 1 && ` C#`) || ``}
+                {(row.Buttplug.ButtplugSupport & 1 &&
+                  row.Buttplug.Buttplug_CSharp === `Untested` &&
+                  ` (Untested)`) ||
+                  ``}
+                {(row.Buttplug.ButtplugSupport & 1 &&
+                  row.Buttplug.Buttplug_CSharp === `Issues` &&
+                  ` (Known Issues)`) ||
+                  ``}
+                {(row.Buttplug.ButtplugSupport & 2 && ` JS`) || ``}
+                {((row.Buttplug.ButtplugSupport & 2 &&
+                  row.Buttplug.Buttplug_JS === `Untested`) ||
+                  ``) &&
+                  ` (Untested)`}
+                {((row.Buttplug.ButtplugSupport & 2 &&
+                  row.Buttplug.Buttplug_JS === `Issues`) ||
+                  ``) &&
+                  ` (Known Issues)`}
+              </span>
+            )) ||
+            ``}
+          {row.Buttplug.Buttplug_Support_Notes.length > 0 && (
+            <LightTooltip title={row.Buttplug.Buttplug_Support_Notes}>
+              <InfoIcon />
+            </LightTooltip>
+          )}
+        </div>
+      ),
+    },
+    {
+      dataField: `XToys.XToysSupport`,
+      text: `XToys.app Support`,
+      sort: true,
+      formatter: (cellContent, row) => (
+        <Container
+          sx={{
+            display: `flex`,
+            alignItems: `center`,
+            "& span": {
+              margin: 5,
+            },
+          }}
+        >
+          {row.XToys.XToysSupport === 1 ? (
+            <CheckCircleIcon style={{ color: `green` }} />
+          ) : (
+            <HighlightOffIcon color="error" />
+          )}
+          {row.XToys.XToys_Support_Notes.length > 0 && (
+            <LightTooltip title={row.XToys.XToys_Support_Notes}>
+              <InfoIcon />
+            </LightTooltip>
+          )}
+        </Container>
+      ),
+    },
+    {
+      dataField: `Detail`,
+      text: `Url`,
+      formatter: (cellContent, row) => <AffiliateLink device={row} />,
+    },
+  ]
+}
 
 function EnhancedTableHead(props) {
+  const { currency, exchangeRates } = useCurrency()
+  const cols = columns(props.filters, currency, exchangeRates)
   return (
     <TableHead>
       <TableRow>
         <TableCell>
           {(props.compareMode && <CompareIcon />) || <InfoIcon />}
         </TableCell>
-        {columns.map((col, id) =>
+        {cols.map((col, id) =>
           col.hidden ? null : (
             <TableCell
               key={id}
@@ -287,9 +333,11 @@ function CompareSnackbar(props) {
 }
 
 function DeviceListInternal(props) {
+  const { currency, exchangeRates } = useCurrency()
   const data = props.data
   const scrollPosition = props.scrollPosition
   const [compares, setCompares] = useState([])
+  const cols = columns(props.filters, currency, exchangeRates)
 
   const doCompare = () => {
     navigate(`/compare?` + compares.join(`&`))
@@ -328,7 +376,7 @@ function DeviceListInternal(props) {
           </a>
         )}
       </TableCell>
-      {columns.map((col, id) =>
+      {cols.map((col, id) =>
         col.hidden ? null : (
           <TableCell key={id}>
             {col.formatter
@@ -359,6 +407,7 @@ function DeviceListInternal(props) {
             compareMode={props.compareMode}
             setCompareMode={props.setCompareMode}
             setCompares={setCompares}
+            filters={props.filters}
           />
           <TableBody>{rows}</TableBody>
         </Table>

@@ -3,6 +3,7 @@ import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import Select from "@mui/material/Select"
 import MenuItem from "@mui/material/MenuItem"
+import { useCurrency } from "../context/CurrencyContext"
 import TextField from "@mui/material/TextField"
 import DeleteIcon from "@mui/icons-material/Delete"
 import FormGroup from "@mui/material/FormGroup"
@@ -456,6 +457,7 @@ export function initialiseFilter(filter) {
 }
 
 export default function DeviceFilter(props) {
+  const { currency: globalCurrency } = useCurrency()
   const handleSearchChange = (event, field) => {
     props.onChange(props.ident, {
       field: field || props.filter.field,
@@ -958,7 +960,12 @@ export default function DeviceFilter(props) {
               variant="standard"
             />
           </StyledFormControl>
-          <StyledFormControl variant="standard">
+          <StyledFormControl
+            variant="standard"
+            sx={{
+              display: globalCurrency !== `Original` ? `none` : `inline-flex`,
+            }}
+          >
             <InputLabel>Currency</InputLabel>
             <Select
               value={props.filter.priceCurrency}
