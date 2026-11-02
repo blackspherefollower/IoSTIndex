@@ -952501,5 +952501,622 @@
                 ]
             ]
         ]
+    },
+    {
+        "date": "1786728758",
+        "added": [],
+        "removed": [],
+        "updated": [
+            [
+                {
+                    "Brand": "Satisfyer",
+                    "Device": "Big Heat",
+                    "Availability": "Available",
+                    "Type": "Insertable Vibrator",
+                    "Has Clones": "",
+                    "Buttplug-C#": "0",
+                    "Buttplug-JS": "0",
+                    "Buttplug-Rust": "Untested",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "1",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices/Satisfyer/Big Heat"
+                },
+                {
+                    "Brand": "Satisfyer",
+                    "Device": "Big Heat",
+                    "Availability": "Available",
+                    "Type": "Insertable Vibrator",
+                    "Has Clones": "",
+                    "Buttplug-C#": "0",
+                    "Buttplug-JS": "0",
+                    "Buttplug-Rust": "Untested",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "67f6a3ba-d167-4d44-ac52-0991dbf1df16",
+                    "XToys": "1",
+                    "Apps": "",
+                    "Price": "52.47",
+                    "Currency": "GBP",
+                    "Price Checked": "2026-05-06",
+                    "Price Notes": "The product name matches exactly. The price was extracted from structured data and the currency is confirmed by the '£' symbol in the page content.",
+                    "path": "/devices/Satisfyer/Big Heat"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Buttplug-UUID"
+                        ],
+                        "lhs": "",
+                        "rhs": "67f6a3ba-d167-4d44-ac52-0991dbf1df16"
+                    },
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Price"
+                        ],
+                        "lhs": "",
+                        "rhs": "52.47"
+                    },
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Currency"
+                        ],
+                        "lhs": "",
+                        "rhs": "GBP"
+                    },
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Price Checked"
+                        ],
+                        "lhs": "",
+                        "rhs": "2026-05-06"
+                    },
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Price Notes"
+                        ],
+                        "lhs": "",
+                        "rhs": "The product name matches exactly. The price was extracted from structured data and the currency is confirmed by the '£' symbol in the page content."
+                    }
+                ]
+            ],
+            [
+                {
+                    "Brand": "",
+                    "Device": "",
+                    "Availability": "Available",
+                    "Type": "",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices//"
+                },
+                {
+                    "Brand": "",
+                    "Device": "",
+                    "Availability": "Available",
+                    "Type": "Socks",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices//"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Type"
+                        ],
+                        "lhs": "",
+                        "rhs": "Socks"
+                    }
+                ]
+            ],
+            [
+                {
+                    "Brand": "",
+                    "Device": "",
+                    "Availability": "Available",
+                    "Type": "",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices//"
+                },
+                {
+                    "Brand": "",
+                    "Device": "",
+                    "Availability": "Discontinued",
+                    "Type": "",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices//"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Availability"
+                        ],
+                        "lhs": "Available",
+                        "rhs": "Discontinued"
+                    }
+                ]
+            ]
+        ]
+    },
+    {
+        "date": "1793629796",
+        "added": [
+            {
+                "Brand": "Kiiroo",
+                "Device": "Julio",
+                "Availability": "Available",
+                "Type": "Insertable Vibrator",
+                "Has Clones": "",
+                "Buttplug-C#": "",
+                "Buttplug-JS": "",
+                "Buttplug-Rust": "",
+                "Buttplug-Beta": "",
+                "Buttplug-UUID": "",
+                "XToys": "",
+                "Apps": "",
+                "Price": "",
+                "Currency": "",
+                "Price Checked": "",
+                "Price Notes": "",
+                "path": "/devices/Kiiroo/Julio"
+            },
+            {
+                "Brand": "Lovense",
+                "Device": "Glint",
+                "Availability": "Available",
+                "Type": "Buttplug",
+                "Has Clones": "",
+                "Buttplug-C#": "",
+                "Buttplug-JS": "",
+                "Buttplug-Rust": "Supported",
+                "Buttplug-Beta": "",
+                "Buttplug-UUID": "abe83a3e-9b52-48b5-bf08-b45fd5f3e73a",
+                "XToys": "",
+                "Apps": "",
+                "Price": "",
+                "Currency": "",
+                "Price Checked": "",
+                "Price Notes": "",
+                "path": "/devices/Lovense/Glint"
+            }
+        ],
+        "removed": [],
+        "updated": [
+            [
+                {
+                    "Brand": "Kiiroo",
+                    "Device": "Keon 2",
+                    "Availability": "Available",
+                    "Type": "Onahole",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "249",
+                    "Currency": "USD",
+                    "Price Checked": "2026-05-06",
+                    "Price Notes": "The page is for the exact product 'KEON' by 'Kiiroo'. The price and availability are clearly stated in the structured data.",
+                    "path": "/devices/Kiiroo/Keon 2"
+                },
+                {
+                    "Brand": "Kiiroo",
+                    "Device": "Keon 2",
+                    "Availability": "Available",
+                    "Type": "Onahole",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "Supported",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "249",
+                    "Currency": "USD",
+                    "Price Checked": "2026-05-06",
+                    "Price Notes": "The page is for the exact product 'KEON' by 'Kiiroo'. The price and availability are clearly stated in the structured data.",
+                    "path": "/devices/Kiiroo/Keon 2"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Buttplug-Rust"
+                        ],
+                        "lhs": "",
+                        "rhs": "Supported"
+                    }
+                ]
+            ],
+            [
+                {
+                    "Brand": "Lovense",
+                    "Device": "Synth",
+                    "Availability": "Unreleased ",
+                    "Type": "Buttplug",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "abe83a3e-9b52-48b5-bf08-b45fd5f3e73a",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices/Lovense/Synth"
+                },
+                {
+                    "Brand": "Lovense",
+                    "Device": "Synth",
+                    "Availability": "Unreleased ",
+                    "Type": "Buttplug",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "Supported",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "abe83a3e-9b52-48b5-bf08-b45fd5f3e73a",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices/Lovense/Synth"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Buttplug-Rust"
+                        ],
+                        "lhs": "",
+                        "rhs": "Supported"
+                    }
+                ]
+            ],
+            [
+                {
+                    "Brand": "Lovense",
+                    "Device": "Velvo",
+                    "Availability": "Available",
+                    "Type": "Rabbit",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "dffa9fe4-51ac-404b-b0f8-f74377f81f85",
+                    "XToys": "1",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices/Lovense/Velvo"
+                },
+                {
+                    "Brand": "Lovense",
+                    "Device": "Velvo",
+                    "Availability": "Available",
+                    "Type": "Rabbit",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "Supported",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "dffa9fe4-51ac-404b-b0f8-f74377f81f85",
+                    "XToys": "1",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices/Lovense/Velvo"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Buttplug-Rust"
+                        ],
+                        "lhs": "",
+                        "rhs": "Supported"
+                    }
+                ]
+            ],
+            [
+                {
+                    "Brand": "Lovense",
+                    "Device": "Fizz",
+                    "Availability": "Available",
+                    "Type": "Suction Vibrator",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices/Lovense/Fizz"
+                },
+                {
+                    "Brand": "Lovense",
+                    "Device": "Fizz",
+                    "Availability": "Available",
+                    "Type": "Suction Vibrator",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "Supported",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices/Lovense/Fizz"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Buttplug-Rust"
+                        ],
+                        "lhs": "",
+                        "rhs": "Supported"
+                    }
+                ]
+            ],
+            [
+                {
+                    "Brand": "Satisfyer",
+                    "Device": "Big Heat",
+                    "Availability": "Available",
+                    "Type": "Insertable Vibrator",
+                    "Has Clones": "",
+                    "Buttplug-C#": "0",
+                    "Buttplug-JS": "0",
+                    "Buttplug-Rust": "Untested",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "1",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices/Satisfyer/Big Heat"
+                },
+                {
+                    "Brand": "Satisfyer",
+                    "Device": "Big Heat",
+                    "Availability": "Available",
+                    "Type": "Insertable Vibrator",
+                    "Has Clones": "",
+                    "Buttplug-C#": "0",
+                    "Buttplug-JS": "0",
+                    "Buttplug-Rust": "Untested",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "67f6a3ba-d167-4d44-ac52-0991dbf1df16",
+                    "XToys": "1",
+                    "Apps": "",
+                    "Price": "52.47",
+                    "Currency": "GBP",
+                    "Price Checked": "2026-05-06",
+                    "Price Notes": "The product name matches exactly. The price was extracted from structured data and the currency is confirmed by the '£' symbol in the page content.",
+                    "path": "/devices/Satisfyer/Big Heat"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Buttplug-UUID"
+                        ],
+                        "lhs": "",
+                        "rhs": "67f6a3ba-d167-4d44-ac52-0991dbf1df16"
+                    },
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Price"
+                        ],
+                        "lhs": "",
+                        "rhs": "52.47"
+                    },
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Currency"
+                        ],
+                        "lhs": "",
+                        "rhs": "GBP"
+                    },
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Price Checked"
+                        ],
+                        "lhs": "",
+                        "rhs": "2026-05-06"
+                    },
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Price Notes"
+                        ],
+                        "lhs": "",
+                        "rhs": "The product name matches exactly. The price was extracted from structured data and the currency is confirmed by the '£' symbol in the page content."
+                    }
+                ]
+            ],
+            [
+                {
+                    "Brand": "",
+                    "Device": "",
+                    "Availability": "Available",
+                    "Type": "",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices//"
+                },
+                {
+                    "Brand": "",
+                    "Device": "",
+                    "Availability": "Available",
+                    "Type": "Socks",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices//"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Type"
+                        ],
+                        "lhs": "",
+                        "rhs": "Socks"
+                    }
+                ]
+            ],
+            [
+                {
+                    "Brand": "",
+                    "Device": "",
+                    "Availability": "Available",
+                    "Type": "",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices//"
+                },
+                {
+                    "Brand": "",
+                    "Device": "",
+                    "Availability": "Discontinued",
+                    "Type": "",
+                    "Has Clones": "",
+                    "Buttplug-C#": "",
+                    "Buttplug-JS": "",
+                    "Buttplug-Rust": "",
+                    "Buttplug-Beta": "",
+                    "Buttplug-UUID": "",
+                    "XToys": "",
+                    "Apps": "",
+                    "Price": "",
+                    "Currency": "",
+                    "Price Checked": "",
+                    "Price Notes": "",
+                    "path": "/devices//"
+                },
+                [
+                    {
+                        "kind": "E",
+                        "path": [
+                            "Availability"
+                        ],
+                        "lhs": "Available",
+                        "rhs": "Discontinued"
+                    }
+                ]
+            ]
+        ]
     }
 ]
